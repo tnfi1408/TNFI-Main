@@ -1,0 +1,6 @@
+{
+  "name": "TNFI",
+  "description": "Tamil Nadu Farmer Index (TNFI) & Agricultural Finance Terminal — Agri-finance intelligence, FPO performance analytics, and market terminal for Tamil Nadu Farmer Producer Organizations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
