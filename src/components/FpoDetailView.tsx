@@ -81,19 +81,19 @@ export const FpoDetailView: React.FC = () => {
 
   const activeFpoAny = activeFpo as any;
   const seed = RAW_50_FPOS_DATA.find(s => s.id === activeFpo.id || s.ticker === activeFpo.ticker);
-  const subScores = seed?.subScores || activeFpoAny.subScores;
-  const tnfiScore = subScores ? calculateTnfiScore(subScores) : activeFpo.performanceScore || 85.0;
+  const subScores = activeFpo.subScores || seed?.subScores || activeFpoAny.subScores;
+  const tnfiScore = activeFpo.performanceScore ?? activeFpo.tnfiScore ?? (subScores ? calculateTnfiScore(subScores) : 85.0);
 
-  const revenueCr = activeFpo.revenueCr || (activeFpo.expectedRevenue ? activeFpo.expectedRevenue / 10000000 : 22.5);
-  const margin = activeFpo.profitMarginPercent || (activeFpo as any).profitMargin || 16.5;
-  const profitCr = activeFpoAny.profitCr || Number((revenueCr * (margin / 100)).toFixed(2));
-  const harvestTonnes = activeFpo.expectedHarvestTonnes || activeFpoAny.expectedHarvest || 4200;
-  const acres = activeFpo.fundedAcres || activeFpo.totalAcreage || 2100;
-  const farmers = activeFpo.farmerCount || activeFpo.totalFarmers || 1850;
-  const harvestValCr = activeFpo.harvestValue ? (activeFpo.harvestValue / 10000000).toFixed(2) : ((activeFpo.harvestValueLakhs || 450) / 100).toFixed(2);
-  const waterRisk = activeFpo.waterRiskScore || 24;
-  const climateScore = activeFpo.climateSuitabilityScore || 88;
-  const offtakePct = activeFpo.buyerOfftakePercent || 92;
+  const revenueCr = activeFpo.revenueCr ?? (activeFpo.expectedRevenue ? Number((activeFpo.expectedRevenue / 10000000).toFixed(2)) : seed?.revenueCr ?? 22.5);
+  const margin = activeFpo.profitMarginPercent ?? (activeFpo as any).profitMargin ?? seed?.profitMarginPercent ?? 16.5;
+  const profitCr = activeFpo.profitCr ?? activeFpoAny.profitCr ?? Number((revenueCr * (margin / 100)).toFixed(2));
+  const harvestTonnes = activeFpo.expectedHarvestTonnes ?? seed?.expectedHarvestTonnes ?? 4200;
+  const acres = activeFpo.fundedAcres ?? activeFpo.totalAcreage ?? seed?.fundedAcres ?? 2100;
+  const farmers = activeFpo.farmerCount ?? activeFpo.totalFarmers ?? seed?.farmerCount ?? 1850;
+  const harvestValCr = activeFpo.harvestValueCr ?? (activeFpo.harvestValue ? (activeFpo.harvestValue / 10000000).toFixed(2) : ((activeFpo.harvestValueLakhs || 450) / 100).toFixed(2));
+  const waterRisk = activeFpo.waterRiskScore ?? 24;
+  const climateScore = activeFpo.climateScore ?? activeFpo.climateSuitabilityScore ?? 88;
+  const offtakePct = activeFpo.buyerReadiness ?? activeFpo.buyerOfftakePercent ?? 92;
 
   const handleExpressInterest = (e: React.FormEvent) => {
     e.preventDefault();

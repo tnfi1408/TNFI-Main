@@ -1,4 +1,5 @@
 import { FPO, FpoStock, SectorType, CreditRating, RiskLevel } from '../types';
+import { recomputeFpoAggregates } from '../utils/calculations';
 
 export interface TnfiScoreFactorBreakdown {
   financialHealth: number; // 20%
@@ -1680,57 +1681,88 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
   const secondaryCropItems = (seed.secondaryCrops || []).map((secCrop, sIdx) => {
     const secAcres = Math.round((seed.fundedAcres * 0.35) / Math.max(1, seed.secondaryCrops.length));
     const secHarvest = Math.round((seed.expectedHarvestTonnes * 0.25) / Math.max(1, seed.secondaryCrops.length));
-    const secRevenueLakhs = Math.round((revenueLakhs * 0.25) / Math.max(1, seed.secondaryCrops.length));
-    const secProfitLakhs = Math.round((profitLakhs * 0.25) / Math.max(1, seed.secondaryCrops.length));
+    const secYield = Number((secHarvest / Math.max(1, secAcres)).toFixed(1));
+    const secPrice = Math.round(seed.stockPrice * 18 + sIdx * 200);
+    const secOfftake = 88;
+    const secHarvestValRupees = secPrice * secHarvest * 10;
+    const secHarvestValLakhs = Number((secHarvestValRupees / 100000).toFixed(2));
+    const secRevRupees = secHarvestValRupees * (secOfftake / 100);
+    const secRevLakhs = Number((secRevRupees / 100000).toFixed(2));
+    const secTargetCostRupees = secRevRupees * (1 - (seed.profitMarginPercent * 0.95) / 100);
+    const secCostPerAcre = Math.max(8000, Math.round(secTargetCostRupees / Math.max(1, secAcres)));
+    const secCostRupees = secAcres * secCostPerAcre;
+    const secCostLakhs = Number((secCostRupees / 100000).toFixed(2));
+    const secProfitRupees = secRevRupees - secCostRupees;
+    const secProfitLakhs = Number((secProfitRupees / 100000).toFixed(2));
+    const secMargin = secRevRupees > 0 ? Number(((secProfitRupees / secRevRupees) * 100).toFixed(1)) : seed.profitMarginPercent;
 
     return {
       id: `crop-${seed.id}-sec-${sIdx + 1}`,
       cropName: secCrop,
       acres: secAcres,
       acreage: secAcres,
-      expectedYieldTonnesPerAcre: Number((secHarvest / Math.max(1, secAcres)).toFixed(1)),
+      expectedYieldTonnesPerAcre: secYield,
       expectedHarvestTonnes: secHarvest,
-      marketPricePerQtl: Math.round(seed.stockPrice * 18 + sIdx * 200),
-      currentCropMarketPricePerQtl: Math.round(seed.stockPrice * 18 + sIdx * 200),
-      harvestValueLakhs: secRevenueLakhs,
-      harvestValue: secRevenueLakhs * 100000,
-      expectedRevenue: secRevenueLakhs * 100000,
-      revenueLakhs: secRevenueLakhs,
-      costLakhs: Math.round(secRevenueLakhs - secProfitLakhs),
-      expectedProfit: secProfitLakhs * 100000,
+      marketPricePerQtl: secPrice,
+      currentCropMarketPricePerQtl: secPrice,
+      cultivationCostPerAcre: secCostPerAcre,
+      harvestValueLakhs: secHarvestValLakhs,
+      harvestValue: secHarvestValRupees,
+      expectedRevenue: secRevRupees,
+      revenueLakhs: secRevLakhs,
+      costLakhs: secCostLakhs,
+      expectedProfit: secProfitRupees,
       expectedProfitLakhs: secProfitLakhs,
-      marginPercent: Math.round(seed.profitMarginPercent * 0.95),
+      marginPercent: secMargin,
       demandScore: Math.min(99, Math.round(seed.subScores.marketPosition * 0.98)),
       climateScore: Math.min(99, Math.round(seed.subScores.agriStrength * 0.95)),
       waterRiskScore: Math.min(99, Math.round(seed.subScores.risk * 1.05)),
-      buyerOfftakePercent: 88,
+      buyerOfftakePercent: secOfftake,
       buyerName: 'Tamil Nadu Agri Marketing & Spot Mandis',
       harvestDate: 'Nov 2026',
       risk: seed.riskLevel
     };
   });
 
+  const primaryAcres = Math.round(seed.fundedAcres * (seed.secondaryCrops && seed.secondaryCrops.length > 0 ? 0.65 : 1.0));
+  const primaryHarvestTonnes = Math.round(seed.expectedHarvestTonnes * (seed.secondaryCrops && seed.secondaryCrops.length > 0 ? 0.75 : 1.0));
+  const primaryYieldPerAcre = Number((primaryHarvestTonnes / Math.max(1, primaryAcres)).toFixed(1));
+  const primaryPricePerQtl = Math.round(seed.stockPrice * 22);
+  const primaryOfftake = 94;
+  const primaryHarvestValRupees = primaryPricePerQtl * primaryHarvestTonnes * 10;
+  const primaryHarvestValLakhs = Number((primaryHarvestValRupees / 100000).toFixed(2));
+  const primaryRevRupees = primaryHarvestValRupees * (primaryOfftake / 100);
+  const primaryRevLakhs = Number((primaryRevRupees / 100000).toFixed(2));
+  const targetCostRupees = primaryRevRupees * (1 - seed.profitMarginPercent / 100);
+  const primaryCostPerAcre = Math.max(8000, Math.round(targetCostRupees / Math.max(1, primaryAcres)));
+  const primaryCostRupees = primaryAcres * primaryCostPerAcre;
+  const primaryCostLakhs = Number((primaryCostRupees / 100000).toFixed(2));
+  const primaryProfitRupees = primaryRevRupees - primaryCostRupees;
+  const primaryProfitLakhs = Number((primaryProfitRupees / 100000).toFixed(2));
+  const primaryMargin = primaryRevRupees > 0 ? Number(((primaryProfitRupees / primaryRevRupees) * 100).toFixed(1)) : seed.profitMarginPercent;
+
   const primaryCropItem = {
     id: `crop-${seed.id}-1`,
     cropName: seed.primaryCrop,
-    acres: Math.round(seed.fundedAcres * (seed.secondaryCrops && seed.secondaryCrops.length > 0 ? 0.65 : 1.0)),
-    acreage: Math.round(seed.fundedAcres * (seed.secondaryCrops && seed.secondaryCrops.length > 0 ? 0.65 : 1.0)),
-    expectedYieldTonnesPerAcre: Number((seed.expectedHarvestTonnes / Math.max(1, seed.fundedAcres * 0.65)).toFixed(1)),
-    expectedHarvestTonnes: Math.round(seed.expectedHarvestTonnes * (seed.secondaryCrops && seed.secondaryCrops.length > 0 ? 0.75 : 1.0)),
-    marketPricePerQtl: Math.round(seed.stockPrice * 22),
-    currentCropMarketPricePerQtl: Math.round(seed.stockPrice * 22),
-    harvestValueLakhs: Math.round(revenueLakhs * 0.75),
-    harvestValue: Math.round(revenueLakhs * 0.75) * 100000,
-    expectedRevenue: Math.round(revenueLakhs * 0.75) * 100000,
-    revenueLakhs: Math.round(revenueLakhs * 0.75),
-    costLakhs: Math.round(revenueLakhs * 0.75 - profitLakhs * 0.75),
-    expectedProfit: Math.round(profitLakhs * 0.75) * 100000,
-    expectedProfitLakhs: Math.round(profitLakhs * 0.75),
-    marginPercent: seed.profitMarginPercent,
+    acres: primaryAcres,
+    acreage: primaryAcres,
+    expectedYieldTonnesPerAcre: primaryYieldPerAcre,
+    expectedHarvestTonnes: primaryHarvestTonnes,
+    marketPricePerQtl: primaryPricePerQtl,
+    currentCropMarketPricePerQtl: primaryPricePerQtl,
+    cultivationCostPerAcre: primaryCostPerAcre,
+    harvestValueLakhs: primaryHarvestValLakhs,
+    harvestValue: primaryHarvestValRupees,
+    expectedRevenue: primaryRevRupees,
+    revenueLakhs: primaryRevLakhs,
+    costLakhs: primaryCostLakhs,
+    expectedProfit: primaryProfitRupees,
+    expectedProfitLakhs: primaryProfitLakhs,
+    marginPercent: primaryMargin,
     demandScore: seed.subScores.marketPosition,
     climateScore: seed.subScores.agriStrength,
     waterRiskScore: seed.subScores.risk,
-    buyerOfftakePercent: 94,
+    buyerOfftakePercent: primaryOfftake,
     buyerName: 'ITC Agri / WayCool / Modern Foods Escrow',
     harvestDate: 'Oct 2026',
     risk: seed.riskLevel
@@ -1857,7 +1889,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
     }
   ];
 
-  return {
+  const initialFpo: FPO = {
     id: seed.id,
     code: (1000 + idx + 1).toString(),
     ticker: seed.ticker,
@@ -2006,6 +2038,8 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
       { date: 'Aug 14', indexValue: Math.round(tnfiScore * 14.2 + 80), open: Math.round(seed.stockPrice * 57), high: Math.round(seed.stockPrice * 59), low: Math.round(seed.stockPrice * 56.5), close: Math.round(tnfiScore * 14.2 + 80), volumeTonnes: 110 }
     ]
   };
+
+  return recomputeFpoAggregates(initialFpo);
 });
 
 // Convert 50 seeds into FpoStock objects for exchange views

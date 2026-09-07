@@ -61,20 +61,18 @@ export const FpoResearchView: React.FC = () => {
 
   // Normalize full 50 FPO dataset with complete financial and performance calculations
   const completeFpoList = useMemo(() => {
-    return fpos.map((fpo, idx) => {
+    const list = fpos.map((fpo, idx) => {
       const seed =
         RAW_50_FPOS_DATA.find(s => s.id === fpo.id || s.ticker === fpo.ticker) ||
         RAW_50_FPOS_DATA[idx % RAW_50_FPOS_DATA.length];
       const stock = fpoStocks.find(s => s.id === fpo.id || s.ticker === fpo.ticker);
 
-      const score = seed.subScores
-        ? calculateTnfiScore(seed.subScores)
-        : fpo.performanceScore || fpo.tnfiScore || 82.5;
-      const revenueCr = seed.revenueCr || fpo.revenueCr || (fpo.expectedRevenue ? fpo.expectedRevenue / 10000000 : 22.0);
-      const margin = seed.profitMarginPercent || fpo.profitMarginPercent || 16.5;
-      const profitCr = Number((revenueCr * (margin / 100)).toFixed(2));
-      const harvestTonnes = seed.expectedHarvestTonnes || fpo.expectedHarvestTonnes || 4200;
-      const acres = seed.fundedAcres || fpo.fundedAcres || 2100;
+      const score = fpo.performanceScore ?? fpo.tnfiScore ?? (seed.subScores ? calculateTnfiScore(seed.subScores) : 82.5);
+      const revenueCr = (fpo as any).revenueCr ?? (fpo.expectedRevenue ? Number((fpo.expectedRevenue / 10000000).toFixed(2)) : seed.revenueCr || 22.0);
+      const margin = fpo.profitMarginPercent ?? (fpo as any).margin ?? seed.profitMarginPercent ?? 16.5;
+      const profitCr = (fpo as any).profitCr ?? Number((revenueCr * (margin / 100)).toFixed(2));
+      const harvestTonnes = fpo.expectedHarvestTonnes ?? seed.expectedHarvestTonnes ?? 4200;
+      const acres = fpo.fundedAcres ?? fpo.totalAcreage ?? seed.fundedAcres ?? 2100;
       const farmers = seed.farmerCount || fpo.totalFarmers || fpo.farmerCount || 1850;
       const growth = seed.revenueGrowth || fpo.revenueGrowth || 18.5;
       const perf1D = seed.perf1D || fpo.perf1D || 2.4;
@@ -83,7 +81,6 @@ export const FpoResearchView: React.FC = () => {
         ...fpo,
         id: fpo.id || seed.id,
         code: fpo.code || seed.id.replace('fpo-', 'FPO'),
-        rank: idx + 1,
         ticker: seed.ticker || fpo.ticker,
         name: seed.name || fpo.name,
         state: 'Tamil Nadu',
@@ -93,7 +90,7 @@ export const FpoResearchView: React.FC = () => {
         tnfiScore: score,
         performanceScore: score,
         subScores: seed.subScores,
-        indexWeight: seed.indexWeight || fpo.indexWeight || 2.0,
+        indexWeight: fpo.indexWeight ?? seed.indexWeight ?? 2.0,
         revenueCr,
         profitCr,
         profitMarginPercent: margin,
@@ -109,6 +106,12 @@ export const FpoResearchView: React.FC = () => {
         stockPrice: seed.stockPrice || stock?.currentPrice || 120.0
       };
     });
+
+    const sorted = [...list].sort((a, b) => (b.tnfiScore || 0) - (a.tnfiScore || 0) || (b.revenueCr || 0) - (a.revenueCr || 0));
+    return sorted.map((item, sortedIdx) => ({
+      ...item,
+      rank: sortedIdx + 1
+    }));
   }, [fpos, fpoStocks]);
 
   // Extract unique districts and crops for filter dropdowns

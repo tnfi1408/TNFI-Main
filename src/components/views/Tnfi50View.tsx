@@ -58,7 +58,7 @@ export const Tnfi50View: React.FC = () => {
 
   // Combine FPO entities with 50 seed metadata for complete financial and score factor breakdown
   const combinedList = useMemo(() => {
-    return fpos.map((fpo, index) => {
+    const list = fpos.map((fpo, index) => {
       const seed = RAW_50_FPOS_DATA.find(s => s.id === fpo.id || s.ticker === fpo.ticker) || RAW_50_FPOS_DATA[index % RAW_50_FPOS_DATA.length];
       const stock = fpoStocks.find(s => s.id === fpo.id || s.ticker === fpo.ticker) || {
         currentPrice: seed.stockPrice,
@@ -69,23 +69,23 @@ export const Tnfi50View: React.FC = () => {
         volume: 24000 + index * 1200
       };
 
-      const computedScore = seed.subScores ? calculateTnfiScore(seed.subScores) : (fpo.performanceScore || fpo.tnfiScore || 82.5);
-      const revenueCr = seed.revenueCr || (fpo.expectedRevenue ? fpo.expectedRevenue / 100 : 25.0);
-      const margin = seed.profitMarginPercent || fpo.profitMarginPercent || 15.0;
-      const profitCr = Number((revenueCr * (margin / 100)).toFixed(2));
-      const harvestTonnes = seed.expectedHarvestTonnes || fpo.expectedHarvestTonnes || 4500;
-      const acres = seed.fundedAcres || fpo.fundedAcres || 2200;
+      const computedScore = fpo.performanceScore ?? fpo.tnfiScore ?? (seed.subScores ? calculateTnfiScore(seed.subScores) : 82.5);
+      const revenueCr = (fpo as any).revenueCr ?? (fpo.expectedRevenue ? Number((fpo.expectedRevenue / 10000000).toFixed(2)) : seed.revenueCr || 25.0);
+      const margin = fpo.profitMarginPercent ?? (fpo as any).margin ?? seed.profitMarginPercent ?? 15.0;
+      const profitCr = (fpo as any).profitCr ?? Number((revenueCr * (margin / 100)).toFixed(2));
+      const harvestTonnes = fpo.expectedHarvestTonnes ?? seed.expectedHarvestTonnes ?? 4500;
+      const acres = fpo.fundedAcres ?? fpo.totalAcreage ?? seed.fundedAcres ?? 2200;
 
       return {
         ...fpo,
-        rank: index + 1,
         ticker: seed.ticker || fpo.ticker,
         name: seed.name || fpo.name,
         state: 'Tamil Nadu',
         district: seed.district || fpo.district || 'Thanjavur',
         primaryCrop: seed.primaryCrop || fpo.primaryCrop || 'Paddy (Ponni)',
-        indexWeight: seed.indexWeight || 2.0,
+        indexWeight: fpo.indexWeight ?? seed.indexWeight ?? 2.0,
         tnfiScore: computedScore,
+        performanceScore: computedScore,
         subScores: seed.subScores,
         perf1D: seed.perf1D,
         perf1W: seed.perf1W,
@@ -103,6 +103,13 @@ export const Tnfi50View: React.FC = () => {
         stock
       };
     });
+
+    // Dynamic ranking strictly driven by authoritative performance / TNFI score
+    const sorted = [...list].sort((a, b) => (b.tnfiScore || 0) - (a.tnfiScore || 0) || (b.revenueCr || 0) - (a.revenueCr || 0));
+    return sorted.map((item, sortedIdx) => ({
+      ...item,
+      rank: sortedIdx + 1
+    }));
   }, [fpos, fpoStocks]);
 
   // Total Index Weight calculation (must equal 100.00%)

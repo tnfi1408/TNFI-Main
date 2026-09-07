@@ -220,6 +220,7 @@ export interface FPO {
   sector: SectorType;
   totalFarmers?: number;
   farmerCount?: number;
+  femaleFarmers?: number;
   fundedAcres?: number;
   totalAcreage?: number;
   cultivationFundingLakhs?: number;
@@ -231,6 +232,7 @@ export interface FPO {
   harvestValueCr?: number;
   revenueLakhs?: number;
   revenueCr?: number;
+  profitCr?: number;
   expectedRevenue?: number;
   costLakhs?: number;
   expectedProfitLakhs?: number;
@@ -280,6 +282,7 @@ export interface FPO {
   auditStatus?: string;
   financials?: FpoFinancials;
   cropPortfolio?: FpoCropItem[];
+  crops?: FpoCropItem[];
   fundingRecords?: FpoFundingRecord[];
   history?: Array<{
     date: string;
@@ -330,6 +333,9 @@ export interface FPO {
   buyerNames?: string[];
   climateSuitabilityScore?: number;
   totalFundingRaised?: number;
+  peRatio?: number;
+  dividendYield?: number;
+  registrationNumber?: string;
   subScores?: TnfiScoreFactorBreakdown;
 }
 

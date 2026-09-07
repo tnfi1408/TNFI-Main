@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   User,
   UserRole,
@@ -256,116 +257,232 @@ const INITIAL_ADMIN_ACTIVITY: AdminActivityItem[] = [
   }
 ];
 
+export function getRouteForView(view: string, targetId?: string): string {
+  switch (view) {
+    // 0. Farmer Views
+    case 'farmer-dashboard':
+    case 'farmer':
+      return '/farmer/dashboard';
+
+    // 1. Investor Views
+    case 'investor-dashboard':
+    case 'investor':
+      return '/investor/dashboard';
+    case 'investor-profile':
+    case 'profile':
+    case 'preferences':
+      return '/investor-profile';
+    case 'watchlist':
+      return '/watchlist';
+    case 'portfolio':
+      return '/portfolio';
+    case 'scenario-analysis':
+    case 'simulator':
+      return '/scenario-analysis';
+    case 'ai-analyst':
+    case 'ai-engine':
+      return '/ai-analyst';
+
+    // 2. FPO Views
+    case 'fpo-dashboard':
+    case 'fpo':
+      return '/fpo/dashboard';
+    case 'fpo-profile':
+      return '/fpo/profile';
+    case 'fpo-register':
+      return '/fpo/register';
+    case 'crop-portfolio':
+    case 'fpo-crops':
+      return '/fpo/crops';
+    case 'fpo-farmers':
+    case 'farmers':
+      return '/fpo/farmers';
+    case 'fpo-buyers':
+    case 'buyers':
+      return '/fpo/buyers';
+    case 'fpo-funding':
+      return '/fpo/funding';
+    case 'fpo-capital-raise':
+    case 'fpo-capital-requirement':
+    case 'capital-raise':
+      return '/fpo/capital-raise';
+
+    // 3. Admin Views
+    case 'admin-command':
+    case 'admin-dashboard':
+    case 'admin':
+      return '/admin/command';
+    case 'fpo-verification':
+      return '/admin/fpo-verification';
+    case 'fpo-verification-detail':
+      return targetId ? `/admin/fpo-verification/${targetId}` : '/admin/fpo-verification';
+    case 'admin-fpo-directory':
+      return '/admin/fpo-directory';
+    case 'tnfi-50-mgmt':
+    case 'rebalance':
+      return '/admin/tnfi-50';
+
+    // 4. Intelligence & Shared Views
+    case 'fpo-detail':
+      return targetId ? `/fpo-research/${targetId}` : '/fpo-research';
+    case 'fpo-research':
+      return '/fpo-research';
+    case 'fpo-directory':
+      return '/fpo-directory';
+    case 'tnfi-50':
+    case 'market-index':
+      return '/tnfi-50';
+    case 'capital-opportunities':
+    case 'opportunities':
+      return '/capital-opportunities';
+    case 'opportunity-detail':
+      return targetId ? `/capital-opportunities/${targetId}` : '/capital-opportunities';
+    case 'compare':
+    case 'fpo-compare':
+      return '/compare';
+    case 'demand-intel':
+      return '/demand-intel';
+    case 'district-analytics':
+      return '/district-analytics';
+    case 'market-intel':
+      return '/market-intel';
+    case 'funding-intel':
+      return '/funding-intel';
+    case 'reports':
+      return '/reports';
+    case 'settings':
+      return '/settings';
+    case 'fpo-stocks':
+      return '/fpo-stocks';
+    case 'login':
+      return '/login';
+    default:
+      return '/';
+  }
+}
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Application starts logged out on login screen as requested
-  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Restore authenticated session from localStorage if present
+  const [user, setUser] = useState<User | null>(() => {
+    try {
+      const saved = localStorage.getItem('tnfi_active_user');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.role) return parsed;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return null;
+  });
 
   const [currentView, setCurrentViewState] = useState<string>('market-index');
   const [navigationOrigin, setNavigationOrigin] = useState<string>('fpo-research');
   const [selectedTicker, setSelectedTicker] = useState<string>('KAVERI');
   const [selectedFpoId, setSelectedFpoId] = useState<string | null>(null);
+  const [selectedOpportunityId, setSelectedOpportunityId] = useState<string | null>(null);
   const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>('dist-cbe');
   const [selectedSector, setSelectedSector] = useState<SectorType | 'ALL'>('ALL');
 
-  // Direct URL Path / Hash Support (e.g. /fpo-research/fpo-1001, /admin/fpo-verification, etc.)
+  // Synchronize location.pathname with active application state
   React.useEffect(() => {
     try {
-      const path = window.location.pathname || '';
-      const hash = window.location.hash || '';
-      const combined = (path + ' ' + hash).toLowerCase();
-
-      if (combined.includes('/admin/fpo-verification/') || combined.includes('/admin/verification/')) {
+      const path = location.pathname || '';
+      
+      if (path.startsWith('/admin/fpo-verification/')) {
         const parts = path.split('/').filter(Boolean);
-        const verifIdx = parts.findIndex(p => p.toLowerCase() === 'fpo-verification' || p.toLowerCase() === 'verification');
-        if (verifIdx !== -1 && parts[verifIdx + 1]) {
-          const targetId = parts[verifIdx + 1];
+        const targetId = parts[parts.length - 1];
+        if (targetId && targetId !== 'fpo-verification') {
           setSelectedFpoId(targetId);
-          setCurrentViewState('fpo-verification-detail');
-          setNavigationOrigin('fpo-verification');
         }
-      } else if (combined.includes('/admin/fpo-verification') || combined.includes('/admin/verification')) {
+        setCurrentViewState('fpo-verification-detail');
+        setNavigationOrigin('fpo-verification');
+      } else if (path === '/admin/fpo-verification') {
         setCurrentViewState('fpo-verification');
-      } else if (combined.includes('/admin/fpo-directory') || combined.includes('/admin/fpos')) {
+      } else if (path === '/admin/fpo-directory') {
         setCurrentViewState('admin-fpo-directory');
-      } else if (combined.includes('/admin/tnfi50') || combined.includes('/admin/tnfi-50')) {
+      } else if (path === '/admin/tnfi-50' || path === '/admin/tnfi-50-mgmt' || path === '/admin/rebalance') {
         setCurrentViewState('tnfi-50-mgmt');
-      } else if (combined.includes('/admin/demand')) {
-        setCurrentViewState('demand-intel');
-      } else if (combined.includes('/admin/districts')) {
-        setCurrentViewState('district-analytics');
-      } else if (combined.includes('/admin/reports')) {
-        setCurrentViewState('reports');
-      } else if (combined.includes('/admin/settings')) {
-        setCurrentViewState('settings');
-      } else if (combined.includes('/admin')) {
+      } else if (path.startsWith('/admin')) {
         setCurrentViewState('admin-command');
-      } else if (combined.includes('/fpo/register') || combined.includes('/register/fpo') || combined.includes('/fpo-register')) {
-        setCurrentViewState('fpo-register');
-      } else if (combined.includes('/fpo/profile')) {
+      } else if (path === '/fpo/profile') {
         setCurrentViewState('fpo-profile');
-      } else if (combined.includes('/fpo/crops')) {
+      } else if (path === '/fpo/register') {
+        setCurrentViewState('fpo-register');
+      } else if (path === '/fpo/crops') {
         setCurrentViewState('crop-portfolio');
-      } else if (combined.includes('/fpo/funding')) {
+      } else if (path === '/fpo/farmers') {
+        setCurrentViewState('fpo-farmers');
+      } else if (path === '/fpo/buyers') {
+        setCurrentViewState('fpo-buyers');
+      } else if (path === '/fpo/funding') {
         setCurrentViewState('funding-intel');
-      } else if (combined.includes('/fpo/capital-raise') || combined.includes('/fpo/bonds')) {
-        setCurrentViewState('capital-raise');
-      } else if (combined.includes('/fpo/market-intelligence') || combined.includes('/fpo/market-intel')) {
-        setCurrentViewState('market-intel');
-      } else if (combined.includes('/fpo/demand')) {
-        setCurrentViewState('demand-intel');
-      } else if (combined.includes('/fpo/dashboard') || (combined.endsWith('/fpo') || combined.endsWith('/fpo/'))) {
+      } else if (path === '/fpo/capital-raise' || path === '/fpo/capital-requirement') {
+        setCurrentViewState('fpo-capital-raise');
+      } else if (path.startsWith('/fpo')) {
         setCurrentViewState('fpo-dashboard');
-      } else if (combined.includes('/investor/opportunities/') || combined.includes('/opportunities/')) {
+      } else if (path.startsWith('/farmer')) {
+        setCurrentViewState('farmer-dashboard');
+      } else if (path.startsWith('/capital-opportunities/') || path.startsWith('/opportunity-detail/')) {
         const parts = path.split('/').filter(Boolean);
-        const oppIdx = parts.findIndex(p => p.toLowerCase() === 'opportunities' || p.toLowerCase() === 'capital-opportunities');
-        if (oppIdx !== -1 && parts[oppIdx + 1]) {
-          setSelectedOpportunityId(parts[oppIdx + 1]);
-          setCurrentViewState('opportunity-detail');
-        } else {
-          setCurrentViewState('capital-opportunities');
+        const targetId = parts[parts.length - 1];
+        if (targetId && targetId !== 'capital-opportunities' && targetId !== 'opportunity-detail') {
+          setSelectedOpportunityId(targetId);
         }
-      } else if (combined.includes('/investor/opportunities') || combined.includes('/capital-opportunities') || combined.includes('/opportunities')) {
+        setCurrentViewState('opportunity-detail');
+      } else if (path === '/capital-opportunities') {
         setCurrentViewState('capital-opportunities');
-      } else if (combined.includes('/investor/compare') || combined.includes('/compare')) {
-        setCurrentViewState('compare');
-      } else if (combined.includes('/investor/profile') || combined.includes('/profile')) {
-        setCurrentViewState('investor-profile');
-      } else if (combined.includes('/investor/watchlist') || combined.includes('/watchlist')) {
-        setCurrentViewState('watchlist');
-      } else if (combined.includes('/investor/scenario') || combined.includes('/scenario')) {
-        setCurrentViewState('scenario-analysis');
-      } else if (combined.includes('/investor/ai-analyst') || combined.includes('/ai-analyst')) {
-        setCurrentViewState('ai-analyst');
-      } else if (combined.includes('/investor/reports') || combined.includes('/reports')) {
-        setCurrentViewState('reports');
-      } else if (combined.includes('/investor/settings') || combined.includes('/settings')) {
-        setCurrentViewState('settings');
-      } else if (combined.includes('/investor/districts') || combined.includes('/districts')) {
-        setCurrentViewState('district-analytics');
-      } else if (combined.includes('/investor/demand') || combined.includes('/demand')) {
-        setCurrentViewState('demand-intel');
-      } else if (combined.includes('/investor/market-intelligence') || combined.includes('/market-intel')) {
-        setCurrentViewState('market-intel');
-      } else if (combined.includes('/investor/fpo/') || combined.includes('/fpo-research/') || combined.includes('/fpo/')) {
+      } else if (path.startsWith('/fpo-research/') || path.startsWith('/fpo-detail/')) {
         const parts = path.split('/').filter(Boolean);
-        const fpoIdx = parts.findIndex(p => p.toLowerCase() === 'fpo-research' || p.toLowerCase() === 'fpo');
-        if (fpoIdx !== -1 && parts[fpoIdx + 1] && parts[fpoIdx + 1] !== 'register' && parts[fpoIdx + 1] !== 'profile' && parts[fpoIdx + 1] !== 'crops' && parts[fpoIdx + 1] !== 'funding') {
-          const targetId = parts[fpoIdx + 1];
+        const targetId = parts[parts.length - 1];
+        if (targetId && targetId !== 'fpo-research' && targetId !== 'fpo-detail') {
           setSelectedFpoId(targetId);
-          setCurrentViewState('fpo-detail');
-          setNavigationOrigin('fpo-research');
         }
-      } else if (combined.includes('/investor/fpo-research') || combined.includes('/fpo-research') || combined.includes('/fpos')) {
+        setCurrentViewState('fpo-detail');
+      } else if (path === '/fpo-research') {
         setCurrentViewState('fpo-research');
-      } else if (combined.includes('/investor/tnfi50') || combined.includes('/tnfi-50')) {
+      } else if (path === '/fpo-directory') {
+        setCurrentViewState('fpo-directory');
+      } else if (path === '/tnfi-50' || path === '/market-index') {
         setCurrentViewState('tnfi-50');
-      } else if (combined.includes('/investor')) {
+      } else if (path === '/compare' || path === '/fpo-compare') {
+        setCurrentViewState('compare');
+      } else if (path === '/watchlist') {
+        setCurrentViewState('watchlist');
+      } else if (path === '/portfolio') {
+        setCurrentViewState('portfolio');
+      } else if (path === '/scenario-analysis' || path === '/simulator') {
+        setCurrentViewState('scenario-analysis');
+      } else if (path === '/investor-profile') {
+        setCurrentViewState('investor-profile');
+      } else if (path === '/demand-intel') {
+        setCurrentViewState('demand-intel');
+      } else if (path === '/district-analytics') {
+        setCurrentViewState('district-analytics');
+      } else if (path === '/market-intel') {
+        setCurrentViewState('market-intel');
+      } else if (path === '/funding-intel') {
+        setCurrentViewState('funding-intel');
+      } else if (path === '/ai-analyst') {
+        setCurrentViewState('ai-analyst');
+      } else if (path === '/reports') {
+        setCurrentViewState('reports');
+      } else if (path === '/settings') {
+        setCurrentViewState('settings');
+      } else if (path === '/fpo-stocks') {
+        setCurrentViewState('fpo-stocks');
+      } else if (path.startsWith('/investor')) {
         setCurrentViewState('investor-dashboard');
+      } else if (path === '/login') {
+        setCurrentViewState('login');
       }
     } catch (e) {
       // ignore
     }
-  }, []);
+  }, [location.pathname]);
 
   // Core Data
   const [indexData, setIndexData] = useState<TnfiIndexData>(TNFI_INDEX_DATA);
@@ -401,7 +518,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [comparedFpoIds, setComparedFpoIds] = useState<string[]>([]);
   const [capitalOpportunities, setCapitalOpportunities] = useState<CapitalOpportunity[]>(INITIAL_CAPITAL_OPPORTUNITIES);
-  const [selectedOpportunityId, setSelectedOpportunityId] = useState<string | null>(null);
   const [expressionsOfInterest, setExpressionsOfInterest] = useState<ExpressionOfInterest[]>(() => {
     try {
       const saved = localStorage.getItem('tnfi_expressions_of_interest');
@@ -696,12 +812,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (role === 'admin') {
       setCurrentViewState('admin-command');
+      navigate('/admin/command');
     } else if (role === 'fpo') {
       setCurrentViewState('fpo-dashboard');
+      navigate('/fpo/dashboard');
     } else if (role === 'farmer') {
       setCurrentViewState('farmer-dashboard');
+      navigate('/farmer/dashboard');
     } else {
       setCurrentViewState('investor-dashboard');
+      navigate('/investor/dashboard');
     }
   };
 
@@ -771,12 +891,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       if (activeUser.role === 'admin') {
         setCurrentViewState('admin-command');
+        navigate('/admin/command');
       } else if (activeUser.role === 'fpo') {
         setCurrentViewState('fpo-dashboard');
+        navigate('/fpo/dashboard');
       } else if (activeUser.role === 'farmer') {
         setCurrentViewState('farmer-dashboard');
+        navigate('/farmer/dashboard');
       } else {
         setCurrentViewState('investor-dashboard');
+        navigate('/investor/dashboard');
       }
 
       return { success: true, message: `Welcome back, ${activeUser.name}!`, user: activeUser };
@@ -834,12 +958,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (newUser.role === 'admin') {
       setCurrentViewState('admin-command');
+      navigate('/admin/command');
     } else if (newUser.role === 'fpo') {
       setCurrentViewState('fpo-dashboard');
+      navigate('/fpo/dashboard');
     } else if (newUser.role === 'farmer') {
       setCurrentViewState('farmer-dashboard');
+      navigate('/farmer/dashboard');
     } else {
       setCurrentViewState('investor-dashboard');
+      navigate('/investor/dashboard');
     }
 
     return { success: true, message: 'Signed in successfully.', user: newUser };
@@ -983,6 +1111,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       localStorage.removeItem('tnfi_active_user');
     } catch (e) {}
     setCurrentViewState('login');
+    navigate('/login');
   };
 
   const setCurrentView = (view: string, targetId?: string, origin?: string) => {
@@ -1015,20 +1144,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setSelectedDistrictId(cleanTarget);
         }
       }
+    }
 
-      try {
-        if (view === 'fpo-detail') {
-          window.history.pushState(null, '', `/fpo-research/${cleanTarget}`);
-        }
-      } catch (e) {}
-    } else {
-      try {
-        if (view === 'fpo-research' || view === 'fpo-directory') {
-          window.history.pushState(null, '', '/fpo-research');
-        } else if (view === 'tnfi-50') {
-          window.history.pushState(null, '', '/tnfi-50');
-        }
-      } catch (e) {}
+    const route = getRouteForView(view, targetId);
+    if (location.pathname !== route) {
+      navigate(route);
     }
   };
 
@@ -1301,6 +1421,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     fpoId: string,
     item: Omit<FpoCropItem, 'id' | 'harvestValueLakhs' | 'expectedProfitLakhs' | 'marginPercent' | 'risk'>
   ) => {
+    // Role Authorization Check: Only FPO or Admin
+    if (user?.role === 'investor' || user?.role === 'farmer') {
+      console.warn('Unauthorized: Investors and farmers cannot modify FPO crop data.');
+      return;
+    }
+    if (user?.role === 'fpo' && user.fpoId && fpoId !== user.fpoId && !fpoId.includes(user.fpoId)) {
+      console.warn('Unauthorized: FPO users can only modify their own organization crops.');
+      return;
+    }
+
     const totalHarvestTonnes = item.acres * item.expectedYieldTonnesPerAcre;
     const pricePerQtl = item.currentCropMarketPricePerQtl || (item as any).marketPricePerQtl || 2800;
     const harvestValueLakhs = (pricePerQtl * totalHarvestTonnes * 10) / 100000;
@@ -1322,13 +1452,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setFpos(prev =>
       prev.map(fpo => {
         if (fpo.id === fpoId) {
-          const newAcreage = (fpo.totalAcreage || fpo.fundedAcres) + item.acres;
-          return {
+          setFpoSnapshots(s => ({ ...s, [fpo.id]: { ...fpo } }));
+          const updatedPortfolio = [...(fpo.cropPortfolio || []), newCropItem];
+          return recomputeFpoAggregates({
             ...fpo,
-            fundedAcres: newAcreage,
-            totalAcreage: newAcreage,
-            cropPortfolio: [...fpo.cropPortfolio, newCropItem]
-          };
+            cropPortfolio: updatedPortfolio
+          });
         }
         return fpo;
       })
@@ -1340,6 +1469,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addFpoCrop = (fpoId: string, item: any) => {
+    // Role Authorization Check: Only FPO or Admin
+    if (user?.role === 'investor' || user?.role === 'farmer') {
+      console.warn('Unauthorized: Investors and farmers cannot modify FPO crop data.');
+      return;
+    }
+    if (user?.role === 'fpo' && user.fpoId && fpoId !== user.fpoId && !fpoId.includes(user.fpoId)) {
+      console.warn('Unauthorized: FPO users can only modify their own organization crops.');
+      return;
+    }
+
     const acreage = Number(item.acreage || item.acres || 500);
     const yieldPerAcre = Number(item.expectedYieldTonnesPerAcre || 2.5);
     const pricePerQtl = Number(item.marketPricePerQtl || item.currentCropMarketPricePerQtl || 3500);
@@ -1394,6 +1533,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateFpoCrop = (fpoId: string, cropItemId: string, updates: any) => {
+    // Role Authorization Check: Only FPO or Admin
+    if (user?.role === 'investor' || user?.role === 'farmer') {
+      console.warn('Unauthorized: Investors and farmers cannot modify FPO crop data.');
+      return;
+    }
+    if (user?.role === 'fpo' && user.fpoId && fpoId !== user.fpoId && !fpoId.includes(user.fpoId)) {
+      console.warn('Unauthorized: FPO users can only modify their own organization crops.');
+      return;
+    }
     setFpos(prev =>
       prev.map(fpo => {
         if (fpo.id === fpoId) {
@@ -1441,6 +1589,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteFpoCrop = (fpoId: string, cropItemId: string) => {
+    // Role Authorization Check: Only FPO or Admin
+    if (user?.role === 'investor' || user?.role === 'farmer') {
+      console.warn('Unauthorized: Investors and farmers cannot modify FPO crop data.');
+      return;
+    }
+    if (user?.role === 'fpo' && user.fpoId && fpoId !== user.fpoId && !fpoId.includes(user.fpoId)) {
+      console.warn('Unauthorized: FPO users can only modify their own organization crops.');
+      return;
+    }
     setFpos(prev =>
       prev.map(fpo => {
         if (fpo.id === fpoId) {
@@ -1552,6 +1709,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     status: VerificationStatus,
     reasonOrRemarks?: string
   ) => {
+    // Role Authorization Check: Only Admin can verify FPOs
+    if (user?.role !== 'admin') {
+      console.warn('Unauthorized: Only Admin supervisors can update FPO verification status.');
+      return;
+    }
+
     const todayStr = new Date().toISOString().split('T')[0];
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -1650,6 +1813,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     docStatus: 'VERIFIED' | 'SUBMITTED' | 'CHANGES_REQUESTED' | 'MISSING',
     notes?: string
   ) => {
+    // Role Authorization Check: Only Admin can certify documents
+    if (user?.role !== 'admin') {
+      console.warn('Unauthorized: Only Admin supervisors can verify FPO documents.');
+      return;
+    }
+
     setFpos(prev =>
       prev.map(fpo => {
         if (fpo.id !== fpoId && fpo.ticker !== fpoId) return fpo;
@@ -1673,6 +1842,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateFpoData = (fpoId: string, updates: Partial<FPO>) => {
+    // Role Authorization Check: Only FPO (own) or Admin
+    if (user?.role === 'investor' || user?.role === 'farmer') {
+      console.warn('Unauthorized: Investors and farmers cannot modify FPO operational records.');
+      return;
+    }
+    if (user?.role === 'fpo' && user.fpoId && fpoId !== user.fpoId && !fpoId.includes(user.fpoId)) {
+      console.warn('Unauthorized: FPO users can only modify their own organization profile.');
+      return;
+    }
+
     setFpos(prev =>
       prev.map(fpo => {
         if (fpo.id === fpoId || fpo.ticker === fpoId) {
@@ -1687,6 +1866,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const admitFpoToTnfi50 = (fpoId: string) => {
+    // Role Authorization Check: Only Admin can admit to benchmark
+    if (user?.role !== 'admin') {
+      console.warn('Unauthorized: Only Admin supervisors can manage TNFI 50 constituents.');
+      return;
+    }
+
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     setFpos(prev => {
       const target = prev.find(f => f.id === fpoId || f.ticker === fpoId);
@@ -1733,6 +1918,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const removeFpoFromTnfi50 = (fpoId: string, reason?: string) => {
+    // Role Authorization Check: Only Admin can remove from benchmark
+    if (user?.role !== 'admin') {
+      console.warn('Unauthorized: Only Admin supervisors can manage TNFI 50 constituents.');
+      return;
+    }
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     setFpos(prev => {
       const updated = prev.map(f => (f.id === fpoId || f.ticker === fpoId ? { ...f, isInTnfi50: false } : f));

@@ -62,15 +62,21 @@ export const WatchlistView: React.FC = () => {
 
       if (!match) return null;
 
-      const score = match.performanceScore || match.tnfiScore || 84.0;
-      const revenueCr = (match as any).revenueCr || (seed as any)?.revenueCr || 25.0;
-      const margin = match.profitMarginPercent || (seed as any)?.profitMarginPercent || 15.0;
+      const score = match.performanceScore ?? match.tnfiScore ?? 84.0;
+      const revenueCr = (match as any).revenueCr ?? (match.expectedRevenue ? Number((match.expectedRevenue / 10000000).toFixed(2)) : (seed as any)?.revenueCr ?? 25.0);
+      const margin = match.profitMarginPercent ?? (match as any).margin ?? (seed as any)?.profitMarginPercent ?? 15.0;
+      const profitCr = (match as any).profitCr ?? Number((revenueCr * (margin / 100)).toFixed(2));
+      const harvestTonnes = match.expectedHarvestTonnes ?? (seed as any)?.expectedHarvestTonnes ?? 4500;
+      const acres = match.fundedAcres ?? match.totalAcreage ?? (seed as any)?.fundedAcres ?? 2200;
 
       return {
         ...match,
         seed,
         revenueCr,
         margin,
+        profitCr,
+        expectedHarvestTonnes: harvestTonnes,
+        fundedAcres: acres,
         computedScore: score
       };
     }).filter(Boolean) as Array<any>;
@@ -82,15 +88,22 @@ export const WatchlistView: React.FC = () => {
       const match = fpos.find(f => f.id === id || f.ticker === id);
       const seed = RAW_50_FPOS_DATA.find(s => s.id === id || s.ticker === id);
       if (!match) return null;
-      const score = match.performanceScore || match.tnfiScore || 84.0;
-      const revenueCr = (match as any).revenueCr || seed?.revenueCr || 25.0;
-      const margin = match.profitMarginPercent || seed?.profitMarginPercent || 15.0;
+
+      const score = match.performanceScore ?? match.tnfiScore ?? 84.0;
+      const revenueCr = (match as any).revenueCr ?? (match.expectedRevenue ? Number((match.expectedRevenue / 10000000).toFixed(2)) : seed?.revenueCr ?? 25.0);
+      const margin = match.profitMarginPercent ?? (match as any).margin ?? seed?.profitMarginPercent ?? 15.0;
+      const profitCr = (match as any).profitCr ?? Number((revenueCr * (margin / 100)).toFixed(2));
+      const harvestTonnes = match.expectedHarvestTonnes ?? seed?.expectedHarvestTonnes ?? 4500;
+      const acres = match.fundedAcres ?? match.totalAcreage ?? seed?.fundedAcres ?? 2200;
 
       return {
         ...match,
         seed,
         revenueCr,
         margin,
+        profitCr,
+        expectedHarvestTonnes: harvestTonnes,
+        fundedAcres: acres,
         computedScore: score
       };
     }).filter(Boolean) as Array<any>;

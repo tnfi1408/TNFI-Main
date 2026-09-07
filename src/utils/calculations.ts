@@ -367,6 +367,7 @@ export function recomputeFpoAggregates(fpo: FPO): FPO {
   const profitRupees = totalProfitLakhs * 100000;
   const revenueCr = Number((revenueRupees / 10000000).toFixed(2));
   const harvestValueCr = Number((harvestValueRupees / 10000000).toFixed(2));
+  const profitCr = Number((profitRupees / 10000000).toFixed(2));
 
   // Determine factor scores
   const avgMarketPriceScore = crops.length > 0
@@ -417,6 +418,7 @@ export function recomputeFpoAggregates(fpo: FPO): FPO {
     expectedRevenue: revenueRupees,
     revenueLakhs: totalRevenueLakhs,
     revenueCr,
+    profitCr,
     costLakhs: totalCostLakhs,
     expectedProfit: profitRupees,
     expectedProfitLakhs: totalProfitLakhs,
@@ -428,6 +430,7 @@ export function recomputeFpoAggregates(fpo: FPO): FPO {
     buyerReadiness: buyerReadinessScore,
     fpoPerformanceIndex: Number((indexCalc.overallScore).toFixed(1)),
     performanceScore: Number((indexCalc.overallScore).toFixed(1)),
+    tnfiScore: Number((indexCalc.overallScore).toFixed(1)),
     factorBreakdown: indexCalc.factorBreakdown
   };
 }

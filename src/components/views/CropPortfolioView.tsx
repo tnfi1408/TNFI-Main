@@ -157,15 +157,15 @@ export const CropPortfolioView: React.FC = () => {
           </div>
           <div className="p-3.5 rounded-2xl bg-[#050905] border border-[#26351B] space-y-1">
             <div className="text-[10px] text-[#A7AE9B]">Harvest Benchmark Value</div>
-            <div className="text-base font-bold text-[#F2F1E8]">{formatInLakhsOrCrores(activeFpo.harvestValue)}</div>
+            <div className="text-base font-bold text-[#F2F1E8]">{formatCurrencyINR(activeFpo.harvestValue)}</div>
           </div>
           <div className="p-3.5 rounded-2xl bg-[#050905] border border-[#26351B] space-y-1">
             <div className="text-[10px] text-[#A7AE9B]">Expected Revenue</div>
-            <div className="text-base font-bold text-[#A8C94A]">{formatInLakhsOrCrores(activeFpo.expectedRevenue)}</div>
+            <div className="text-base font-bold text-[#A8C94A]">{formatCurrencyINR(activeFpo.expectedRevenue)}</div>
           </div>
           <div className="p-3.5 rounded-2xl bg-[#050905] border border-[#26351B] space-y-1">
             <div className="text-[10px] text-[#A7AE9B]">Expected Net Profit</div>
-            <div className="text-base font-bold text-[#36C77A]">{formatInLakhsOrCrores(activeFpo.expectedProfit)}</div>
+            <div className="text-base font-bold text-[#36C77A]">{formatCurrencyINR(activeFpo.expectedProfit)}</div>
           </div>
           <div className="p-3.5 rounded-2xl bg-[#050905] border border-[#26351B] space-y-1">
             <div className="text-[10px] text-[#A7AE9B]">Index Weight</div>
@@ -211,9 +211,9 @@ export const CropPortfolioView: React.FC = () => {
                   <td className="py-3 px-3 text-right text-[#A7AE9B]">{crop.expectedYieldTonnesPerAcre || 2.5} T/ac</td>
                   <td className="py-3 px-3 text-right font-semibold text-[#F2F1E8]">₹{(crop.marketPricePerQtl || 0).toLocaleString()}/qtl</td>
                   <td className="py-3 px-3 text-right text-[#36C77A] font-bold">{(crop.expectedHarvestTonnes || 0).toLocaleString()} T</td>
-                  <td className="py-3 px-3 text-right text-[#A7AE9B]">{formatInLakhsOrCrores(crop.harvestValue)}</td>
-                  <td className="py-3 px-3 text-right font-bold text-[#F2F1E8]">{formatInLakhsOrCrores(crop.expectedRevenue)}</td>
-                  <td className="py-3 px-3 text-right font-bold text-[#36C77A]">{formatInLakhsOrCrores(crop.expectedProfit)}</td>
+                  <td className="py-3 px-3 text-right text-[#A7AE9B]">{formatCurrencyINR(crop.harvestValue)}</td>
+                  <td className="py-3 px-3 text-right font-bold text-[#F2F1E8]">{formatCurrencyINR(crop.expectedRevenue)}</td>
+                  <td className="py-3 px-3 text-right font-bold text-[#36C77A]">{formatCurrencyINR(crop.expectedProfit)}</td>
                   <td className="py-3 px-3 text-center">
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#36C77A]/10 text-[#36C77A] border border-[#36C77A]/20">
                       {crop.buyerOfftakePercent || 90}%

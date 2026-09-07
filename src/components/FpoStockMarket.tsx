@@ -87,22 +87,22 @@ export const FpoStockMarket: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase bg-[#7A8F35]/15 text-[#9CAF45] border border-[#7A8F35]/30">
-              EQUITIES & PORTFOLIO TRADING
+              FPO PERFORMANCE VALUATION & CAPITAL LEDGER
             </span>
-            <span className="text-xs text-[#969D88] font-mono">TAMIL NADU VETTED LISTINGS</span>
+            <span className="text-xs text-[#969D88] font-mono">TAMIL NADU VETTED PRODUCER REGISTRY</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F3F4EA] tracking-tight">
-            FPO Stock Market & Equities
+            FPO Performance Valuation Ledger
           </h1>
           <p className="text-xs sm:text-sm text-[#969D88] mt-1 max-w-2xl">
-            Trade standardized equity units of high-performing Tamil Nadu Farmer Producer Organizations with verified audited financials, dividend yields, and institutional governance ratings.
+            Evaluate cooperative performance metrics of high-performing Tamil Nadu Farmer Producer Organizations with verified agricultural yields, audited financials, patron dividend yields, and institutional governance ratings.
           </p>
         </div>
 
         {/* Quick Portfolio Balance Card */}
         <div className="flex items-center gap-4 p-3.5 rounded-xl bg-[#080A07] border border-[#2A3320]">
           <div>
-            <span className="text-[10px] font-mono text-[#969D88] block uppercase">AVAILABLE CASH WALLET</span>
+            <span className="text-[10px] font-mono text-[#969D88] block uppercase">AVAILABLE CAPITAL BALANCE</span>
             <span className="text-lg font-extrabold text-[#8FAF3D] font-mono-nums">
               ₹{(portfolioMetrics?.cashBalance || 0).toLocaleString('en-IN')}
             </span>
@@ -111,7 +111,7 @@ export const FpoStockMarket: React.FC = () => {
             onClick={() => setCurrentView('portfolio')}
             className="px-3 py-2 rounded-lg bg-[#7A8F35]/20 hover:bg-[#7A8F35]/35 text-[#9CAF45] border border-[#7A8F35]/35 text-xs font-bold transition-colors cursor-pointer"
           >
-            My Portfolio →
+            My Allocation →
           </button>
         </div>
       </div>
@@ -311,13 +311,13 @@ export const FpoStockMarket: React.FC = () => {
                     onClick={() => handleOpenTrade(stock, 'BUY')}
                     className="flex-1 py-2 rounded-lg bg-[#7A8F35] hover:bg-[#9CAF45] text-white text-xs font-bold transition-colors shadow-md shadow-[#7A8F35]/30 cursor-pointer"
                   >
-                    Buy Unit
+                    Allocate
                   </button>
                   <button
                     onClick={() => handleOpenTrade(stock, 'SELL')}
                     className="flex-1 py-2 rounded-lg bg-[#D65C5C]/20 hover:bg-[#D65C5C]/35 text-[#D65C5C] border border-[#D65C5C]/30 text-xs font-bold transition-colors cursor-pointer"
                   >
-                    Sell Unit
+                    Withdraw
                   </button>
                 </div>
               </div>
@@ -331,11 +331,11 @@ export const FpoStockMarket: React.FC = () => {
             <table className="w-full text-left text-xs">
               <thead className="bg-[#080A07] border-b border-[#2A3320] text-[#969D88] font-mono uppercase text-[10px]">
                 <tr>
-                  <th className="py-3.5 px-4">TICKER & FPO</th>
+                  <th className="py-3.5 px-4">CODE & FPO</th>
                   <th className="py-3.5 px-3">SECTOR</th>
-                  <th className="py-3.5 px-3">PRICE (₹)</th>
-                  <th className="py-3.5 px-3">24H CHANGE</th>
-                  <th className="py-3.5 px-3">MKT CAP</th>
+                  <th className="py-3.5 px-3">UNIT VAL (₹)</th>
+                  <th className="py-3.5 px-3">VAL CHG</th>
+                  <th className="py-3.5 px-3">VALUATION</th>
                   <th className="py-3.5 px-3">P/E</th>
                   <th className="py-3.5 px-3">DIV YIELD</th>
                   <th className="py-3.5 px-3">TNFI SCORE</th>
@@ -388,13 +388,13 @@ export const FpoStockMarket: React.FC = () => {
                             onClick={() => handleOpenTrade(stock, 'BUY')}
                             className="px-2.5 py-1 rounded bg-[#7A8F35] hover:bg-[#9CAF45] text-white font-bold text-[11px] transition-colors cursor-pointer"
                           >
-                            Buy
+                            Allocate
                           </button>
                           <button
                             onClick={() => handleOpenTrade(stock, 'SELL')}
                             className="px-2.5 py-1 rounded bg-[#D65C5C]/20 hover:bg-[#D65C5C]/35 text-[#D65C5C] border border-[#D65C5C]/30 font-bold text-[11px] transition-colors cursor-pointer"
                           >
-                            Sell
+                            Withdraw
                           </button>
                         </div>
                       </td>
@@ -442,7 +442,7 @@ export const FpoStockMarket: React.FC = () => {
                     : 'text-[#969D88] hover:text-[#F3F4EA]'
                 }`}
               >
-                BUY / INVEST
+                CAPITAL ALLOCATION
               </button>
               <button
                 type="button"
@@ -453,7 +453,7 @@ export const FpoStockMarket: React.FC = () => {
                     : 'text-[#969D88] hover:text-[#F3F4EA]'
                 }`}
               >
-                SELL / EXIT
+                FACILITY WITHDRAWAL
               </button>
             </div>
 
@@ -469,7 +469,7 @@ export const FpoStockMarket: React.FC = () => {
                       : 'bg-[#080A07] text-[#969D88] border-[#2A3320]'
                   }`}
                 >
-                  Market Order
+                  Spot Allocation
                 </button>
                 <button
                   type="button"
@@ -480,13 +480,13 @@ export const FpoStockMarket: React.FC = () => {
                       : 'bg-[#080A07] text-[#969D88] border-[#2A3320]'
                   }`}
                 >
-                  Limit Order
+                  Scheduled tranche
                 </button>
               </div>
 
               {/* Unit Price display */}
               <div className="p-3 rounded-xl bg-[#080A07] border border-[#2A3320] flex items-center justify-between text-xs font-mono">
-                <span className="text-[#969D88]">Execution Unit Price:</span>
+                <span className="text-[#969D88]">Benchmark Unit Valuation:</span>
                 <span className="text-base font-extrabold text-[#F3F4EA]">
                   ₹{(tradeModalStock.currentPrice || tradeModalStock.price || 0).toFixed(2)}
                 </span>
@@ -495,7 +495,7 @@ export const FpoStockMarket: React.FC = () => {
               {/* Quantity input */}
               <div>
                 <label className="block text-[11px] font-mono text-[#969D88] mb-1">
-                  Quantity (Units):
+                  Allocation Units:
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -524,17 +524,17 @@ export const FpoStockMarket: React.FC = () => {
               {/* Trade Summary Calc */}
               <div className="p-3.5 rounded-xl bg-[#161B11] border border-[#2A3320] space-y-1.5 text-xs font-mono">
                 <div className="flex justify-between text-[#969D88]">
-                  <span>Total Order Value:</span>
+                  <span>Total Facility Value:</span>
                   <span className="font-bold text-[#F3F4EA] font-mono-nums">
                     ₹{(quantity * tradeModalStock.currentPrice).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
                 <div className="flex justify-between text-[#969D88] text-[10px]">
-                  <span>Exchange & Clearing Fee:</span>
-                  <span>₹0.00 (Zero Fee for TN Cooperatives)</span>
+                  <span>Governance & Custody Fee:</span>
+                  <span>₹0.00 (Subsidized TNFI Agri-Support)</span>
                 </div>
                 <div className="flex justify-between text-[#8FAF3D] font-bold pt-1 border-t border-[#2A3320]">
-                  <span>Estimated Annual Dividend:</span>
+                  <span>Estimated Annual Patron Dividend:</span>
                   <span>
                     ₹{((quantity * tradeModalStock.currentPrice * tradeModalStock.dividendYieldPercent) / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}/yr
                   </span>
@@ -561,12 +561,19 @@ export const FpoStockMarket: React.FC = () => {
                     : 'bg-[#D65C5C] hover:opacity-90 text-white shadow-[#D65C5C]/30'
                 }`}
               >
-                Execute {tradeType} Order ({quantity} Units)
+                Confirm {tradeType === 'BUY' ? 'Capital Allocation' : 'Facility Withdrawal'} ({quantity} Units)
               </button>
             </form>
           </div>
         </div>
       )}
+
+      {/* Regulatory & Institutional Notice */}
+      <div className="p-4 rounded-xl bg-[#0A0D08] border border-[#2A3320] text-center">
+        <p className="text-[11px] text-[#78826B] font-mono leading-relaxed max-w-4xl mx-auto">
+          <strong className="text-[#9CAF45]">REGULATORY & COOPERATIVE NOTICE:</strong> TNFI is an agricultural finance intelligence and cooperative performance evaluation portal. It is not a stock exchange or broker-dealer. Unit valuations reflect audited cooperative balance sheets, crop cycle revenues, and performance index algorithms. Capital facilities are non-speculative and directed to farmer collective operations.
+        </p>
+      </div>
     </div>
   );
 };
