@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   User,
@@ -490,12 +490,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [portfolioHoldings, setPortfolioHoldings] = useState<PortfolioHolding[]>(INITIAL_PORTFOLIO_HOLDINGS);
   const [portfolioTransactions, setPortfolioTransactions] = useState<PortfolioTransaction[]>(INITIAL_TRANSACTIONS);
   const [cashBalance, setCashBalance] = useState<number>(450000);
-  const [capitalCampaigns, setCapitalCampaigns] = useState<CapitalRaiseCampaign[]>(CAPITAL_RAISE_CAMPAIGNS);
+  const [capitalCampaigns, setCapitalCampaigns] = useState<CapitalRaiseCampaign[]>(() => {
+    try {
+      const saved = localStorage.getItem('tnfi_capital_campaigns');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return CAPITAL_RAISE_CAMPAIGNS;
+  });
   const [aiEvaluations] = useState<FpoAiEvaluation[]>(AI_EVALUATIONS);
-  const [fpos, setFpos] = useState<FPO[]>(INITIAL_FPOS);
-  const [farmers, setFarmers] = useState<Farmer[]>(INITIAL_FARMERS);
+  const [fpos, setFpos] = useState<FPO[]>(() => {
+    try {
+      const saved = localStorage.getItem('tnfi_fpos');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return INITIAL_FPOS;
+  });
+  const [farmers, setFarmers] = useState<Farmer[]>(() => {
+    try {
+      const saved = localStorage.getItem('tnfi_farmers');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return INITIAL_FARMERS;
+  });
   const [districts] = useState<DistrictData[]>(INITIAL_DISTRICTS);
-  const [buyers, setBuyers] = useState<BuyerOfftake[]>(INITIAL_BUYERS);
+  const [buyers, setBuyers] = useState<BuyerOfftake[]>(() => {
+    try {
+      const saved = localStorage.getItem('tnfi_buyers');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return INITIAL_BUYERS;
+  });
   const [insights] = useState<AiInsight[]>(INITIAL_INSIGHTS);
   const [fpoSnapshots, setFpoSnapshots] = useState<Record<string, Partial<FPO>>>(() => {
     const snaps: Record<string, Partial<FPO>> = {};
@@ -517,7 +541,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [comparedFpoIds, setComparedFpoIds] = useState<string[]>([]);
-  const [capitalOpportunities, setCapitalOpportunities] = useState<CapitalOpportunity[]>(INITIAL_CAPITAL_OPPORTUNITIES);
+  const [capitalOpportunities, setCapitalOpportunities] = useState<CapitalOpportunity[]>(() => {
+    try {
+      const saved = localStorage.getItem('tnfi_capital_opportunities');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return INITIAL_CAPITAL_OPPORTUNITIES;
+  });
   const [expressionsOfInterest, setExpressionsOfInterest] = useState<ExpressionOfInterest[]>(() => {
     try {
       const saved = localStorage.getItem('tnfi_expressions_of_interest');
@@ -525,6 +555,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e) {}
     return INITIAL_EXPRESSIONS_OF_INTEREST;
   });
+
+  // Synchronize state changes to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('tnfi_fpos', JSON.stringify(fpos));
+    } catch (e) {}
+  }, [fpos]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tnfi_farmers', JSON.stringify(farmers));
+    } catch (e) {}
+  }, [farmers]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tnfi_buyers', JSON.stringify(buyers));
+    } catch (e) {}
+  }, [buyers]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tnfi_capital_campaigns', JSON.stringify(capitalCampaigns));
+    } catch (e) {}
+  }, [capitalCampaigns]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('tnfi_capital_opportunities', JSON.stringify(capitalOpportunities));
+    } catch (e) {}
+  }, [capitalOpportunities]);
 
   const addToWatchlist = (fpoId: string) => {
     if (!watchlist.includes(fpoId)) {
@@ -906,71 +967,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return { success: true, message: `Welcome back, ${activeUser.name}!`, user: activeUser };
     }
 
-    // If not found in default list, allow dynamic sign in for demo convenience
-    const guessedRole: UserRole = cleanEmail.includes('farmer')
-      ? 'farmer'
-      : cleanEmail.includes('fpo') || cleanEmail.includes('agro') 
-      ? 'fpo' 
-      : cleanEmail.includes('admin') || cleanEmail.includes('gov') 
-      ? 'admin' 
-      : 'investor';
-
-    const generatedName = cleanEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-
-    const newUser: User = {
-      id: `usr-${Date.now()}`,
-      name: generatedName || (guessedRole === 'farmer' ? 'Tamil Nadu Farmer' : guessedRole === 'admin' ? 'TNFI Admin Officer' : guessedRole === 'fpo' ? 'Producer Collective' : 'Verified Investor'),
-      email: cleanEmail,
-      role: guessedRole,
-      avatar: (generatedName || 'TN').slice(0, 2).toUpperCase(),
-      orgName: guessedRole === 'farmer' ? 'Smallholder Farmer Collective' : 'Verified Market Participant',
-      portfolioValue: guessedRole === 'investor' ? 2500000 : undefined,
-      joinedDate: new Date().toISOString().split('T')[0],
-      is2FAEnabled: false
+    // Explicit rejection for unregistered email - no guessing roles from email strings
+    return {
+      success: false,
+      message: 'Account not found. Please select an institutional profile or register your account with your designated role.'
     };
-
-    setRegisteredUsers(prev => {
-      const updated = [...prev, { ...newUser, password }];
-      try {
-        localStorage.setItem('tnfi_registered_users', JSON.stringify(updated));
-      } catch (e) {}
-      return updated;
-    });
-
-    setUser(newUser);
-    if (rememberMe) {
-      try {
-        localStorage.setItem('tnfi_active_user', JSON.stringify(newUser));
-      } catch (e) {}
-    }
-
-    setNotifications(prev => [
-      {
-        id: `notif-login-${Date.now()}`,
-        title: `Welcome to TNFI Portal`,
-        message: `Account session active for ${newUser.email}.`,
-        time: 'Just now',
-        read: false,
-        type: 'trade'
-      },
-      ...prev
-    ]);
-
-    if (newUser.role === 'admin') {
-      setCurrentViewState('admin-command');
-      navigate('/admin/command');
-    } else if (newUser.role === 'fpo') {
-      setCurrentViewState('fpo-dashboard');
-      navigate('/fpo/dashboard');
-    } else if (newUser.role === 'farmer') {
-      setCurrentViewState('farmer-dashboard');
-      navigate('/farmer/dashboard');
-    } else {
-      setCurrentViewState('investor-dashboard');
-      navigate('/investor/dashboard');
-    }
-
-    return { success: true, message: 'Signed in successfully.', user: newUser };
   };
 
   const registerUser = (data: {

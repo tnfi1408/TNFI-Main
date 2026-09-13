@@ -96,9 +96,7 @@ export const CropPortfolioView: React.FC = () => {
 
   const handleDeleteCrop = (cropId: string) => {
     if (!activeFpo) return;
-    if (confirm('Are you sure you want to remove this crop from the active portfolio?')) {
-      deleteFpoCrop(activeFpo.id, cropId);
-    }
+    deleteFpoCrop(activeFpo.id, cropId);
   };
 
   if (!activeFpo) {

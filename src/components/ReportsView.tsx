@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FileText,
   Download,
@@ -11,6 +11,15 @@ import { useApp } from '../context/AppContext';
 
 export const ReportsView: React.FC = () => {
   const { fpoStocks, indexData } = useApp();
+  const [downloadToast, setDownloadToast] = useState<string | null>(null);
+
+  const handleDownload = (title: string) => {
+    setDownloadToast(`Preparing certified dossier for: ${title}`);
+    setTimeout(() => {
+      setDownloadToast(`Downloaded verified statutory copy of: ${title}`);
+      setTimeout(() => setDownloadToast(null), 3500);
+    }, 800);
+  };
 
   const reports = [
     {
@@ -51,7 +60,17 @@ export const ReportsView: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 max-w-[1600px] mx-auto">
+    <div className="space-y-6 max-w-[1600px] mx-auto relative">
+      {/* Toast Notification */}
+      {downloadToast && (
+        <div className="fixed top-20 right-6 z-50 p-4 rounded-2xl bg-[#10140D] border border-[#7A8F35]/60 text-[#A8C94A] text-xs shadow-2xl flex items-center gap-3 animate-fade-in font-mono">
+          <CheckCircle2 className="w-5 h-5 text-[#36C77A] shrink-0" />
+          <div>
+            <div className="font-bold text-white">Repository Vault Retrieval</div>
+            <div className="text-neutral-300 text-[11px] mt-0.5">{downloadToast}</div>
+          </div>
+        </div>
+      )}
       <div className="p-6 rounded-2xl bg-gradient-to-r from-[#0B120B] via-[#101A0D] to-[#0B120B] border border-[#26351B] shadow-2xl">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -99,7 +118,7 @@ export const ReportsView: React.FC = () => {
               </div>
 
               <button
-                onClick={() => alert(`Downloading verified copy of: ${report.title}`)}
+                onClick={() => handleDownload(report.title)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#050905] hover:bg-[#101A0D] text-[#A8C94A] border border-[#26351B] text-xs font-mono font-bold transition-colors self-start sm:self-center cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />

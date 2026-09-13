@@ -227,7 +227,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       {/* Simulated Notice & User Footer */}
       <div className="p-3 border-t border-[#2A3320] bg-[#080A07] space-y-2">
         <div className="px-2 py-1 rounded bg-[#10140D] border border-[#2A3320] text-[9px] font-mono text-[#969D88] text-center">
-          TAMIL NADU AGRI PROTOTYPE • 38 DISTRICTS
+          TAMIL NADU AGRI INTELLIGENCE • 38 DISTRICTS
         </div>
 
         {user && (

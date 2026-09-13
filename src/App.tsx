@@ -48,6 +48,36 @@ import { Tnfi50ManagementView } from './components/views/Tnfi50ManagementView';
 import { RebalancingView } from './components/views/RebalancingView';
 import { SettingsView } from './components/views/SettingsView';
 import { FarmerDashboardView } from './components/views/FarmerDashboardView';
+import { ShieldAlert, ArrowLeft } from 'lucide-react';
+
+const RoleAccessBoundary: React.FC<{ requiredRole: string; roleLabel: string }> = ({ roleLabel }) => {
+  const { user, setCurrentView } = useApp();
+  const defaultDashboard = user?.role === 'admin' ? 'admin-dashboard' : user?.role === 'fpo' ? 'fpo-dashboard' : user?.role === 'farmer' ? 'farmer-dashboard' : 'investor-dashboard';
+
+  return (
+    <div className="max-w-2xl mx-auto py-16 px-4 text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-16 h-16 rounded-3xl bg-[#D65C5C]/15 border border-[#D65C5C]/30 text-[#D65C5C] flex items-center justify-center mx-auto shadow-xl">
+        <ShieldAlert className="w-8 h-8" />
+      </div>
+      <div className="space-y-2">
+        <h2 className="text-xl font-bold text-[#F3F4EA]">Restricted Operational Terminal</h2>
+        <p className="text-xs text-[#969D88] leading-relaxed max-w-lg mx-auto">
+          This terminal requires <span className="text-[#F3F4EA] font-semibold">{roleLabel}</span> credentials.
+          Your active session is authenticated under the <span className="text-[#9CAF45] font-mono uppercase">{user?.role || 'Guest'}</span> role.
+        </p>
+      </div>
+      <div>
+        <button
+          onClick={() => setCurrentView(defaultDashboard as any)}
+          className="px-5 py-2.5 rounded-xl bg-[#7A8F35] hover:bg-[#8FAF3D] text-white text-xs font-bold transition-all shadow-lg shadow-[#7A8F35]/25 cursor-pointer inline-flex items-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Return to Authorized Dashboard</span>
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const MainLayout: React.FC = () => {
   const { currentView, selectedFpoId, selectedOpportunityId, user } = useApp();
@@ -71,7 +101,7 @@ const MainLayout: React.FC = () => {
       case 'fpo-directory':
         return user?.role === 'admin' ? <AdminFpoDirectoryView /> : <FpoResearchView />;
       case 'admin-fpo-directory':
-        return <AdminFpoDirectoryView />;
+        return user?.role === 'admin' ? <AdminFpoDirectoryView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
       case 'fpo-detail':
         return <FpoDetailView key={selectedFpoId || 'detail'} />;
       case 'market-intel':
@@ -108,47 +138,44 @@ const MainLayout: React.FC = () => {
       // 2. FPO VIEWS & OPERATING WORKFLOW
       case 'fpo-dashboard':
       case 'fpo':
-        return <FpoOperatingDashboardView />;
+        return (user?.role === 'fpo' || user?.role === 'admin') ? <FpoOperatingDashboardView /> : <RoleAccessBoundary requiredRole="fpo" roleLabel="FPO Management" />;
       case 'fpo-profile':
-        return <FpoProfileView />;
+        return (user?.role === 'fpo' || user?.role === 'admin') ? <FpoProfileView /> : <RoleAccessBoundary requiredRole="fpo" roleLabel="FPO Management" />;
       case 'fpo-register':
         return <FpoRegisterWizardView />;
       case 'crop-portfolio':
       case 'fpo-crops':
-        return <CropPortfolioView />;
+        return (user?.role === 'fpo' || user?.role === 'admin') ? <CropPortfolioView /> : <RoleAccessBoundary requiredRole="fpo" roleLabel="FPO Management" />;
       case 'fpo-farmers':
       case 'farmers':
-        return <FpoFarmersView />;
+        return (user?.role === 'fpo' || user?.role === 'admin') ? <FpoFarmersView /> : <RoleAccessBoundary requiredRole="fpo" roleLabel="FPO Management" />;
       case 'fpo-buyers':
       case 'buyers':
-        return <FpoBuyersView />;
+        return (user?.role === 'fpo' || user?.role === 'admin') ? <FpoBuyersView /> : <RoleAccessBoundary requiredRole="fpo" roleLabel="FPO Management" />;
       case 'fpo-funding':
-        return <FpoFundingView />;
+        return (user?.role === 'fpo' || user?.role === 'admin') ? <FpoFundingView /> : <RoleAccessBoundary requiredRole="fpo" roleLabel="FPO Management" />;
       case 'fpo-capital-raise':
       case 'capital-raise':
-        return <FpoCapitalRequirementView />;
+        return (user?.role === 'fpo' || user?.role === 'admin') ? <FpoCapitalRequirementView /> : <RoleAccessBoundary requiredRole="fpo" roleLabel="FPO Management" />;
       case 'funding-intel':
         return <FundingIntelligenceView />;
-      case 'market-intel':
-        return <MarketIntelligenceView />;
 
       // 3. ADMIN OPERATIONAL VIEWS
       case 'admin-command':
       case 'admin-dashboard':
-        return <AdminCommandCenterView />;
+        return user?.role === 'admin' ? <AdminCommandCenterView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
       case 'fpo-verification':
-        return <FpoVerificationView />;
+        return user?.role === 'admin' ? <FpoVerificationView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
       case 'fpo-verification-detail':
-        return <FpoVerificationDetailView key={selectedFpoId || 'vdetail'} />;
+        return user?.role === 'admin' ? <FpoVerificationDetailView key={selectedFpoId || 'vdetail'} /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
       case 'tnfi-50-mgmt':
-        return <Tnfi50ManagementView />;
       case 'rebalance':
-        return <Tnfi50ManagementView />;
+        return user?.role === 'admin' ? <Tnfi50ManagementView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
 
       // Additional Supporting Views
       case 'fpo-stocks':
         return <FpoStockMarket />;
-      case 'simulator':
+      case 'market-simulator':
         return <MarketSimulator />;
 
       default:

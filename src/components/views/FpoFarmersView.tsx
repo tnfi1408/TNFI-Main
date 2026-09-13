@@ -127,11 +127,9 @@ export const FpoFarmersView: React.FC = () => {
   };
 
   const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to remove ${name} from the active member ledger?`)) {
-      deleteFarmer(id);
-      setNotification({ type: 'success', message: `Farmer ${name} removed from ledger.` });
-      setTimeout(() => setNotification(null), 3000);
-    }
+    deleteFarmer(id);
+    setNotification({ type: 'success', message: `Farmer ${name} removed from ledger.` });
+    setTimeout(() => setNotification(null), 3000);
   };
 
   return (

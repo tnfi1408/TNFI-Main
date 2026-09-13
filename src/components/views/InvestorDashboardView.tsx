@@ -36,6 +36,7 @@ export const InvestorDashboardView: React.FC = () => {
     isWatchlisted,
     comparedFpoIds,
     toggleCompareFpo,
+    expressionsOfInterest,
     setCurrentView
   } = useApp();
 
@@ -597,6 +598,37 @@ export const InvestorDashboardView: React.FC = () => {
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Active Expressions of Interest Tracker */}
+        {expressionsOfInterest && expressionsOfInterest.length > 0 && (
+          <div className="p-4 rounded-2xl bg-[#080A07] border border-[#7A8F35]/40 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#F3F4EA] flex items-center gap-2">
+                <Coins className="w-4 h-4 text-[#9CAF45]" />
+                <span>My Active Expressions of Interest ({expressionsOfInterest.length})</span>
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                PENDING FPO REVIEW
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {expressionsOfInterest.slice(0, 3).map(eoi => (
+                <div
+                  key={eoi.id}
+                  onClick={() => setCurrentView('opportunity-detail', eoi.opportunityId)}
+                  className="p-3 rounded-xl bg-[#10140D] border border-[#2A3320] hover:border-[#7A8F35] transition-all cursor-pointer space-y-1"
+                >
+                  <div className="flex justify-between items-center text-[10px]">
+                    <span className="text-[#9CAF45] font-bold">{eoi.crop}</span>
+                    <span className="text-neutral-400">₹{eoi.interestedAmountLakhs}L allocation</span>
+                  </div>
+                  <div className="text-xs font-bold text-white truncate">{eoi.fpoName}</div>
+                  <div className="text-[10px] text-[#969D88]">Structure: {eoi.proposedStructure || 'STANDARD'}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {capitalOpportunities.slice(0, 3).map(opp => (

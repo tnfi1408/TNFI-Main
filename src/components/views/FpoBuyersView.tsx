@@ -104,11 +104,9 @@ export const FpoBuyersView: React.FC = () => {
   };
 
   const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to remove the contract record for ${name}?`)) {
-      deleteBuyer(id);
-      setNotification({ type: 'success', message: `Contract with ${name} removed.` });
-      setTimeout(() => setNotification(null), 3000);
-    }
+    deleteBuyer(id);
+    setNotification({ type: 'success', message: `Contract with ${name} removed.` });
+    setTimeout(() => setNotification(null), 3000);
   };
 
   return (
@@ -217,7 +215,13 @@ export const FpoBuyersView: React.FC = () => {
                     </span>
                     <h3 className="text-base font-bold text-[#F3F4EA] mt-1.5">{buyer.buyerName}</h3>
                   </div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-[#36C77A]/15 text-[#36C77A] border border-[#36C77A]/30">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono border ${
+                    buyer.contractStatus === 'ACTIVE'
+                      ? 'bg-[#36C77A]/15 text-[#36C77A] border-[#36C77A]/30'
+                      : buyer.contractStatus === 'PROPOSED'
+                      ? 'bg-[#D6B45C]/15 text-[#D6B45C] border-[#D6B45C]/30'
+                      : 'bg-[#969D88]/15 text-[#969D88] border-[#969D88]/30'
+                  }`}>
                     {buyer.contractStatus}
                   </span>
                 </div>
@@ -370,13 +374,16 @@ export const FpoBuyersView: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-mono text-[#969D88] uppercase">Delivery Terms</label>
-                  <input
-                    type="text"
-                    value={formData.deliveryTerms}
-                    onChange={e => setFormData({ ...formData, deliveryTerms: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl bg-[#080A07] border border-[#2A3320] text-[#F3F4EA] focus:border-[#7A8F35] outline-hidden"
-                  />
+                  <label className="text-[10px] font-mono text-[#969D88] uppercase">Contract Status</label>
+                  <select
+                    value={formData.contractStatus}
+                    onChange={e => setFormData({ ...formData, contractStatus: e.target.value as any })}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#080A07] border border-[#2A3320] text-[#F3F4EA] focus:border-[#7A8F35] outline-hidden font-mono"
+                  >
+                    <option value="PROPOSED">PROPOSED (Under Review / Negotiation)</option>
+                    <option value="ACTIVE">ACTIVE (Signed & Operational)</option>
+                    <option value="COMPLETED">COMPLETED (Fulfilled)</option>
+                  </select>
                 </div>
               </div>
 

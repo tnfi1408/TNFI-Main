@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { RAW_50_FPOS_DATA, calculateTnfiScore } from '../data/tnfi50Data';
+import { calculateDataCompleteness, calculateDataConfidence } from '../utils/calculations';
 
 export const FpoDetailView: React.FC = () => {
   const {
@@ -57,13 +58,15 @@ export const FpoDetailView: React.FC = () => {
   if (!activeFpo) {
     return (
       <div className="p-8 sm:p-12 text-center rounded-3xl bg-[#10140D] border border-[#2A3320] space-y-4 max-w-2xl mx-auto my-12 font-mono">
-        <div className="w-16 h-16 rounded-2xl bg-[#D65C5C]/15 border border-[#D65C5C]/30 flex items-center justify-center mx-auto text-[#D65C5C]">
+        <div className="w-16 h-16 rounded-2xl bg-[#7A8F35]/15 border border-[#7A8F35]/30 flex items-center justify-center mx-auto text-[#9CAF45]">
           <AlertTriangle className="w-8 h-8" />
         </div>
         <div className="space-y-1">
-          <h2 className="text-xl font-black text-[#F3F4EA]">FPO DOSSIER NOT FOUND</h2>
+          <h2 className="text-xl font-black text-[#F3F4EA]">Select an FPO to view agricultural performance details.</h2>
           <p className="text-xs text-[#969D88] font-sans max-w-md mx-auto">
-            No FPO record matching identifier <code className="text-[#D6A83A] bg-[#080A07] px-1.5 py-0.5 rounded font-mono font-bold">{selectedFpoId || 'Unknown'}</code> was found in the Tamil Nadu TNFI registry.
+            {selectedFpoId
+              ? `No FPO record matching identifier ${selectedFpoId} was found in the Tamil Nadu TNFI registry.`
+              : 'Choose any constituent from the FPO Research directory or TNFI 50 performance leaderboard.'}
           </p>
         </div>
         <div className="pt-2">
@@ -72,7 +75,7 @@ export const FpoDetailView: React.FC = () => {
             className="px-5 py-2.5 rounded-xl bg-[#7A8F35] hover:bg-[#8FAF3D] text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer inline-flex items-center gap-2 shadow-lg"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to All FPOs</span>
+            <span>Browse FPO Directory</span>
           </button>
         </div>
       </div>
@@ -94,6 +97,11 @@ export const FpoDetailView: React.FC = () => {
   const waterRisk = activeFpo.waterRiskScore ?? 24;
   const climateScore = activeFpo.climateScore ?? activeFpo.climateSuitabilityScore ?? 88;
   const offtakePct = activeFpo.buyerReadiness ?? activeFpo.buyerOfftakePercent ?? 92;
+
+  // Data Trust Layer
+  const dataCompleteness = calculateDataCompleteness(activeFpo);
+  const dataConfidence = calculateDataConfidence(activeFpo);
+  const lastUpdated = activeFpo.lastActionDate || activeFpo.submittedDate || '2026-09-12';
 
   const handleExpressInterest = (e: React.FormEvent) => {
     e.preventDefault();
@@ -249,6 +257,55 @@ export const FpoDetailView: React.FC = () => {
               {tab.label}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 2.5 DATA TRUST LAYER                                                      */}
+      {/* ========================================================================= */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#10140D] border border-[#2A3320] flex flex-wrap items-center justify-between gap-4 shadow-md">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#36C77A]" />
+            <div>
+              <span className="text-[10px] font-mono text-[#969D88] uppercase block">TNFI Accreditation</span>
+              <span className="font-bold text-[#F3F4EA]">{activeFpo.verificationStatus || 'VERIFIED'}</span>
+            </div>
+          </div>
+
+          <div className="h-6 w-px bg-[#2A3320] hidden sm:block" />
+
+          <div>
+            <span className="text-[10px] font-mono text-[#969D88] uppercase block">Data Completeness</span>
+            <div className="flex items-center gap-1.5 font-mono">
+              <span className="font-bold text-[#9CAF45]">{dataCompleteness.totalScore}%</span>
+              <span className="text-[10px] text-[#969D88]">({dataCompleteness.completedAreasCount}/{dataCompleteness.totalAreasCount} verified)</span>
+            </div>
+          </div>
+
+          <div className="h-6 w-px bg-[#2A3320] hidden sm:block" />
+
+          <div>
+            <span className="text-[10px] font-mono text-[#969D88] uppercase block">Data Confidence</span>
+            <div className="flex items-center gap-1.5 font-mono">
+              <span className={`font-bold ${dataConfidence.confidence === 'HIGH' ? 'text-[#36C77A]' : dataConfidence.confidence === 'MEDIUM' ? 'text-[#D6B45C]' : 'text-amber-400'}`}>
+                {dataConfidence.confidence}
+              </span>
+              <span className="text-[10px] text-[#969D88]">({dataConfidence.score}/100)</span>
+            </div>
+          </div>
+
+          <div className="h-6 w-px bg-[#2A3320] hidden sm:block" />
+
+          <div>
+            <span className="text-[10px] font-mono text-[#969D88] uppercase block">Telemetry Audit</span>
+            <span className="font-mono text-[#F3F4EA]">Synced: {lastUpdated}</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-[11px] text-[#969D88] font-mono">
+          <Info className="w-3.5 h-3.5 text-[#7A8F35]" />
+          <span>Continuous multi-source agronomic validation</span>
         </div>
       </div>
 

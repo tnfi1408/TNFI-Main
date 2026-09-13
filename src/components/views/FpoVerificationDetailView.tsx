@@ -46,8 +46,12 @@ export const FpoVerificationDetailView: React.FC = () => {
     setCurrentView,
     updateFpoVerificationStatus,
     updateFpoDocumentStatus,
+    navigationOrigin,
     user
   } = useApp();
+
+  const backTarget = navigationOrigin === 'admin-fpo-directory' ? 'admin-fpo-directory' : 'fpo-verification';
+  const backLabel = navigationOrigin === 'admin-fpo-directory' ? 'FPO Directory' : 'Verification Desk';
 
   const [activeTab, setActiveTab] = useState<'checklist' | 'survey' | 'documents' | 'history'>('checklist');
   const [actionModal, setActionModal] = useState<{
@@ -102,10 +106,10 @@ export const FpoVerificationDetailView: React.FC = () => {
       <div className="p-8 text-center space-y-4 font-mono">
         <div className="text-sm text-neutral-400">FPO not found in verification registry.</div>
         <button
-          onClick={() => setCurrentView('fpo-verification')}
+          onClick={() => setCurrentView(backTarget)}
           className="px-4 py-2 rounded-xl bg-[#7A8F35] text-white text-xs font-bold"
         >
-          Back to Verification Queue
+          Back to {backLabel}
         </button>
       </div>
     );
@@ -163,11 +167,11 @@ export const FpoVerificationDetailView: React.FC = () => {
       <div className="flex items-center justify-between border-b border-[#2A3320] pb-4">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setCurrentView('fpo-verification')}
+            onClick={() => setCurrentView(backTarget)}
             className="p-2 rounded-xl bg-[#10140D] border border-[#2A3320] hover:border-[#7A8F35] text-neutral-300 hover:text-white transition-colors cursor-pointer flex items-center gap-2 text-xs"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Verification Desk</span>
+            <span>{backLabel}</span>
           </button>
           <span className="text-neutral-600">/</span>
           <span className="text-xs text-neutral-400">{fpo.name}</span>
@@ -233,7 +237,7 @@ export const FpoVerificationDetailView: React.FC = () => {
               className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>Approve & Certify</span>
+              <span>Approve (TNFI Verified)</span>
             </button>
             <button
               onClick={() => setActionModal({ open: true, action: 'CHANGES REQUESTED', reason: '' })}
@@ -915,7 +919,7 @@ export const FpoVerificationDetailView: React.FC = () => {
               ))
             ) : (
               <div className="p-6 text-center text-xs text-neutral-500">
-                No historic audit events logged for this FPO yet.
+                No audit records available for this period.
               </div>
             )}
           </div>

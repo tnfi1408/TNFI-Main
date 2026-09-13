@@ -52,7 +52,7 @@ export const FpoRankings: React.FC = () => {
             </h2>
           </div>
           <p className="text-xs text-[#A7AE9B] mt-0.5">
-            Ranked by AI composite score, governance audits, member profitability, and market capitalization
+            Ranked by FPO Performance Index, governance audits, agricultural yields, and audited fundamentals
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export const FpoRankings: React.FC = () => {
                   : 'text-[#A7AE9B] hover:text-[#F2F1E8]'
               }`}
             >
-              {s === 'score' ? 'TNFI Score' : s === 'marketCap' ? 'Mkt Cap' : s === 'dividend' ? 'Yield' : 'Price'}
+              {s === 'score' ? 'Perf Index' : s === 'marketCap' ? 'Scale Val' : s === 'dividend' ? 'Patron Yield' : 'Unit Val'}
             </button>
           ))}
         </div>
@@ -111,13 +111,13 @@ export const FpoRankings: React.FC = () => {
           <thead className="bg-[#050905] border-b border-[#26351B] text-[#A7AE9B] font-mono uppercase text-[10px]">
             <tr>
               <th className="py-3 px-3 w-12 text-center">RANK</th>
-              <th className="py-3 px-4">TICKER & FPO</th>
+              <th className="py-3 px-4">CODE & FPO</th>
               <th className="py-3 px-3">SECTOR</th>
-              <th className="py-3 px-3">STOCK PRICE</th>
-              <th className="py-3 px-3">24H RETURN</th>
-              <th className="py-3 px-3">MKT CAP</th>
-              <th className="py-3 px-3">DIV YIELD</th>
-              <th className="py-3 px-3">TNFI SCORE</th>
+              <th className="py-3 px-3">UNIT VAL (₹)</th>
+              <th className="py-3 px-3">VAL CHG</th>
+              <th className="py-3 px-3">SCALE VAL</th>
+              <th className="py-3 px-3">PATRON YIELD</th>
+              <th className="py-3 px-3">PERF INDEX</th>
               <th className="py-3 px-3">CREDIT RATING</th>
               <th className="py-3 px-4 text-right">ACTION</th>
             </tr>
@@ -185,7 +185,7 @@ export const FpoRankings: React.FC = () => {
                       }}
                       className="px-2.5 py-1 rounded bg-[#718C2C]/20 hover:bg-[#718C2C]/40 text-[#A8C94A] border border-[#718C2C]/40 text-[11px] font-bold transition-colors cursor-pointer"
                     >
-                      Trade
+                      View FPO
                     </button>
                   </td>
                 </tr>

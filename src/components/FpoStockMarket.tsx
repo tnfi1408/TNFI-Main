@@ -257,15 +257,15 @@ export const FpoStockMarket: React.FC = () => {
                   {/* Key Financial Multiples Matrix */}
                   <div className="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-[#080A07] border border-[#2A3320] text-xs font-mono-nums mb-3">
                     <div>
-                      <span className="text-[9px] text-[#969D88] block font-sans">Mkt Cap</span>
+                      <span className="text-[9px] text-[#969D88] block font-sans">Scale Val</span>
                       <span className="font-bold text-[#F3F4EA]">₹{stock.marketCapCr} Cr</span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-[#969D88] block font-sans">P/E Ratio</span>
+                      <span className="text-[9px] text-[#969D88] block font-sans">Op Multiple</span>
                       <span className="font-bold text-[#9CAF45]">{stock.peRatio}x</span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-[#969D88] block font-sans">Div Yield</span>
+                      <span className="text-[9px] text-[#969D88] block font-sans">Patron Yield</span>
                       <span className="font-bold text-[#8FAF3D]">{stock.dividendYieldPercent}%</span>
                     </div>
                     <div>
@@ -336,9 +336,9 @@ export const FpoStockMarket: React.FC = () => {
                   <th className="py-3.5 px-3">UNIT VAL (₹)</th>
                   <th className="py-3.5 px-3">VAL CHG</th>
                   <th className="py-3.5 px-3">VALUATION</th>
-                  <th className="py-3.5 px-3">P/E</th>
-                  <th className="py-3.5 px-3">DIV YIELD</th>
-                  <th className="py-3.5 px-3">TNFI SCORE</th>
+                  <th className="py-3.5 px-3">OP MULT</th>
+                  <th className="py-3.5 px-3">PATRON YIELD</th>
+                  <th className="py-3.5 px-3">PERF INDEX</th>
                   <th className="py-3.5 px-3">RATING</th>
                   <th className="py-3.5 px-4 text-right">ACTION</th>
                 </tr>

@@ -34,6 +34,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
     setSelectedOpportunityId,
     setCurrentView,
     submitExpressionOfInterest,
+    expressionsOfInterest,
     user
   } = useApp();
 
@@ -204,6 +205,78 @@ export const CapitalOpportunitiesView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Submitted Expressions of Interest (EOI) Section */}
+      {expressionsOfInterest && expressionsOfInterest.length > 0 ? (
+        <div className="p-5 rounded-2xl bg-[#10140D] border border-[#7A8F35]/40 shadow-xl space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Briefcase className="w-4 h-4 text-[#9CAF45]" />
+              <h3 className="text-sm font-bold text-[#F3F4EA]">
+                My Submitted Expressions of Interest ({expressionsOfInterest.length})
+              </h3>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#7A8F35]/20 text-[#A8C94A] border border-[#7A8F35]/40">
+                Non-Transactional Inquiries
+              </span>
+            </div>
+            <span className="text-[11px] text-[#969D88]">
+              Under direct review with FPO executive boards
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+            {expressionsOfInterest.map(eoi => (
+              <div
+                key={eoi.id}
+                className="p-3.5 rounded-xl bg-[#080A07] border border-[#2A3320] hover:border-[#7A8F35] transition-colors space-y-2.5 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-[#9CAF45] uppercase">
+                      {eoi.crop || 'Agri Commodity'}
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                      {eoi.status === 'PENDING' ? 'PENDING FPO REVIEW' : eoi.status}
+                    </span>
+                  </div>
+                  <div className="font-bold text-white text-xs mt-1">
+                    {eoi.fpoName}
+                  </div>
+                  <div className="text-[11px] text-[#969D88] mt-0.5">
+                    Structure: <span className="text-neutral-300 font-medium">{eoi.proposedStructure || 'STANDARD'}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-[#1C2415] text-xs">
+                  <div>
+                    <span className="text-[10px] text-[#969D88]">Intended: </span>
+                    <span className="font-bold text-[#9CAF45]">₹{eoi.interestedAmountLakhs}L</span>
+                  </div>
+                  <button
+                    onClick={() => handleViewDetails(eoi.opportunityId)}
+                    className="px-2.5 py-1 rounded-lg bg-[#161B11] hover:bg-[#2A3320] text-[#A8C94A] border border-[#2A3320] text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    <span>View Deal</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="p-4 rounded-2xl bg-[#10140D] border border-[#2A3320] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+          <div className="flex items-center gap-2.5">
+            <Briefcase className="w-4 h-4 text-[#969D88] shrink-0" />
+            <span className="text-xs text-[#969D88]">
+              No Expressions of Interest submitted yet. Browse Capital Opportunities to connect with vetted FPOs.
+            </span>
+          </div>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-[#161B11] text-[#9CAF45] border border-[#2A3320] shrink-0">
+            NON-BINDING INQUIRIES
+          </span>
+        </div>
+      )}
 
       {/* Filter & Search Bar */}
       <div className="p-4 rounded-xl bg-[#10140D] border border-[#2A3320] space-y-4">
@@ -420,7 +493,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
       {filteredOpportunities.length === 0 && (
         <div className="p-12 text-center rounded-2xl bg-[#10140D] border border-[#2A3320] space-y-3">
           <Coins className="w-10 h-10 text-[#969D88] mx-auto" />
-          <h3 className="text-base font-bold text-[#F3F4EA]">No Capital Opportunities Found</h3>
+          <h3 className="text-base font-bold text-[#F3F4EA]">No active capital opportunities currently available.</h3>
           <p className="text-xs text-[#969D88] font-sans max-w-md mx-auto">
             Try adjusting your search query, crop, district, or instrument filter to view active FPO capital requests.
           </p>

@@ -19,7 +19,7 @@ import { useApp } from '../../context/AppContext';
 import { CapitalRaiseCampaign } from '../../types';
 
 export const FpoCapitalRequirementView: React.FC = () => {
-  const { currentFpo, capitalCampaigns, createCapitalRaiseRequest, createCapitalOpportunity, setCurrentView, setSelectedOpportunityId } = useApp();
+  const { currentFpo, capitalCampaigns, createCapitalRaiseRequest, createCapitalOpportunity, expressionsOfInterest, setCurrentView, setSelectedOpportunityId } = useApp();
 
   const fpo = currentFpo;
 
@@ -44,6 +44,16 @@ export const FpoCapitalRequirementView: React.FC = () => {
     if (!fpo) return capitalCampaigns;
     return capitalCampaigns.filter(c => c.fpoId === fpo.id || c.ticker === fpo.ticker);
   }, [capitalCampaigns, fpo]);
+
+  // Filter inbound Expressions of Interest from investors for this FPO
+  const inboundEois = useMemo(() => {
+    if (!fpo) return [];
+    return (expressionsOfInterest || []).filter(e =>
+      e.fpoId === fpo.id ||
+      (fpo.name && e.fpoName && e.fpoName.toLowerCase().includes(fpo.name.toLowerCase())) ||
+      (fpo.ticker && e.fpoName && e.fpoName.toLowerCase().includes(fpo.ticker.toLowerCase()))
+    );
+  }, [expressionsOfInterest, fpo]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -407,6 +417,47 @@ export const FpoCapitalRequirementView: React.FC = () => {
               ))}
             </div>
           </div>
+
+          {/* Inbound Investor Expressions of Interest */}
+          {inboundEois.length > 0 && (
+            <div className="p-6 rounded-3xl bg-[#10140D] border border-[#7A8F35]/40 space-y-4 shadow-xl">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold font-mono text-[#9CAF45] uppercase flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5" />
+                  <span>Inbound Investor Inquiries ({inboundEois.length})</span>
+                </h4>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 font-mono">
+                  ACTION PENDING
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {inboundEois.map(eoi => (
+                  <div key={eoi.id} className="p-3.5 rounded-2xl bg-[#080A07] border border-[#2A3320] text-xs space-y-2">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="font-bold text-white text-xs">{eoi.investorEntity || eoi.investorName}</div>
+                        <div className="text-[10px] text-[#969D88]">{eoi.investorName} • {eoi.investorEmail || eoi.email}</div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold text-[#9CAF45] bg-[#7A8F35]/20">
+                        ₹{eoi.interestedAmountLakhs}L
+                      </span>
+                    </div>
+
+                    <div className="text-[11px] text-neutral-300 font-mono">
+                      Structure: <span className="text-[#9CAF45]">{eoi.proposedStructure || 'STANDARD'}</span>
+                    </div>
+
+                    {eoi.notes && (
+                      <p className="text-[11px] text-[#969D88] italic bg-[#10140D] p-2 rounded-lg border border-[#2A3320]">
+                        "{eoi.notes}"
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
       </div>

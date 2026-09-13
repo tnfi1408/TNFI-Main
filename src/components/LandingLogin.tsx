@@ -222,11 +222,11 @@ export const LandingLogin: React.FC = () => {
       pass: 'password123',
       title: 'INVESTOR MARKET INTELLIGENCE',
       badge: 'Market Intelligence',
-      tagline: 'Discover vetted Tamil Nadu FPOs, analyze agricultural credit ratings, and allocate to green notes.',
+      tagline: 'Discover vetted Tamil Nadu FPOs, analyze agricultural fundamentals, and submit Expressions of Interest for capital opportunities.',
       bullets: [
-        'Analyze TNFI 50 constituent performance',
+        'Analyze TNFI 50 constituent performance index',
         'Evaluate audited cash flows & solvency ratios',
-        'Subscribe to Agri-Infra green notes',
+        'Review vetted FPO capital opportunities',
         'Multi-crop risk resilience models'
       ],
       cta: 'ENTER INVESTOR TERMINAL →'
@@ -508,24 +508,35 @@ export const LandingLogin: React.FC = () => {
             {/* Supporting Micro-Eyebrow */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#101811] border border-[#7A8F35]/40 text-xs font-medium text-[#9CAF45] shadow-sm">
               <Sprout className="w-3.5 h-3.5 text-[#8FAF3D]" />
-              <span className="tracking-wide">TAMIL NADU'S AGRICULTURAL PERFORMANCE</span>
+              <span className="tracking-wide">AGRI FINANCE & FPO MARKET INTELLIGENCE</span>
             </div>
 
             {/* Editorial Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-[#F3F1E8] tracking-tight leading-[1.08] font-editorial-serif">
-              UNDERSTAND <br />
-              <span className="font-editorial-sans font-bold tracking-tight">FPO </span>
-              <span className="font-editorial-serif italic text-[#C9A653] font-semibold">VALUE.</span>
+              CONNECTING <br />
+              <span className="font-editorial-sans font-bold tracking-tight">AGRI DATA </span>
+              <span className="font-editorial-serif italic text-[#C9A653] font-semibold">WITH CAPITAL.</span>
             </h1>
 
-            {/* Concise Product Description */}
-            <div className="space-y-2 text-[#969D88] text-sm sm:text-base leading-relaxed max-w-xl font-normal">
-              <p>
-                TNFI brings together agricultural performance, market demand and financial fundamentals to help understand how Tamil Nadu's FPOs are performing.
+            {/* Concise Product Description with WHO / WHAT / WHY */}
+            <div className="space-y-3 text-[#969D88] text-sm sm:text-base leading-relaxed max-w-xl font-normal">
+              <p className="text-[#F3F1E8]/90 font-medium">
+                TNFI is an Agri Finance & FPO Market Intelligence platform that connects agricultural performance data with capital opportunities.
               </p>
-              <p className="text-xs sm:text-sm text-[#969D88]/90">
-                Track crops, harvest potential, demand, risk, revenue and profitability through one standardized intelligence platform.
-              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
+                <div className="p-2.5 rounded-xl bg-[#101811] border border-[#2A3320]">
+                  <span className="text-[#8FAF3D] font-bold block uppercase text-[9px]">WHO</span>
+                  <span className="text-[#F3F4EA] leading-tight block">Farmers, FPOs, Admins & Capital Providers</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[#101811] border border-[#2A3320]">
+                  <span className="text-[#9CAF45] font-bold block uppercase text-[9px]">WHAT</span>
+                  <span className="text-[#F3F4EA] leading-tight block">Standardized FPO Performance Intelligence</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[#101811] border border-[#2A3320]">
+                  <span className="text-[#D6B45C] font-bold block uppercase text-[9px]">WHY</span>
+                  <span className="text-[#F3F4EA] leading-tight block">Structured Capital & Risk Visibility</span>
+                </div>
+              </div>
             </div>
 
             {/* Primary & Secondary Action CTAs */}

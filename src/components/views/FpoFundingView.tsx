@@ -102,11 +102,9 @@ export const FpoFundingView: React.FC = () => {
 
   const handleDelete = (recordId: string, source: string) => {
     if (!fpo) return;
-    if (window.confirm(`Remove funding record for ${source}?`)) {
-      deleteFpoFundingRecord(fpo.id, recordId);
-      setNotification({ type: 'success', message: `Record removed.` });
-      setTimeout(() => setNotification(null), 3000);
-    }
+    deleteFpoFundingRecord(fpo.id, recordId);
+    setNotification({ type: 'success', message: `Funding record for ${source} removed.` });
+    setTimeout(() => setNotification(null), 3000);
   };
 
   return (

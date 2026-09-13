@@ -886,6 +886,23 @@ export const FpoResearchView: React.FC = () => {
         </div>
       )}
 
+      {/* Empty State when no FPOs match filters */}
+      {filteredAndSortedFpos.length === 0 && (
+        <div className="p-12 text-center rounded-2xl bg-[#10140D] border border-[#2A3320] space-y-3">
+          <Layers className="w-10 h-10 text-[#969D88] mx-auto" />
+          <h3 className="text-base font-bold text-[#F3F4EA]">No FPOs found matching current filters.</h3>
+          <p className="text-xs text-[#969D88] font-sans max-w-md mx-auto">
+            Try adjusting your district, commodity, performance tier, or search keyword to discover active Tamil Nadu Producer Organisations.
+          </p>
+          <button
+            onClick={resetAllFilters}
+            className="px-4 py-2 rounded-xl bg-[#161B11] border border-[#2A3320] text-xs text-[#9CAF45] font-bold hover:bg-[#202719] cursor-pointer"
+          >
+            Clear All Filters
+          </button>
+        </div>
+      )}
+
       {/* ========================================================================= */}
       {/* 4. TNFI SCORE FACTOR BREAKDOWN MODAL                                      */}
       {/* ========================================================================= */}
