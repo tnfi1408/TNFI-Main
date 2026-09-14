@@ -191,35 +191,6 @@ export function calculateFPOIndex(factors: {
   };
 }
 
-/**
- * Determine Risk Level based on fundamental agricultural risk factors
- */
-export function calculatePortfolioMetrics(
-  holdings: Array<{
-    currentValue: number;
-    investedAmount: number;
-    unrealizedPnL: number;
-    totalUnits?: number;
-  }>
-) {
-  const totalPortfolioValue = holdings.reduce((sum, h) => sum + (h.currentValue || 0), 0);
-  const totalInvested = holdings.reduce((sum, h) => sum + (h.investedAmount || 0), 0);
-  const totalPnL = totalPortfolioValue - totalInvested;
-  const totalReturnPercent = totalInvested > 0 ? (totalPnL / totalInvested) * 100 : 0;
-  const dayPnL = totalPortfolioValue * 0.0142; // simulated benchmark drift
-  const dayPnLPercent = 1.42;
-
-  return {
-    totalPortfolioValue,
-    totalInvested,
-    totalPnL,
-    totalReturnPercent,
-    dayPnL,
-    dayPnLPercent,
-    cashBalance: 408534
-  };
-}
-
 export function calculateFinancialScore(revenueGrowth: number, netMargin: number, roe: number, debtToEquity: number): number {
   const growthComp = Math.min(100, Math.max(0, revenueGrowth * 3.0));
   const marginComp = Math.min(100, Math.max(0, netMargin * 3.5));

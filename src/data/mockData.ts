@@ -1,8 +1,6 @@
 import {
   FpoStock,
   TnfiIndexData,
-  PortfolioHolding,
-  PortfolioTransaction,
   CapitalRaiseCampaign,
   FpoAiEvaluation,
   FPO,
@@ -51,131 +49,6 @@ export const TNFI_INDEX_DATA: TnfiIndexData = {
 };
 
 export const LISTED_FPO_STOCKS: FpoStock[] = TNFI_50_STOCKS;
-
-export const INITIAL_PORTFOLIO_HOLDINGS: PortfolioHolding[] = [
-  {
-    id: 'hold-1',
-    ticker: 'TNFI-ETF',
-    name: 'TNFI Top 24 FPO Index Fund Unit',
-    assetType: 'TNFI ETF (Index Unit)',
-    quantity: 1200,
-    avgBuyPrice: 1180.50,
-    currentPrice: 1245.68,
-    investedValue: 1416600,
-    currentValue: 1494816,
-    unrealizedProfit: 78216,
-    returnPercent: 5.52,
-    dividendYieldPercent: 5.62,
-    sector: 'Horticulture'
-  },
-  {
-    id: 'hold-2',
-    ticker: 'KAVERI',
-    name: 'Kaveri Horticulture FPO Ltd',
-    assetType: 'FPO Equity',
-    quantity: 2500,
-    avgBuyPrice: 122.00,
-    currentPrice: 142.50,
-    investedValue: 305000,
-    currentValue: 356250,
-    unrealizedProfit: 51250,
-    returnPercent: 16.80,
-    dividendYieldPercent: 5.4,
-    sector: 'Horticulture'
-  },
-  {
-    id: 'hold-3',
-    ticker: 'NILGIRI',
-    name: 'Nilgiris Dairy & Green Tea FPO',
-    assetType: 'FPO Equity',
-    quantity: 1000,
-    avgBuyPrice: 188.40,
-    currentPrice: 215.80,
-    investedValue: 188400,
-    currentValue: 215800,
-    unrealizedProfit: 27400,
-    returnPercent: 14.54,
-    dividendYieldPercent: 4.8,
-    sector: 'Dairy & Livestock'
-  },
-  {
-    id: 'hold-4',
-    ticker: 'CDELTA',
-    name: 'Cauvery Delta Paddy Farmers FPO',
-    assetType: 'FPO Equity',
-    quantity: 3000,
-    avgBuyPrice: 91.00,
-    currentPrice: 98.20,
-    investedValue: 273000,
-    currentValue: 294600,
-    unrealizedProfit: 21600,
-    returnPercent: 7.91,
-    dividendYieldPercent: 6.2,
-    sector: 'Paddy & Cereals'
-  },
-  {
-    id: 'hold-5',
-    ticker: 'KONGU-BOND-28',
-    name: 'Kongu Cold-Storage 9.25% Agri-Bond',
-    assetType: 'Agri-Infrastructure Bond',
-    quantity: 120,
-    avgBuyPrice: 10000,
-    currentPrice: 10250,
-    investedValue: 1200000,
-    currentValue: 1230000,
-    unrealizedProfit: 30000,
-    returnPercent: 2.50,
-    dividendYieldPercent: 9.25,
-    sector: 'Coconut & Oilseeds'
-  }
-];
-
-export const INITIAL_TRANSACTIONS: PortfolioTransaction[] = [
-  {
-    id: 'tx-1',
-    timestamp: '2026-08-14 11:32 AM',
-    ticker: 'KAVERI',
-    name: 'Kaveri Horticulture FPO Ltd',
-    type: 'BUY',
-    quantity: 500,
-    price: 141.20,
-    totalAmount: 70600,
-    status: 'EXECUTED'
-  },
-  {
-    id: 'tx-2',
-    timestamp: '2026-08-13 02:15 PM',
-    ticker: 'TNFI-ETF',
-    name: 'TNFI Top 24 FPO Index Fund',
-    type: 'BUY',
-    quantity: 200,
-    price: 1228.40,
-    totalAmount: 245680,
-    status: 'EXECUTED'
-  },
-  {
-    id: 'tx-3',
-    timestamp: '2026-08-11 10:00 AM',
-    ticker: 'CDELTA',
-    name: 'Cauvery Delta Paddy Farmers FPO',
-    type: 'DIVIDEND_PAYOUT',
-    quantity: 3000,
-    price: 5.80,
-    totalAmount: 17400,
-    status: 'SETTLED'
-  },
-  {
-    id: 'tx-4',
-    timestamp: '2026-08-08 03:45 PM',
-    ticker: 'NILGIRI',
-    name: 'Nilgiris Dairy & Green Tea FPO',
-    type: 'BUY',
-    quantity: 400,
-    price: 208.50,
-    totalAmount: 83400,
-    status: 'EXECUTED'
-  }
-];
 
 export const CAPITAL_RAISE_CAMPAIGNS: CapitalRaiseCampaign[] = [
   {
@@ -643,11 +516,11 @@ export const INITIAL_INSIGHTS: AiInsight[] = [
   },
   {
     id: 'ins-3',
-    type: 'IPO_ALERT',
-    headline: 'Kongu Coconut Launches ₹8 Cr Agri-Infra 9.40% Green Bond',
+    type: 'CAPITAL_ALERT',
+    headline: 'Kongu Coconut Launches ₹8 Cr Agri-Infra 9.40% Green Facility',
     explanation: 'Fully backed by 2,500 MT warehouse assets with credit rating of AA+ from ICRA/CRISIL.',
-    impact: 'Provides guaranteed quarterly yield with priority liquidation preference.',
-    recommendedAction: 'Subscribe via Capital Raise primary portal.',
+    impact: 'Provides institutional quarterly yield with priority liquidation preference.',
+    recommendedAction: 'Review via Capital Opportunities primary portal.',
     urgency: 'INFO',
     timestamp: '5 hours ago',
     targetTicker: 'KONGU'
@@ -657,28 +530,28 @@ export const INITIAL_INSIGHTS: AiInsight[] = [
 export const INITIAL_NOTIFICATIONS: PlatformNotification[] = [
   {
     id: 'notif-1',
-    title: 'Trade Executed: 500 KAVERI @ ₹141.20',
-    message: 'Your buy limit order for Kaveri Horticulture FPO units was filled on the TNFI matching engine.',
-    type: 'trade',
-    targetView: 'portfolio',
+    title: 'EOI Logged: Kaveri Horticulture Facility',
+    message: 'Your institutional Expression of Interest for Kaveri Horticulture FPO was logged and transmitted to leadership.',
+    type: 'funding',
+    targetView: 'capital-opportunities',
     time: '11:32 AM',
     read: false
   },
   {
     id: 'notif-2',
-    title: 'Dividend Received: ₹17,400 from CDELTA',
-    message: 'Cauvery Delta Paddy FPO annual dividend has been credited to your investment cash wallet.',
-    type: 'dividend',
-    targetView: 'portfolio',
+    title: 'Patron Distribution Audited: CDELTA',
+    message: 'Cauvery Delta Paddy FPO annual producer distribution verified in cooperative records.',
+    type: 'funding',
+    targetView: 'fpo-research',
     time: 'Yesterday',
     read: false
   },
   {
     id: 'notif-3',
-    title: 'TNFI Index Hits New All-Time High of 1,248.90',
-    message: 'Broad-based rally across Horticulture (+2.4%) and Coconut (+3.1%) constituents drove the surge.',
+    title: 'TNFI Index Hits Benchmark Level 1,248.90',
+    message: 'Broad-based performance across Horticulture (+2.4%) and Coconut (+3.1%) constituents drove the composite.',
     type: 'index',
-    targetView: 'market-index',
+    targetView: 'tnfi-50',
     time: 'Aug 14',
     read: true
   }

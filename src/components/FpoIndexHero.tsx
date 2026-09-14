@@ -82,11 +82,11 @@ export const FpoIndexHero: React.FC = () => {
             <span className="font-bold text-[#D6A83A] text-sm font-mono mt-0.5 block">₹{(indexData?.totalMarketCapCr ?? 3450).toLocaleString()} Cr</span>
           </div>
           <div className="p-3 rounded-2xl bg-[#161B11] border border-[#2A3320]">
-            <span className="text-[10px] text-[#969D88] block uppercase font-medium">Avg Producer Payout</span>
-            <span className="font-bold text-[#8FAF3D] text-sm font-mono mt-0.5 block">{indexData.dividendYield || 4.2}% / Yr</span>
+            <span className="text-[10px] text-[#969D88] block uppercase font-medium">Avg Net Margin</span>
+            <span className="font-bold text-[#8FAF3D] text-sm font-mono mt-0.5 block">14.8% Realized</span>
           </div>
           <div className="p-3 rounded-2xl bg-[#161B11] border border-[#2A3320]">
-            <span className="text-[10px] text-[#969D88] block uppercase font-medium">52-Week Range</span>
+            <span className="text-[10px] text-[#969D88] block uppercase font-medium">Composite Index Range</span>
             <span className="font-bold text-[#969D88] text-xs font-mono mt-0.5 block">{indexData.yearLow || '1,120.00'} - {indexData.yearHigh || '1,280.50'}</span>
           </div>
         </div>
@@ -268,7 +268,7 @@ export const FpoIndexHero: React.FC = () => {
                     </td>
                     <td className="py-3 px-4 text-right">
                       <button
-                        onClick={() => setCurrentView('fpo-stocks', stock.ticker)}
+                        onClick={() => setCurrentView('fpo-detail', stock.id || stock.ticker)}
                         className="px-3 py-1 rounded-xl bg-[#161B11] hover:bg-[#7A8F35] text-[#9CAF45] hover:text-white border border-[#2A3320] text-xs font-semibold transition-colors cursor-pointer"
                       >
                         Inspect

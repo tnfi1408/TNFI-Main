@@ -461,14 +461,14 @@ export const AdminCommandCenterView: React.FC = () => {
               <Sliders className="w-4 h-4 text-[#A8C94A]" />
               Index Governance & Volatility Circuit Controls
             </h3>
-            <span className="text-[10px] text-[#36C77A]">NORMAL TRADING</span>
+            <span className="text-[10px] text-[#36C77A]">STABLE INDEX FEED</span>
           </div>
 
           <div className="space-y-3 text-xs">
             <div className="p-3.5 rounded-xl bg-[#080A07] border border-[#2A3320] flex items-center justify-between">
               <div>
                 <div className="font-bold text-white">Daily Volatility Circuit Collar (±10%)</div>
-                <div className="text-[10px] text-neutral-400 mt-0.5">Automated halt if aggregate index moves ±10.0% in single trading session</div>
+                <div className="text-[10px] text-neutral-400 mt-0.5">Automated governance alert if aggregate index moves ±10.0% in single daily reporting cycle</div>
               </div>
               <button
                 onClick={() => setCircuitBreakerActive(!circuitBreakerActive)}

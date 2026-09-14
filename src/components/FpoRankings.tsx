@@ -16,7 +16,7 @@ export const FpoRankings: React.FC = () => {
   const { fpoStocks, setCurrentView } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [sectorFilter, setSectorFilter] = useState('ALL');
-  const [sortBy, setSortBy] = useState<'score' | 'price' | 'marketCap' | 'dividend'>('score');
+  const [sortBy, setSortBy] = useState<'score' | 'revenue' | 'marketCap' | 'profit'>('score');
 
   const sectorsList = ['ALL', 'Horticulture', 'Paddy & Cereals', 'Dairy & Livestock', 'Spices & Plantation', 'Coconut & Oilseeds', 'Millets & Pulses'];
 
@@ -33,9 +33,9 @@ export const FpoRankings: React.FC = () => {
       })
       .sort((a, b) => {
         if (sortBy === 'score') return b.tnfiScore - a.tnfiScore;
-        if (sortBy === 'price') return b.currentPrice - a.currentPrice;
+        if (sortBy === 'revenue') return (b.financials?.revenueCr || 0) - (a.financials?.revenueCr || 0);
         if (sortBy === 'marketCap') return b.marketCapCr - a.marketCapCr;
-        if (sortBy === 'dividend') return b.dividendYieldPercent - a.dividendYieldPercent;
+        if (sortBy === 'profit') return (b.financials?.patCr || 0) - (a.financials?.patCr || 0);
         return 0;
       });
   }, [fpoStocks, searchTerm, sectorFilter, sortBy]);
@@ -59,7 +59,7 @@ export const FpoRankings: React.FC = () => {
         {/* Sort Switcher */}
         <div className="flex items-center gap-1 bg-[#050905] border border-[#26351B] p-1 rounded-xl text-xs font-mono">
           <span className="text-[#68705F] px-2">Sort:</span>
-          {(['score', 'price', 'marketCap', 'dividend'] as const).map(s => (
+          {(['score', 'revenue', 'marketCap', 'profit'] as const).map(s => (
             <button
               key={s}
               onClick={() => setSortBy(s)}
@@ -69,7 +69,7 @@ export const FpoRankings: React.FC = () => {
                   : 'text-[#A7AE9B] hover:text-[#F2F1E8]'
               }`}
             >
-              {s === 'score' ? 'Perf Index' : s === 'marketCap' ? 'Scale Val' : s === 'dividend' ? 'Patron Yield' : 'Unit Val'}
+              {s === 'score' ? 'Perf Index' : s === 'revenue' ? 'Revenue Cr' : s === 'marketCap' ? 'Harvest Val' : 'Net PAT'}
             </button>
           ))}
         </div>
@@ -113,10 +113,9 @@ export const FpoRankings: React.FC = () => {
               <th className="py-3 px-3 w-12 text-center">RANK</th>
               <th className="py-3 px-4">CODE & FPO</th>
               <th className="py-3 px-3">SECTOR</th>
-              <th className="py-3 px-3">UNIT VAL (₹)</th>
-              <th className="py-3 px-3">VAL CHG</th>
-              <th className="py-3 px-3">SCALE VAL</th>
-              <th className="py-3 px-3">PATRON YIELD</th>
+              <th className="py-3 px-3">REVENUE</th>
+              <th className="py-3 px-3">HARVEST VAL</th>
+              <th className="py-3 px-3">NET PAT</th>
               <th className="py-3 px-3">PERF INDEX</th>
               <th className="py-3 px-3">CREDIT RATING</th>
               <th className="py-3 px-4 text-right">ACTION</th>
@@ -124,11 +123,10 @@ export const FpoRankings: React.FC = () => {
           </thead>
           <tbody className="divide-y divide-[#26351B] font-sans">
             {rankedStocks.map((stock, index) => {
-              const isPos = stock.changePercent >= 0;
               return (
                 <tr
                   key={stock.id}
-                  onClick={() => setCurrentView('fpo-stocks', stock.ticker)}
+                  onClick={() => setCurrentView('fpo-detail', stock.id)}
                   className="hover:bg-[#101A0D] cursor-pointer transition-colors"
                 >
                   <td className="py-3 px-3 text-center font-mono font-black">
@@ -156,18 +154,13 @@ export const FpoRankings: React.FC = () => {
                     </span>
                   </td>
                   <td className="py-3 px-3 font-bold font-mono-nums text-[#F2F1E8]">
-                    ₹{(stock.currentPrice || stock.price || 0).toFixed(2)}
-                  </td>
-                  <td className="py-3 px-3 font-bold font-mono-nums">
-                    <span className={isPos ? 'text-[#36C77A]' : 'text-[#D96555]'}>
-                      {isPos ? '+' : ''}{(stock.changePercent || 0).toFixed(2)}%
-                    </span>
+                    ₹{stock.financials?.revenueCr ?? (stock.marketCapCr * 0.4).toFixed(1)} Cr
                   </td>
                   <td className="py-3 px-3 font-mono-nums text-[#A7AE9B]">
                     ₹{stock.marketCapCr} Cr
                   </td>
                   <td className="py-3 px-3 font-mono-nums text-[#36C77A] font-bold">
-                    {stock.dividendYieldPercent}%
+                    ₹{stock.financials?.patCr ?? (stock.marketCapCr * 0.06).toFixed(1)} Cr
                   </td>
                   <td className="py-3 px-3 font-mono-nums font-bold text-[#A8C94A]">
                     {stock.tnfiScore}/100
@@ -181,11 +174,11 @@ export const FpoRankings: React.FC = () => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setCurrentView('fpo-stocks', stock.ticker);
+                        setCurrentView('fpo-detail', stock.id);
                       }}
                       className="px-2.5 py-1 rounded bg-[#718C2C]/20 hover:bg-[#718C2C]/40 text-[#A8C94A] border border-[#718C2C]/40 text-[11px] font-bold transition-colors cursor-pointer"
                     >
-                      View FPO
+                      Dossier →
                     </button>
                   </td>
                 </tr>

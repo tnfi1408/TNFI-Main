@@ -25,7 +25,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
     user,
     login,
     logout,
-    portfolioMetrics,
     notifications,
     unreadNotifsCount,
     markNotificationRead,
@@ -119,16 +118,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
           )}
         </div>
 
-        {/* Portfolio Value Pill */}
+        {/* Capital Pipeline Indicator */}
         <div
-          onClick={() => setCurrentView('portfolio')}
+          onClick={() => setCurrentView('capital-opportunities')}
           className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#161B11] border border-[#2A3320] cursor-pointer hover:border-[#7A8F35]/50 transition-all"
+          title="View Capital Opportunities Pipeline"
         >
           <Wallet className="w-3.5 h-3.5 text-[#9CAF45]" />
           <div className="text-xs font-mono">
-            <span className="text-[#969D88] mr-1 text-[11px]">Agri Capital:</span>
+            <span className="text-[#969D88] mr-1 text-[11px]">Agri Pipeline:</span>
             <strong className="text-[#8FAF3D]">
-              ₹{((portfolioMetrics?.totalCurrent || 0) + (portfolioMetrics?.cashBalance || 0)).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+              ₹48.5 Cr Active
             </strong>
           </div>
         </div>

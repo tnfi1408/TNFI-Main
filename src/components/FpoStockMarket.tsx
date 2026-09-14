@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   TrendingUp,
   TrendingDown,
@@ -10,35 +10,51 @@ import {
   Zap,
   Sparkles,
   BarChart2,
-  SlidersHorizontal,
-  DollarSign,
   Layers,
   Building2,
   CheckCircle2,
-  X
+  X,
+  Send,
+  FileText,
+  Scale,
+  Star,
+  Users,
+  MapPin,
+  Sprout,
+  Coins,
+  ArrowRight
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { FpoStock, SectorType } from '../types';
 
-export const FpoStockMarket: React.FC = () => {
+export const FpoPerformanceMarket: React.FC = () => {
   const {
     fpoStocks,
+    fpos,
+    capitalOpportunities,
     selectedSector,
     setSelectedSector,
-    selectedTicker,
-    setSelectedTicker,
-    executeTrade,
-    portfolioMetrics,
+    watchlist,
+    toggleWatchlist,
+    comparedFpoIds,
+    toggleCompareFpo,
+    submitExpressionOfInterest,
+    user,
     setCurrentView
   } = useApp();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
-  const [tradeModalStock, setTradeModalStock] = useState<FpoStock | null>(null);
-  const [tradeType, setTradeType] = useState<'BUY' | 'SELL'>('BUY');
-  const [quantity, setQuantity] = useState<number>(100);
-  const [orderType, setOrderType] = useState<'MARKET' | 'LIMIT'>('MARKET');
-  const [tradeFeedback, setTradeFeedback] = useState<{ success: boolean; message: string } | null>(null);
+
+  // Expression of Interest Modal State
+  const [eoiModalStock, setEoiModalStock] = useState<FpoStock | null>(null);
+  const [eoiFacilityType, setEoiFacilityType] = useState('Seasonal Working Capital');
+  const [eoiAmountLakhs, setEoiAmountLakhs] = useState<number>(25);
+  const [eoiInvestorName, setEoiInvestorName] = useState(user?.name || 'Institutional Capital Partner');
+  const [eoiEntity, setEoiEntity] = useState('Agri Impact Capital Fund');
+  const [eoiEmail, setEoiEmail] = useState(user?.email || 'allocations@agricapital.in');
+  const [eoiNotes, setEoiNotes] = useState('Interested in structuring working capital tranche backed by harvest receivables.');
+  const [eoiFeedback, setEoiFeedback] = useState<{ success: boolean; message: string } | null>(null);
 
   const sectors: (SectorType | 'ALL')[] = [
     'ALL',
@@ -50,33 +66,54 @@ export const FpoStockMarket: React.FC = () => {
     'Millets & Pulses'
   ];
 
-  const filteredStocks = fpoStocks.filter(stock => {
-    const matchesSector = selectedSector === 'ALL' || stock.sector === selectedSector;
-    const matchesSearch =
-      stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      stock.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      stock.primaryCrop.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSector && matchesSearch;
-  });
+  const filteredStocks = useMemo(() => {
+    return fpoStocks.filter(stock => {
+      const matchesSector = selectedSector === 'ALL' || stock.sector === selectedSector;
+      const matchesSearch =
+        stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stock.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        stock.primaryCrop.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesSector && matchesSearch;
+    });
+  }, [fpoStocks, selectedSector, searchTerm]);
 
-  const handleOpenTrade = (stock: FpoStock, type: 'BUY' | 'SELL') => {
-    setTradeModalStock(stock);
-    setTradeType(type);
-    setQuantity(100);
-    setTradeFeedback(null);
+  const handleOpenEoi = (stock: FpoStock, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setEoiModalStock(stock);
+    setEoiAmountLakhs(25);
+    setEoiFeedback(null);
   };
 
-  const handleExecuteTrade = (e: React.FormEvent) => {
+  const handleExecuteEoi = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tradeModalStock) return;
-    const result = executeTrade(tradeModalStock.ticker, tradeType, quantity, orderType);
-    setTradeFeedback(result);
-    if (result.success) {
+    if (!eoiModalStock) return;
+
+    // Check if there is an existing matching opportunity or create a verified inquiry
+    const existingOpp = capitalOpportunities.find(o => o.fpoId === eoiModalStock.id || o.fpoName === eoiModalStock.name);
+    const oppId = existingOpp?.id || `opp-direct-${eoiModalStock.id}`;
+
+    const res = submitExpressionOfInterest({
+      opportunityId: oppId,
+      fpoId: eoiModalStock.id,
+      fpoName: eoiModalStock.name,
+      crop: eoiModalStock.primaryCrop || 'Multi-Crop',
+      investorName: eoiInvestorName,
+      investorEntity: eoiEntity,
+      organisation: eoiEntity,
+      email: eoiEmail,
+      investorEmail: eoiEmail,
+      interestedAmountLakhs: Number(eoiAmountLakhs),
+      proposedStructure: eoiFacilityType,
+      notes: eoiNotes
+    });
+
+    setEoiFeedback(res);
+    if (res.success) {
       setTimeout(() => {
-        setTradeModalStock(null);
-        setTradeFeedback(null);
-      }, 1500);
+        setEoiModalStock(null);
+        setEoiFeedback(null);
+      }, 2000);
     }
   };
 
@@ -87,31 +124,32 @@ export const FpoStockMarket: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase bg-[#7A8F35]/15 text-[#9CAF45] border border-[#7A8F35]/30">
-              FPO PERFORMANCE VALUATION & CAPITAL LEDGER
+              FPO PERFORMANCE MARKET
             </span>
             <span className="text-xs text-[#969D88] font-mono">TAMIL NADU VETTED PRODUCER REGISTRY</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F3F4EA] tracking-tight">
-            FPO Performance Valuation Ledger
+            FPO Performance & Valuation Market
           </h1>
           <p className="text-xs sm:text-sm text-[#969D88] mt-1 max-w-2xl">
-            Evaluate cooperative performance metrics of high-performing Tamil Nadu Farmer Producer Organizations with verified agricultural yields, audited financials, patron dividend yields, and institutional governance ratings.
+            Evaluate cooperative performance metrics of high-performing Tamil Nadu Farmer Producer Organizations with verified agricultural yields, audited financials, credit ratings, and live capital requirements.
           </p>
         </div>
 
-        {/* Quick Portfolio Balance Card */}
+        {/* Quick Capital Opportunities Pipeline Card */}
         <div className="flex items-center gap-4 p-3.5 rounded-xl bg-[#080A07] border border-[#2A3320]">
           <div>
-            <span className="text-[10px] font-mono text-[#969D88] block uppercase">AVAILABLE CAPITAL BALANCE</span>
+            <span className="text-[10px] font-mono text-[#969D88] block uppercase">ACTIVE CAPITAL PIPELINE</span>
             <span className="text-lg font-extrabold text-[#8FAF3D] font-mono-nums">
-              ₹{(portfolioMetrics?.cashBalance || 0).toLocaleString('en-IN')}
+              ₹48.5 Cr in 12 Facilities
             </span>
           </div>
           <button
-            onClick={() => setCurrentView('portfolio')}
-            className="px-3 py-2 rounded-lg bg-[#7A8F35]/20 hover:bg-[#7A8F35]/35 text-[#9CAF45] border border-[#7A8F35]/35 text-xs font-bold transition-colors cursor-pointer"
+            onClick={() => setCurrentView('capital-opportunities')}
+            className="px-3 py-2 rounded-lg bg-[#7A8F35]/20 hover:bg-[#7A8F35]/35 text-[#9CAF45] border border-[#7A8F35]/35 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
           >
-            My Allocation →
+            <span>Opportunities</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
@@ -174,6 +212,9 @@ export const FpoStockMarket: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredStocks.map(stock => {
             const isPositive = stock.changePercent >= 0;
+            const isWatchlisted = watchlist.includes(stock.id) || watchlist.includes(stock.ticker);
+            const isCompared = comparedFpoIds.includes(stock.id);
+
             return (
               <div
                 key={stock.id}
@@ -215,13 +256,16 @@ export const FpoStockMarket: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Stock Price & Change Hero */}
+                  {/* Performance Index & Benchmark Hero */}
                   <div className="flex items-baseline justify-between py-2.5 my-2 border-y border-[#2A3320]">
                     <div>
-                      <span className="text-[10px] text-[#969D88] block font-mono">EQUITY SHARE PRICE</span>
-                      <span className="text-2xl font-black text-[#F3F4EA] font-mono-nums">
-                        ₹{(stock.currentPrice || stock.price || 0).toFixed(2)}
-                      </span>
+                      <span className="text-[10px] text-[#969D88] block font-mono uppercase">PERFORMANCE BENCHMARK</span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-black text-[#F3F4EA] font-mono-nums">
+                          {stock.tnfiScore}
+                        </span>
+                        <span className="text-xs text-[#969D88] font-mono">INDEX PTS</span>
+                      </div>
                     </div>
                     <div
                       className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-xl font-mono text-xs font-bold ${
@@ -231,19 +275,21 @@ export const FpoStockMarket: React.FC = () => {
                       }`}
                     >
                       {isPositive ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
-                      {isPositive ? '+' : ''}{(stock.changePercent || 0).toFixed(2)}% (₹{(stock.changeValue || stock.change24h || 0).toFixed(2)})
+                      {isPositive ? '+' : ''}{(stock.changePercent || 0).toFixed(2)}% Trend
                     </div>
                   </div>
 
                   {/* Agricultural Drivers Micro-Bar */}
                   <div className="p-2 rounded-xl bg-[#080A07] border border-[#2A3320] mb-2.5 space-y-1 text-[10px] font-mono">
                     <div className="flex justify-between items-center text-[#969D88]">
-                      <span className="text-[#F3F4EA] font-sans font-medium">Crop: <strong className="text-[#9CAF45] font-mono">{stock.primaryCrop || 'Multi-Crop'}</strong></span>
-                      <span className="text-[#8FAF3D] font-bold">Mandi Spot: +{(((stock.changePercent || 0) + 1.2)).toFixed(1)}%</span>
+                      <span className="text-[#F3F4EA] font-sans font-medium">
+                        Crop: <strong className="text-[#9CAF45] font-mono">{stock.primaryCrop || 'Multi-Crop'}</strong>
+                      </span>
+                      <span className="text-[#8FAF3D] font-bold">Mandi Realization: +{(((stock.changePercent || 0) + 1.2)).toFixed(1)}%</span>
                     </div>
                     <div className="flex items-center gap-1 text-[9px] text-[#969D88] overflow-x-auto custom-scroll">
                       <span className="px-1.5 py-0.5 rounded bg-[#161B11] border border-[#2A3320] text-[#9CAF45] whitespace-nowrap">
-                        Demand: High
+                        Offtake: High
                       </span>
                       <span className="px-1.5 py-0.5 rounded bg-[#8FAF3D]/10 border border-[#8FAF3D]/30 text-[#8FAF3D] whitespace-nowrap">
                         Yield: +4.8%
@@ -257,42 +303,42 @@ export const FpoStockMarket: React.FC = () => {
                   {/* Key Financial Multiples Matrix */}
                   <div className="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-[#080A07] border border-[#2A3320] text-xs font-mono-nums mb-3">
                     <div>
-                      <span className="text-[9px] text-[#969D88] block font-sans">Scale Val</span>
+                      <span className="text-[9px] text-[#969D88] block font-sans">Harvest Scale</span>
                       <span className="font-bold text-[#F3F4EA]">₹{stock.marketCapCr} Cr</span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-[#969D88] block font-sans">Op Multiple</span>
-                      <span className="font-bold text-[#9CAF45]">{stock.peRatio}x</span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-[#969D88] block font-sans">Patron Yield</span>
-                      <span className="font-bold text-[#8FAF3D]">{stock.dividendYieldPercent}%</span>
-                    </div>
-                    <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Revenue</span>
-                      <span className="font-bold text-[#F3F4EA]">₹{stock.financials.revenueCr} Cr</span>
+                      <span className="font-bold text-[#9CAF45]">₹{stock.financials.revenueCr} Cr</span>
                     </div>
                     <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Net PAT</span>
                       <span className="font-bold text-[#8FAF3D]">₹{stock.financials.patCr} Cr</span>
                     </div>
                     <div>
-                      <span className="text-[9px] text-[#969D88] block font-sans">ROE</span>
-                      <span className="font-bold text-[#D6A83A]">{stock.financials.roePercent}%</span>
+                      <span className="text-[9px] text-[#969D88] block font-sans">Margin</span>
+                      <span className="font-bold text-[#F3F4EA]">{stock.financials.roePercent}%</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-[#969D88] block font-sans">Farmers</span>
+                      <span className="font-bold text-[#8FAF3D]">{(stock.totalMembers || 1500).toLocaleString()}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-[#969D88] block font-sans">Rating</span>
+                      <span className="font-bold text-[#D6A83A]">{stock.creditRating}</span>
                     </div>
                   </div>
 
-                  {/* 52-Week Range Bar */}
+                  {/* Harvest & Season Progress Bar */}
                   <div className="space-y-1 mb-4">
                     <div className="flex justify-between text-[10px] text-[#969D88] font-mono">
-                      <span>52W L: ₹{stock.yearLow}</span>
-                      <span>52W H: ₹{stock.yearHigh}</span>
+                      <span>Harvest Target: ₹{stock.yearLow || 85}L</span>
+                      <span>Target Realized: ₹{stock.yearHigh || 140}L</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-[#080A07] overflow-hidden">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-[#53652A] to-[#8FAF3D]"
                         style={{
-                          width: `${Math.min(100, Math.max(5, ((stock.currentPrice - stock.yearLow) / (stock.yearHigh - stock.yearLow)) * 100))}%`
+                          width: `${Math.min(100, Math.max(15, stock.tnfiScore))}%`
                         }}
                       />
                     </div>
@@ -303,21 +349,30 @@ export const FpoStockMarket: React.FC = () => {
                 <div className="flex items-center gap-2 pt-2 border-t border-[#2A3320]">
                   <button
                     onClick={() => setCurrentView('fpo-detail', stock.id)}
-                    className="flex-1 py-2 rounded-lg bg-[#080A07] hover:bg-[#161B11] text-[#969D88] hover:text-[#F3F4EA] border border-[#2A3320] text-xs font-bold transition-colors text-center cursor-pointer"
+                    className="flex-1 py-2 rounded-lg bg-[#080A07] hover:bg-[#161B11] text-[#969D88] hover:text-[#F3F4EA] border border-[#2A3320] text-xs font-bold transition-colors text-center cursor-pointer flex items-center justify-center gap-1"
                   >
-                    Financials
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>Dossier</span>
                   </button>
+
                   <button
-                    onClick={() => handleOpenTrade(stock, 'BUY')}
-                    className="flex-1 py-2 rounded-lg bg-[#7A8F35] hover:bg-[#9CAF45] text-white text-xs font-bold transition-colors shadow-md shadow-[#7A8F35]/30 cursor-pointer"
+                    onClick={(e) => handleOpenEoi(stock, e)}
+                    className="flex-1 py-2 rounded-lg bg-[#7A8F35] hover:bg-[#9CAF45] text-white text-xs font-bold transition-colors shadow-md shadow-[#7A8F35]/30 cursor-pointer flex items-center justify-center gap-1"
                   >
-                    Allocate
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Express Interest</span>
                   </button>
+
                   <button
-                    onClick={() => handleOpenTrade(stock, 'SELL')}
-                    className="flex-1 py-2 rounded-lg bg-[#D65C5C]/20 hover:bg-[#D65C5C]/35 text-[#D65C5C] border border-[#D65C5C]/30 text-xs font-bold transition-colors cursor-pointer"
+                    onClick={() => toggleWatchlist(stock.id)}
+                    className={`p-2 rounded-lg border text-xs font-bold transition-colors cursor-pointer ${
+                      isWatchlisted
+                        ? 'bg-[#D6A83A]/20 border-[#D6A83A]/40 text-[#D6A83A]'
+                        : 'bg-[#080A07] border-[#2A3320] text-[#969D88] hover:text-[#F3F4EA]'
+                    }`}
+                    title={isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'}
                   >
-                    Withdraw
+                    <Star className={`w-3.5 h-3.5 ${isWatchlisted ? 'fill-current' : ''}`} />
                   </button>
                 </div>
               </div>
@@ -333,12 +388,12 @@ export const FpoStockMarket: React.FC = () => {
                 <tr>
                   <th className="py-3.5 px-4">CODE & FPO</th>
                   <th className="py-3.5 px-3">SECTOR</th>
-                  <th className="py-3.5 px-3">UNIT VAL (₹)</th>
-                  <th className="py-3.5 px-3">VAL CHG</th>
-                  <th className="py-3.5 px-3">VALUATION</th>
-                  <th className="py-3.5 px-3">OP MULT</th>
-                  <th className="py-3.5 px-3">PATRON YIELD</th>
                   <th className="py-3.5 px-3">PERF INDEX</th>
+                  <th className="py-3.5 px-3">TREND</th>
+                  <th className="py-3.5 px-3">HARVEST VAL</th>
+                  <th className="py-3.5 px-3">ANNUAL REVENUE</th>
+                  <th className="py-3.5 px-3">NET SURPLUS</th>
+                  <th className="py-3.5 px-3">FARMERS</th>
                   <th className="py-3.5 px-3">RATING</th>
                   <th className="py-3.5 px-4 text-right">ACTION</th>
                 </tr>
@@ -347,7 +402,11 @@ export const FpoStockMarket: React.FC = () => {
                 {filteredStocks.map(stock => {
                   const isPositive = stock.changePercent >= 0;
                   return (
-                    <tr key={stock.id} className="hover:bg-[#161B11] transition-colors">
+                    <tr
+                      key={stock.id}
+                      onClick={() => setCurrentView('fpo-detail', stock.id)}
+                      className="hover:bg-[#161B11] transition-colors cursor-pointer"
+                    >
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-[#F3F4EA] font-mono text-sm">{stock.ticker}</div>
                         <div className="text-[11px] text-[#969D88] line-clamp-1">{stock.name}</div>
@@ -357,8 +416,8 @@ export const FpoStockMarket: React.FC = () => {
                           {stock.sector}
                         </span>
                       </td>
-                      <td className="py-3.5 px-3 font-bold font-mono-nums text-[#F3F4EA] text-sm">
-                        ₹{(stock.currentPrice || stock.price || 0).toFixed(2)}
+                      <td className="py-3.5 px-3 font-bold font-mono-nums text-[#9CAF45] text-sm">
+                        {stock.tnfiScore}/100
                       </td>
                       <td className="py-3.5 px-3 font-bold font-mono-nums">
                         <span className={isPositive ? 'text-[#8FAF3D]' : 'text-[#D65C5C]'}>
@@ -368,14 +427,14 @@ export const FpoStockMarket: React.FC = () => {
                       <td className="py-3.5 px-3 font-mono-nums text-[#F3F4EA]">
                         ₹{stock.marketCapCr} Cr
                       </td>
-                      <td className="py-3.5 px-3 font-mono-nums text-[#9CAF45] font-bold">
-                        {stock.peRatio}x
+                      <td className="py-3.5 px-3 font-mono-nums text-[#F3F4EA] font-bold">
+                        ₹{stock.financials.revenueCr} Cr
                       </td>
                       <td className="py-3.5 px-3 font-mono-nums text-[#8FAF3D] font-bold">
-                        {stock.dividendYieldPercent}%
+                        ₹{stock.financials.patCr} Cr
                       </td>
-                      <td className="py-3.5 px-3 font-mono-nums font-bold text-[#D6A83A]">
-                        {stock.tnfiScore}/100
+                      <td className="py-3.5 px-3 font-mono-nums text-[#969D88]">
+                        {(stock.totalMembers || 1500).toLocaleString()}
                       </td>
                       <td className="py-3.5 px-3 font-mono">
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8FAF3D]/15 text-[#8FAF3D] border border-[#8FAF3D]/30">
@@ -383,18 +442,18 @@ export const FpoStockMarket: React.FC = () => {
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                        <div className="flex items-center justify-end gap-1.5" onClick={e => e.stopPropagation()}>
                           <button
-                            onClick={() => handleOpenTrade(stock, 'BUY')}
-                            className="px-2.5 py-1 rounded bg-[#7A8F35] hover:bg-[#9CAF45] text-white font-bold text-[11px] transition-colors cursor-pointer"
+                            onClick={() => setCurrentView('fpo-detail', stock.id)}
+                            className="px-2.5 py-1 rounded bg-[#080A07] hover:bg-[#161B11] text-[#969D88] hover:text-[#F3F4EA] border border-[#2A3320] font-bold text-[11px] transition-colors cursor-pointer"
                           >
-                            Allocate
+                            Dossier
                           </button>
                           <button
-                            onClick={() => handleOpenTrade(stock, 'SELL')}
-                            className="px-2.5 py-1 rounded bg-[#D65C5C]/20 hover:bg-[#D65C5C]/35 text-[#D65C5C] border border-[#D65C5C]/30 font-bold text-[11px] transition-colors cursor-pointer"
+                            onClick={(e) => handleOpenEoi(stock, e)}
+                            className="px-2.5 py-1 rounded bg-[#7A8F35] hover:bg-[#9CAF45] text-white font-bold text-[11px] transition-colors cursor-pointer"
                           >
-                            Withdraw
+                            Express Interest
                           </button>
                         </div>
                       </td>
@@ -407,12 +466,12 @@ export const FpoStockMarket: React.FC = () => {
         </div>
       )}
 
-      {/* Trade Execution Modal */}
-      {tradeModalStock && (
+      {/* Expression of Interest (EOI) Modal */}
+      {eoiModalStock && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl bg-[#10140D] border border-[#7A8F35]/40 p-6 shadow-2xl relative space-y-4">
+          <div className="w-full max-w-lg rounded-2xl bg-[#10140D] border border-[#7A8F35]/40 p-6 shadow-2xl relative space-y-4">
             <button
-              onClick={() => setTradeModalStock(null)}
+              onClick={() => setEoiModalStock(null)}
               className="absolute top-4 right-4 text-[#969D88] hover:text-[#F3F4EA] p-1 rounded-lg bg-[#080A07] border border-[#2A3320] cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -422,146 +481,133 @@ export const FpoStockMarket: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black text-[#F3F4EA] font-mono">
-                  {tradeModalStock.ticker}
+                  {eoiModalStock.ticker}
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#7A8F35]/15 text-[#9CAF45] border border-[#7A8F35]/30">
-                  {tradeModalStock.sector}
+                  {eoiModalStock.creditRating} RATED
+                </span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#161B11] text-[#969D88] border border-[#2A3320]">
+                  {eoiModalStock.sector}
                 </span>
               </div>
-              <p className="text-xs text-[#969D88] mt-0.5">{tradeModalStock.name}</p>
+              <h3 className="text-sm font-semibold text-[#F3F4EA] mt-1">{eoiModalStock.name}</h3>
+              <p className="text-xs text-[#969D88] mt-0.5">
+                Submit an institutional Expression of Interest (EOI) to structure capital support for this verified FPO.
+              </p>
             </div>
 
-            {/* Trade Type Selector */}
-            <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-[#080A07] border border-[#2A3320]">
-              <button
-                type="button"
-                onClick={() => setTradeType('BUY')}
-                className={`py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  tradeType === 'BUY'
-                    ? 'bg-[#7A8F35] text-white shadow-lg'
-                    : 'text-[#969D88] hover:text-[#F3F4EA]'
-                }`}
-              >
-                CAPITAL ALLOCATION
-              </button>
-              <button
-                type="button"
-                onClick={() => setTradeType('SELL')}
-                className={`py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  tradeType === 'SELL'
-                    ? 'bg-[#D65C5C] text-white shadow-lg'
-                    : 'text-[#969D88] hover:text-[#F3F4EA]'
-                }`}
-              >
-                FACILITY WITHDRAWAL
-              </button>
-            </div>
-
-            <form onSubmit={handleExecuteTrade} className="space-y-3">
-              {/* Order Type */}
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <button
-                  type="button"
-                  onClick={() => setOrderType('MARKET')}
-                  className={`py-1.5 px-3 rounded-lg border cursor-pointer ${
-                    orderType === 'MARKET'
-                      ? 'bg-[#7A8F35]/30 text-[#9CAF45] border-[#9CAF45]'
-                      : 'bg-[#080A07] text-[#969D88] border-[#2A3320]'
-                  }`}
-                >
-                  Spot Allocation
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setOrderType('LIMIT')}
-                  className={`py-1.5 px-3 rounded-lg border cursor-pointer ${
-                    orderType === 'LIMIT'
-                      ? 'bg-[#7A8F35]/30 text-[#9CAF45] border-[#9CAF45]'
-                      : 'bg-[#080A07] text-[#969D88] border-[#2A3320]'
-                  }`}
-                >
-                  Scheduled tranche
-                </button>
-              </div>
-
-              {/* Unit Price display */}
-              <div className="p-3 rounded-xl bg-[#080A07] border border-[#2A3320] flex items-center justify-between text-xs font-mono">
-                <span className="text-[#969D88]">Benchmark Unit Valuation:</span>
-                <span className="text-base font-extrabold text-[#F3F4EA]">
-                  ₹{(tradeModalStock.currentPrice || tradeModalStock.price || 0).toFixed(2)}
-                </span>
-              </div>
-
-              {/* Quantity input */}
+            <form onSubmit={handleExecuteEoi} className="space-y-3">
+              {/* Facility Structure Type */}
               <div>
                 <label className="block text-[11px] font-mono text-[#969D88] mb-1">
-                  Allocation Units:
+                  Target Facility Structure:
+                </label>
+                <select
+                  value={eoiFacilityType}
+                  onChange={e => setEoiFacilityType(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-[#080A07] border border-[#2A3320] text-xs font-mono text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
+                >
+                  <option value="Seasonal Working Capital">Seasonal Working Capital (Paddy & Crop Tranches)</option>
+                  <option value="Warehouse Receipt Financing">Warehouse Receipt Financing (e-NWR backed)</option>
+                  <option value="Post-Harvest Processing Infrastructure">Post-Harvest Processing Infrastructure</option>
+                  <option value="Farmer Input Credit Facility">Farmer Input Credit & Collective Aggregation</option>
+                </select>
+              </div>
+
+              {/* Indicative Amount */}
+              <div>
+                <label className="block text-[11px] font-mono text-[#969D88] mb-1">
+                  Indicative Capital Allocation (₹ Lakhs):
                 </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
-                    min={1}
-                    max={100000}
-                    value={quantity}
-                    onChange={e => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    min={5}
+                    max={1000}
+                    step={5}
+                    value={eoiAmountLakhs}
+                    onChange={e => setEoiAmountLakhs(Math.max(5, parseInt(e.target.value) || 5))}
                     className="w-full px-3 py-2 rounded-xl bg-[#080A07] border border-[#2A3320] text-sm font-mono-nums text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
                   />
                   <div className="flex items-center gap-1">
-                    {[100, 500, 1000].map(amt => (
+                    {[10, 25, 50, 100].map(amt => (
                       <button
                         key={amt}
                         type="button"
-                        onClick={() => setQuantity(amt)}
-                        className="px-2 py-2 rounded-lg bg-[#161B11] border border-[#2A3320] text-[10px] font-mono text-[#9CAF45] hover:bg-[#7A8F35]/30 cursor-pointer"
+                        onClick={() => setEoiAmountLakhs(amt)}
+                        className="px-2 py-2 rounded-lg bg-[#161B11] border border-[#2A3320] text-[10px] font-mono text-[#9CAF45] hover:bg-[#7A8F35]/30 cursor-pointer whitespace-nowrap"
                       >
-                        +{amt}
+                        ₹{amt}L
                       </button>
                     ))}
                   </div>
                 </div>
               </div>
 
-              {/* Trade Summary Calc */}
-              <div className="p-3.5 rounded-xl bg-[#161B11] border border-[#2A3320] space-y-1.5 text-xs font-mono">
-                <div className="flex justify-between text-[#969D88]">
-                  <span>Total Facility Value:</span>
-                  <span className="font-bold text-[#F3F4EA] font-mono-nums">
-                    ₹{(quantity * tradeModalStock.currentPrice).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                  </span>
+              {/* Entity / Institution Name */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[11px] font-mono text-[#969D88] mb-1">
+                    Institution / Entity:
+                  </label>
+                  <input
+                    type="text"
+                    value={eoiEntity}
+                    onChange={e => setEoiEntity(e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#080A07] border border-[#2A3320] text-xs font-mono text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
+                    placeholder="Capital Fund / Bank"
+                  />
                 </div>
-                <div className="flex justify-between text-[#969D88] text-[10px]">
-                  <span>Governance & Custody Fee:</span>
-                  <span>₹0.00 (Subsidized TNFI Agri-Support)</span>
-                </div>
-                <div className="flex justify-between text-[#8FAF3D] font-bold pt-1 border-t border-[#2A3320]">
-                  <span>Estimated Annual Patron Dividend:</span>
-                  <span>
-                    ₹{((quantity * tradeModalStock.currentPrice * tradeModalStock.dividendYieldPercent) / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 })}/yr
-                  </span>
+                <div>
+                  <label className="block text-[11px] font-mono text-[#969D88] mb-1">
+                    Contact Email:
+                  </label>
+                  <input
+                    type="email"
+                    value={eoiEmail}
+                    onChange={e => setEoiEmail(e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-xl bg-[#080A07] border border-[#2A3320] text-xs font-mono text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
+                    placeholder="email@fund.com"
+                  />
                 </div>
               </div>
 
-              {tradeFeedback && (
+              {/* Facility Summary Matrix */}
+              <div className="p-3.5 rounded-xl bg-[#161B11] border border-[#2A3320] space-y-1.5 text-xs font-mono">
+                <div className="flex justify-between text-[#969D88]">
+                  <span>Indicative Facility Size:</span>
+                  <span className="font-bold text-[#F3F4EA] font-mono-nums">
+                    ₹{eoiAmountLakhs} Lakhs (₹{(eoiAmountLakhs / 100).toFixed(2)} Cr)
+                  </span>
+                </div>
+                <div className="flex justify-between text-[#969D88] text-[10px]">
+                  <span>Expected Tenor:</span>
+                  <span>12 - 24 Months (Crop-Cycle Linked)</span>
+                </div>
+                <div className="flex justify-between text-[#8FAF3D] font-bold pt-1 border-t border-[#2A3320]">
+                  <span>FPO Performance Rating:</span>
+                  <span>{eoiModalStock.creditRating} • {eoiModalStock.tnfiScore}/100</span>
+                </div>
+              </div>
+
+              {eoiFeedback && (
                 <div
                   className={`p-3 rounded-xl text-xs font-mono ${
-                    tradeFeedback.success
+                    eoiFeedback.success
                       ? 'bg-[#8FAF3D]/15 text-[#8FAF3D] border border-[#8FAF3D]/30'
                       : 'bg-[#D65C5C]/15 text-[#D65C5C] border border-[#D65C5C]/30'
                   }`}
                 >
-                  {tradeFeedback.message}
+                  {eoiFeedback.message}
                 </div>
               )}
 
               <button
                 type="submit"
-                className={`w-full py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all shadow-lg cursor-pointer ${
-                  tradeType === 'BUY'
-                    ? 'bg-[#7A8F35] hover:bg-[#9CAF45] text-white shadow-[#7A8F35]/30'
-                    : 'bg-[#D65C5C] hover:opacity-90 text-white shadow-[#D65C5C]/30'
-                }`}
+                className="w-full py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider bg-[#7A8F35] hover:bg-[#9CAF45] text-white shadow-lg shadow-[#7A8F35]/30 transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                Confirm {tradeType === 'BUY' ? 'Capital Allocation' : 'Facility Withdrawal'} ({quantity} Units)
+                <Send className="w-4 h-4" />
+                <span>Submit Expression of Interest (₹{eoiAmountLakhs}L)</span>
               </button>
             </form>
           </div>
@@ -571,9 +617,12 @@ export const FpoStockMarket: React.FC = () => {
       {/* Regulatory & Institutional Notice */}
       <div className="p-4 rounded-xl bg-[#0A0D08] border border-[#2A3320] text-center">
         <p className="text-[11px] text-[#78826B] font-mono leading-relaxed max-w-4xl mx-auto">
-          <strong className="text-[#9CAF45]">REGULATORY & COOPERATIVE NOTICE:</strong> TNFI is an agricultural finance intelligence and cooperative performance evaluation portal. It is not a stock exchange or broker-dealer. Unit valuations reflect audited cooperative balance sheets, crop cycle revenues, and performance index algorithms. Capital facilities are non-speculative and directed to farmer collective operations.
+          <strong className="text-[#9CAF45]">REGULATORY & COOPERATIVE NOTICE:</strong> TNFI is an agricultural finance intelligence and cooperative performance evaluation platform. It is not a stock exchange, broker-dealer, or securities trading system. Valuations and performance scores reflect audited cooperative balance sheets, crop cycle revenues, mandi commodity yields, and institutional governance audits. Capital facilities are non-speculative and directed toward farmer collective operations under Tamil Nadu agricultural development frameworks.
         </p>
       </div>
     </div>
   );
 };
+
+// Backwards compatibility alias
+export const FpoStockMarket = FpoPerformanceMarket;

@@ -627,44 +627,6 @@ export interface TnfiIndexData {
   }>;
 }
 
-export interface PortfolioHolding {
-  id: string;
-  ticker: string;
-  fpoName?: string;
-  name?: string;
-  assetType?: string;
-  units?: number;
-  quantity?: number;
-  totalUnits?: number;
-  avgBuyPrice: number;
-  currentPrice: number;
-  currentValue: number;
-  investedValue?: number;
-  investedAmount?: number;
-  unrealizedPnL?: number;
-  unrealizedProfit?: number;
-  unrealizedPnLPercent?: number;
-  returnPercent?: number;
-  allocationPercent?: number;
-  sector: SectorType;
-  dividendYieldPercent?: number;
-}
-
-export interface PortfolioTransaction {
-  id: string;
-  type: string;
-  ticker: string;
-  name?: string;
-  fpoName?: string;
-  units?: number;
-  quantity?: number;
-  price: number;
-  totalAmount: number;
-  timestamp: string;
-  status: 'COMPLETED' | 'PENDING' | 'SETTLED' | string;
-  txHash?: string;
-}
-
 export interface ExpressionOfInterest {
   id: string;
   fpoId: string;

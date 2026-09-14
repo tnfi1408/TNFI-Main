@@ -111,8 +111,8 @@ export const FpoDirectory: React.FC = () => {
                 </div>
 
                 <div className="text-right font-mono">
-                  <span className="text-xs font-black text-[#F2F1E8]">₹{(fpo.stockPrice || (fpo.performanceScore ? fpo.performanceScore * 1.2 : 110)).toFixed(2)}</span>
-                  <span className="text-[10px] text-[#36C77A] block">+{(fpo.indexChange24h ?? fpo.change24h ?? 2.4)}%</span>
+                  <span className="text-xs font-black text-[#A8C94A]">{(fpo.performanceScore ?? fpo.tnfiScore ?? 85)}/100</span>
+                  <span className="text-[9px] text-[#A7AE9B] block font-sans">TNFI Score</span>
                 </div>
               </div>
 

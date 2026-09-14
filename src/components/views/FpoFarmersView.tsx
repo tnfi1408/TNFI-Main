@@ -150,7 +150,7 @@ export const FpoFarmersView: React.FC = () => {
             Farmer Member Roster & Landholdings
           </h1>
           <p className="text-xs text-[#969D88] max-w-2xl leading-relaxed">
-            Direct farmer shareholder registry, individual plot landholding verification, KYC compliance and yield histories.
+            Direct farmer member registry, individual plot landholding verification, KYC compliance and yield histories.
           </p>
         </div>
 

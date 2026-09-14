@@ -5,8 +5,6 @@ import {
   UserRole,
   FpoStock,
   TnfiIndexData,
-  PortfolioHolding,
-  PortfolioTransaction,
   CapitalRaiseCampaign,
   FpoAiEvaluation,
   FPO,
@@ -30,8 +28,6 @@ import {
 import {
   TNFI_INDEX_DATA,
   LISTED_FPO_STOCKS,
-  INITIAL_PORTFOLIO_HOLDINGS,
-  INITIAL_TRANSACTIONS,
   CAPITAL_RAISE_CAMPAIGNS,
   AI_EVALUATIONS,
   INITIAL_FPOS,
@@ -44,7 +40,7 @@ import {
   INITIAL_EXPRESSIONS_OF_INTEREST,
   INITIAL_WATCHLIST
 } from '../data/mockData';
-import { calculatePortfolioMetrics, recomputeFpoAggregates } from '../utils/calculations';
+import { recomputeFpoAggregates } from '../utils/calculations';
 
 interface AppContextType {
   user: User | null;
@@ -91,8 +87,6 @@ interface AppContextType {
   // Data collections
   indexData: TnfiIndexData;
   fpoStocks: FpoStock[];
-  portfolioHoldings: PortfolioHolding[];
-  portfolioTransactions: PortfolioTransaction[];
   capitalCampaigns: CapitalRaiseCampaign[];
   aiEvaluations: FpoAiEvaluation[];
   fpos: FPO[];
@@ -102,12 +96,6 @@ interface AppContextType {
   insights: AiInsight[];
   notifications: PlatformNotification[];
   unreadNotifsCount: number;
-
-  // Real-time trading & investment actions
-  executeTrade: (ticker: string, type: 'BUY' | 'SELL', quantity: number, orderType?: 'MARKET' | 'LIMIT') => { success: boolean; message: string };
-  subscribeToCapitalRaise: (campaignId: string, investmentAmount: number) => { success: boolean; message: string };
-  rebalancePortfolio: () => void;
-  updateStockPrice: (ticker: string, newPrice: number) => void;
 
   // FPO management & Admin actions
   registerFpo: (data: any) => { success: boolean; message: string; fpo: FPO };
@@ -155,15 +143,6 @@ interface AppContextType {
   markNotificationRead: (id: string) => void;
   clearAllNotifications: () => void;
 
-  // Computed Portfolio Metrics
-  portfolioMetrics: {
-    totalInvested: number;
-    totalCurrent: number;
-    totalProfit: number;
-    returnPercent: number;
-    cashBalance: number;
-  };
-
   // Aggregate Market Stats
   marketStats: {
     totalMarketCapCr: number;
@@ -171,8 +150,7 @@ interface AppContextType {
     totalListedFpos: number;
     advancingCount: number;
     decliningCount: number;
-    averagePeRatio: number;
-    averageDividendYield: number;
+    averageNetMargin: number;
   };
 
   // Selected Stock Helper
@@ -487,9 +465,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Core Data
   const [indexData, setIndexData] = useState<TnfiIndexData>(TNFI_INDEX_DATA);
   const [fpoStocks, setFpoStocks] = useState<FpoStock[]>(LISTED_FPO_STOCKS);
-  const [portfolioHoldings, setPortfolioHoldings] = useState<PortfolioHolding[]>(INITIAL_PORTFOLIO_HOLDINGS);
-  const [portfolioTransactions, setPortfolioTransactions] = useState<PortfolioTransaction[]>(INITIAL_TRANSACTIONS);
-  const [cashBalance, setCashBalance] = useState<number>(450000);
   const [capitalCampaigns, setCapitalCampaigns] = useState<CapitalRaiseCampaign[]>(() => {
     try {
       const saved = localStorage.getItem('tnfi_capital_campaigns');
@@ -1153,270 +1128,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  // Trade Execution Engine
-  const executeTrade = (
-    ticker: string,
-    type: 'BUY' | 'SELL',
-    quantity: number,
-    orderType: 'MARKET' | 'LIMIT' = 'MARKET'
-  ): { success: boolean; message: string } => {
-    const stock = fpoStocks.find(s => s.ticker === ticker);
-    const isEtf = ticker === 'TNFI-ETF';
-    const price = isEtf ? indexData.indexValue : stock ? stock.currentPrice : 0;
-    const name = isEtf ? 'TNFI Top 24 FPO Index Fund' : stock ? stock.name : ticker;
-    const totalCost = quantity * price;
-
-    if (quantity <= 0 || price <= 0) {
-      return { success: false, message: 'Invalid trade parameters.' };
-    }
-
-    if (type === 'BUY') {
-      if (totalCost > cashBalance) {
-        return { success: false, message: `Insufficient cash balance. Required: ₹${totalCost.toLocaleString()}, Available: ₹${cashBalance.toLocaleString()}` };
-      }
-
-      setCashBalance(prev => prev - totalCost);
-
-      setPortfolioHoldings(prev => {
-        const existing = prev.find(h => h.ticker === ticker);
-        if (existing) {
-          const totalQty = existing.quantity + quantity;
-          const totalInvested = existing.investedValue + totalCost;
-          const avgBuyPrice = totalInvested / totalQty;
-          const currentValue = totalQty * price;
-          const unrealizedProfit = currentValue - totalInvested;
-          const returnPercent = (unrealizedProfit / totalInvested) * 100;
-
-          return prev.map(h =>
-            h.ticker === ticker
-              ? {
-                  ...h,
-                  quantity: totalQty,
-                  avgBuyPrice,
-                  investedValue: totalInvested,
-                  currentPrice: price,
-                  currentValue,
-                  unrealizedProfit,
-                  returnPercent
-                }
-              : h
-          );
-        } else {
-          const newHolding: PortfolioHolding = {
-            id: `hold-${Date.now()}`,
-            ticker,
-            name,
-            assetType: isEtf ? 'TNFI ETF (Index Unit)' : 'FPO Equity',
-            quantity,
-            avgBuyPrice: price,
-            currentPrice: price,
-            investedValue: totalCost,
-            currentValue: totalCost,
-            unrealizedProfit: 0,
-            returnPercent: 0,
-            dividendYieldPercent: stock ? stock.dividendYieldPercent : 5.62,
-            sector: stock ? stock.sector : 'Horticulture'
-          };
-          return [...prev, newHolding];
-        }
-      });
-    } else {
-      // SELL
-      const existing = portfolioHoldings.find(h => h.ticker === ticker);
-      if (!existing || existing.quantity < quantity) {
-        return { success: false, message: `Cannot sell ${quantity} units. Current holding: ${existing ? existing.quantity : 0} units.` };
-      }
-
-      setCashBalance(prev => prev + totalCost);
-
-      setPortfolioHoldings(prev => {
-        return prev
-          .map(h => {
-            if (h.ticker === ticker) {
-              const remainingQty = h.quantity - quantity;
-              if (remainingQty <= 0) return null;
-              const fraction = remainingQty / h.quantity;
-              const newInvested = h.investedValue * fraction;
-              const currentValue = remainingQty * price;
-              const unrealizedProfit = currentValue - newInvested;
-              const returnPercent = newInvested > 0 ? (unrealizedProfit / newInvested) * 100 : 0;
-              return {
-                ...h,
-                quantity: remainingQty,
-                investedValue: newInvested,
-                currentValue,
-                unrealizedProfit,
-                returnPercent
-              };
-            }
-            return h;
-          })
-          .filter(Boolean) as PortfolioHolding[];
-      });
-    }
-
-    // Add transaction record
-    const newTx: PortfolioTransaction = {
-      id: `tx-${Date.now()}`,
-      timestamp: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-      ticker,
-      name,
-      type,
-      quantity,
-      price,
-      totalAmount: totalCost,
-      status: 'EXECUTED'
-    };
-
-    setPortfolioTransactions(prev => [newTx, ...prev]);
-
-    // Add notification
-    const newNotif: PlatformNotification = {
-      id: `notif-${Date.now()}`,
-      title: `Order Executed: ${type} ${quantity} ${ticker} @ ₹${price.toFixed(2)}`,
-      message: `${orderType} order filled on TNFI Matching Engine. Total value: ₹${totalCost.toLocaleString()}.`,
-      type: 'trade',
-      targetView: 'portfolio',
-      time: 'Just now',
-      read: false
-    };
-    setNotifications(prev => [newNotif, ...prev]);
-
-    return {
-      success: true,
-      message: `Successfully executed ${type} order for ${quantity} units of ${ticker} at ₹${price.toFixed(2)}.`
-    };
-  };
-
-  // Capital Raise Primary Subscription
-  const subscribeToCapitalRaise = (
-    campaignId: string,
-    investmentAmount: number
-  ): { success: boolean; message: string } => {
-    const campaign = capitalCampaigns.find(c => c.id === campaignId);
-    if (!campaign) return { success: false, message: 'Campaign not found.' };
-
-    if (investmentAmount < campaign.minInvestment) {
-      return { success: false, message: `Minimum subscription amount is ₹${campaign.minInvestment.toLocaleString()}` };
-    }
-
-    if (investmentAmount > cashBalance) {
-      return { success: false, message: `Insufficient cash balance. Available: ₹${cashBalance.toLocaleString()}` };
-    }
-
-    setCashBalance(prev => prev - investmentAmount);
-
-    setCapitalCampaigns(prev =>
-      prev.map(c => {
-        if (c.id === campaignId) {
-          const addedCr = investmentAmount / 10000000;
-          const newRaised = c.raisedAmountCr + addedCr;
-          return {
-            ...c,
-            raisedAmountCr: Math.min(c.targetAmountCr, Number(newRaised.toFixed(2))),
-            investorsCount: c.investorsCount + 1,
-            status: newRaised >= c.targetAmountCr ? 'OVER_SUBSCRIBED' : c.status
-          };
-        }
-        return c;
-      })
-    );
-
-    // Record as bond or equity holding
-    const units = Math.floor(investmentAmount / campaign.unitPrice);
-    const newHolding: PortfolioHolding = {
-      id: `hold-ipo-${Date.now()}`,
-      ticker: `${campaign.ticker}-IPO`,
-      name: `${campaign.fpoName} (${campaign.instrumentType})`,
-      assetType: campaign.instrumentType.includes('Bond') ? 'Agri-Infrastructure Bond' : 'FPO Equity',
-      quantity: units,
-      avgBuyPrice: campaign.unitPrice,
-      currentPrice: campaign.unitPrice,
-      investedValue: investmentAmount,
-      currentValue: investmentAmount,
-      unrealizedProfit: 0,
-      returnPercent: 0,
-      dividendYieldPercent: campaign.expectedYieldPercent || 8.5,
-      sector: campaign.sector
-    };
-    setPortfolioHoldings(prev => [...prev, newHolding]);
-
-    const newTx: PortfolioTransaction = {
-      id: `tx-${Date.now()}`,
-      timestamp: 'Just now',
-      ticker: campaign.ticker,
-      name: campaign.fpoName,
-      type: 'IPO_ALLOCATION',
-      quantity: units,
-      price: campaign.unitPrice,
-      totalAmount: investmentAmount,
-      status: 'SETTLED'
-    };
-    setPortfolioTransactions(prev => [newTx, ...prev]);
-
-    return {
-      success: true,
-      message: `Subscribed ₹${investmentAmount.toLocaleString()} to ${campaign.fpoName} ${campaign.instrumentType} allocation.`
-    };
-  };
-
-  // Rebalance Portfolio to match TNFI Index weights
-  const rebalancePortfolio = () => {
-    const metrics = calculatePortfolioMetrics(portfolioHoldings);
-    const totalVal = metrics.totalPortfolioValue || 0;
-
-    // Adjust portfolio holdings toward target sector weights
-    setPortfolioHoldings(prev =>
-      prev.map(h => {
-        const sectorWeight = indexData.sectorWeights.find(s => s.sector === h.sector);
-        const targetPercent = sectorWeight ? sectorWeight.weightPercent : 15;
-        const targetValue = (totalVal * targetPercent) / 100;
-        const newQty = Math.round(targetValue / (h.currentPrice || 100));
-        const newInvested = newQty * (h.avgBuyPrice || 100);
-        const newCurrent = newQty * (h.currentPrice || 100);
-        return {
-          ...h,
-          quantity: newQty,
-          investedValue: newInvested,
-          currentValue: newCurrent,
-          unrealizedProfit: newCurrent - newInvested,
-          returnPercent: newInvested > 0 ? ((newCurrent - newInvested) / newInvested) * 100 : 0
-        };
-      })
-    );
-
-    const newNotif: PlatformNotification = {
-      id: `notif-${Date.now()}`,
-      title: 'Portfolio Rebalanced to TNFI Benchmark',
-      message: 'Holdings reallocated to mirror the 6 sector weights of the Tamil Nadu Farmer Index.',
-      type: 'index',
-      targetView: 'portfolio',
-      time: 'Just now',
-      read: false
-    };
-    setNotifications(prev => [newNotif, ...prev]);
-  };
-
-  const updateStockPrice = (ticker: string, newPrice: number) => {
-    setFpoStocks(prev =>
-      prev.map(s => {
-        if (s.ticker === ticker) {
-          const changeVal = newPrice - s.prevClose;
-          const changePct = (changeVal / s.prevClose) * 100;
-          return {
-            ...s,
-            currentPrice: newPrice,
-            changeValue: Number(changeVal.toFixed(2)),
-            changePercent: Number(changePct.toFixed(2)),
-            high: Math.max(s.high, newPrice),
-            low: Math.min(s.low, newPrice)
-          };
-        }
-        return s;
-      })
-    );
-  };
-
   // FPO Crop Portfolio Management
   const addCropToFpo = (
     fpoId: string,
@@ -2037,21 +1748,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNotifications([]);
   };
 
-  // Computed Portfolio Metrics
-  const portfolioMetrics = useMemo(() => {
-    const metrics = calculatePortfolioMetrics(portfolioHoldings);
-    return {
-      ...metrics,
-      cashBalance
-    };
-  }, [portfolioHoldings, cashBalance]);
-
   // Aggregate Market Stats
   const marketStats = useMemo(() => {
     const advancing = fpoStocks.filter(s => s.changePercent > 0).length;
     const declining = fpoStocks.filter(s => s.changePercent < 0).length;
-    const avgPe = Number((fpoStocks.reduce((sum, s) => sum + s.peRatio, 0) / (fpoStocks.length || 1)).toFixed(1));
-    const avgYield = Number((fpoStocks.reduce((sum, s) => sum + s.dividendYieldPercent, 0) / (fpoStocks.length || 1)).toFixed(2));
 
     return {
       totalMarketCapCr: indexData.totalMarketCapCr,
@@ -2059,8 +1759,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       totalListedFpos: fpoStocks.length,
       advancingCount: advancing,
       decliningCount: declining,
-      averagePeRatio: avgPe,
-      averageDividendYield: avgYield
+      averageNetMargin: 14.8
     };
   }, [fpoStocks, indexData]);
 
@@ -2690,8 +2389,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedSector,
         indexData,
         fpoStocks,
-        portfolioHoldings,
-        portfolioTransactions,
         capitalCampaigns,
         aiEvaluations,
         fpos,
@@ -2701,10 +2398,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         insights,
         notifications,
         unreadNotifsCount,
-        executeTrade,
-        subscribeToCapitalRaise,
-        rebalancePortfolio,
-        updateStockPrice,
         addCropToFpo,
         editFpoCrop,
         deleteFpoCrop,
@@ -2733,7 +2426,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         resetSimulator,
         markNotificationRead,
         clearAllNotifications,
-        portfolioMetrics,
         marketStats,
         activeStock,
         activeFpo,

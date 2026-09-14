@@ -7,10 +7,7 @@ import { Sidebar } from './components/Sidebar';
 import { FpoIndexHero } from './components/FpoIndexHero';
 import { KpiCards } from './components/KpiCards';
 import { FpoStockMarket } from './components/FpoStockMarket';
-import { InvestorPortfolio } from './components/InvestorPortfolio';
-import { FpoCapitalRaise } from './components/FpoCapitalRaise';
 import { AiScoringEngine } from './components/AiScoringEngine';
-import { MarketSimulator } from './components/MarketSimulator';
 import { FpoDirectory } from './components/FpoDirectory';
 import { FpoDetailView } from './components/FpoDetailView';
 import { FpoResearchView } from './components/views/FpoResearchView';
@@ -174,9 +171,10 @@ const MainLayout: React.FC = () => {
 
       // Additional Supporting Views
       case 'fpo-stocks':
+      case 'fpo-performance-market':
         return <FpoStockMarket />;
       case 'market-simulator':
-        return <MarketSimulator />;
+        return <AgriculturalScenarioView />;
 
       default:
         if (user?.role === 'farmer') return <FarmerDashboardView />;

@@ -101,25 +101,25 @@ export const KpiCards: React.FC = () => {
         </span>
       </div>
 
-      {/* 5. Average Producer Payout */}
+      {/* 5. Average Realized Margin */}
       <div
-        onClick={() => setCurrentView('portfolio')}
+        onClick={() => setCurrentView('fpo-rankings')}
         className="p-4 rounded-2xl bg-[#10140D] hover:bg-[#161B11] border border-[#2A3320] hover:border-[#7A8F35]/80 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#7A8F35]/10 cursor-pointer transition-all duration-200 group"
       >
         <span className="text-[10px] uppercase font-semibold text-[#969D88] block group-hover:text-[#9CAF45] transition-colors">
-          AVG PRODUCER PAYOUT
+          AVG OPERATING MARGIN
         </span>
         <div className="flex items-baseline gap-1 mt-1">
           <span className="text-xl font-bold text-[#8FAF3D] font-mono">
             <AnimatedNumber
-              value={marketStats.averageDividendYield || 4.2}
+              value={14.8}
               decimals={1}
               suffix="%"
             />
           </span>
         </div>
         <span className="text-xs text-[#969D88] block mt-0.5">
-          Direct Payout Yield
+          Verified FPO Surplus
         </span>
       </div>
 

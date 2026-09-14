@@ -560,7 +560,7 @@ export const FpoRegisterWizardView: React.FC = () => {
 
               <div>
                 <label className="block text-xs font-bold text-[#F3F4EA] mb-1.5">
-                  FPO Trading Ticker / Short Code
+                  FPO Identifier / Short Code
                 </label>
                 <input
                   type="text"
@@ -798,7 +798,7 @@ export const FpoRegisterWizardView: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div className="p-4 rounded-2xl bg-[#080A07] border border-[#2A3320] space-y-2">
                 <label className="block text-xs font-bold text-[#F3F4EA]">
-                  Total Shareholder Farmers *
+                  Total Producer Member Farmers *
                 </label>
                 <input
                   type="number"
@@ -808,7 +808,7 @@ export const FpoRegisterWizardView: React.FC = () => {
                   onChange={e => setFormData({ ...formData, totalFarmers: Number(e.target.value) })}
                   className="w-full px-3.5 py-2 rounded-xl bg-[#10140D] border border-[#2A3320] text-sm font-bold font-mono text-[#9CAF45]"
                 />
-                <span className="text-[10px] text-[#969D88] block">Registered equity shareholders</span>
+                <span className="text-[10px] text-[#969D88] block">Registered voting member farmers</span>
               </div>
 
               <div className="p-4 rounded-2xl bg-[#080A07] border border-[#2A3320] space-y-2">
