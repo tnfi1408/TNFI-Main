@@ -25,6 +25,7 @@ import {
   Scale
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { FiLogo } from './FiLogo';
 
 interface SidebarProps {
   mobileOpen?: boolean;
@@ -133,13 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
             }}
             className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#53652A] via-[#7A8F35] to-[#9CAF45] p-0.5 shadow-lg shadow-[#7A8F35]/20">
-              <div className="w-full h-full bg-[#10140D] rounded-[10px] flex items-center justify-center">
-                <span className="text-sm font-black text-[#9CAF45] font-mono">
-                  FI
-                </span>
-              </div>
-            </div>
+            <FiLogo size={32} />
             <div>
               <div className="text-xs font-black text-[#F3F4EA] tracking-wider font-mono flex items-center gap-1">
                 <span>FI</span>

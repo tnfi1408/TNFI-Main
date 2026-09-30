@@ -113,7 +113,7 @@ export const SettingsView: React.FC = () => {
             {/* Phase 1 */}
             <div className="p-4 rounded-2xl bg-[#050905] border border-[#26351B] space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-[#A8C94A]">Phase 1: Tamil Nadu FPO Index Pilot</span>
+                <span className="font-bold text-[#A8C94A]">Phase 1: FI 50 FPO Index Pilot</span>
                 <span className="text-[10px] font-bold text-[#36C77A]">ACTIVE PILOT PLATFORM</span>
               </div>
               <p className="text-[#A7AE9B] text-[11px] leading-relaxed">

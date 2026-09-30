@@ -1464,7 +1464,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         fpoId,
         fpoName,
         ticker: targetFpo?.ticker,
-        action: status === 'VERIFIED' ? 'FPO Verified & Certified' : status === 'CHANGES REQUESTED' ? 'Changes Requested' : status === 'REJECTED' ? 'Application Rejected' : 'Status Updated',
+        action: status === 'VERIFIED' ? 'FI Verification Completed' : status === 'CHANGES REQUESTED' ? 'Changes Requested' : status === 'REJECTED' ? 'Application Rejected' : 'Status Updated',
         details: reasonOrRemarks ? `${status}: ${reasonOrRemarks}` : `Verification status transitioned to ${status}.`,
         timestamp: timeStr,
         timeAgo: 'Just now',

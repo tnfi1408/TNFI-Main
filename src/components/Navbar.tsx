@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { UserRole } from '../types';
+import { FiLogo } from './FiLogo';
 
 interface NavbarProps {
   onOpenMobileMenu: () => void;
@@ -55,18 +56,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
 
         {/* Platform Title on Mobile */}
         <div className="lg:hidden font-mono font-black text-sm text-[#F3F4EA] flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-[#53652A] via-[#7A8F35] to-[#9CAF45] p-0.5 shadow-sm">
-            <div className="w-full h-full bg-[#10140D] rounded-[6px] flex items-center justify-center">
-              <span className="text-[10px] font-black text-[#9CAF45] font-mono leading-none">
-                FI
-              </span>
-            </div>
-          </div>
+          <FiLogo size="xs" />
           <span>FI TERMINAL</span>
         </div>
 
         {/* State Tag on Desktop */}
-        <div className="hidden lg:flex items-center gap-2 font-mono text-xs text-[#969D88]">
+        <div className="hidden lg:flex items-center gap-2.5 font-mono text-xs text-[#969D88]">
+          <FiLogo size={20} />
           <span className="w-2 h-2 rounded-full bg-[#8FAF3D] animate-pulse" />
           <span className="text-[#F3F4EA] font-semibold">Tamil Nadu Agricultural Network</span>
           <span>•</span>

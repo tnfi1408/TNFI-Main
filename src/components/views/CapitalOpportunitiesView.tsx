@@ -44,7 +44,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string>('ALL');
   const [selectedCrop, setSelectedCrop] = useState<string>('ALL');
   const [selectedInstrument, setSelectedInstrument] = useState<string>('ALL');
-  const [sortBy, setSortBy] = useState<'amount' | 'irr' | 'committed' | 'rating'>('amount');
+  const [sortBy, setSortBy] = useState<'amount' | 'committed' | 'performance' | 'rate'>('amount');
 
   // Modal State for Expressing Interest
   const [selectedOppForEoi, setSelectedOppForEoi] = useState<CapitalOpportunity | null>(null);
@@ -97,12 +97,17 @@ export const CapitalOpportunitiesView: React.FC = () => {
       const bCommitted = b.committedAmountLakhs || Math.round(bTarget * 0.45);
 
       if (sortBy === 'amount') return bTarget - aTarget;
-      if (sortBy === 'irr') return bIrr - aIrr;
       if (sortBy === 'committed') {
         const percA = (aCommitted / aTarget) * 100;
         const percB = (bCommitted / bTarget) * 100;
         return percB - percA;
       }
+      if (sortBy === 'performance') {
+        const aScore = a.performanceIndex || 82;
+        const bScore = b.performanceIndex || 82;
+        return bScore - aScore;
+      }
+      if (sortBy === 'rate') return bIrr - aIrr;
       return bTarget - aTarget;
     });
   }, [capitalOpportunities, searchTerm, selectedStage, selectedDistrict, selectedCrop, selectedInstrument, sortBy]);
@@ -195,7 +200,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
               <div className="text-lg font-black text-[#9CAF45]">₹{aggregateMetrics.totalTargetCr} Cr</div>
             </div>
             <div className="px-3 border-r border-[#2A3320]">
-              <div className="text-[10px] text-[#969D88] uppercase">Avg Target IRR</div>
+              <div className="text-[10px] text-[#969D88] uppercase">Indicative Rate (Avg)</div>
               <div className="text-lg font-black text-[#8FAF3D]">{aggregateMetrics.avgIrr}%</div>
             </div>
             <div className="px-3">
@@ -328,9 +333,10 @@ export const CapitalOpportunitiesView: React.FC = () => {
               onChange={e => setSortBy(e.target.value as any)}
               className="w-full bg-[#080A07] border border-[#2A3320] rounded-xl px-3 py-2 text-xs text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
             >
-              <option value="amount">Sort: Target Size (High to Low)</option>
-              <option value="irr">Sort: Projected IRR (Highest)</option>
+              <option value="amount">Sort: Capital Requirement (High to Low)</option>
               <option value="committed">Sort: Funding Progress %</option>
+              <option value="performance">Sort: FPO Performance Index</option>
+              <option value="rate">Sort: Indicative Rate (Proposed)</option>
             </select>
           </div>
         </div>
@@ -400,11 +406,13 @@ export const CapitalOpportunitiesView: React.FC = () => {
                   </div>
 
                   <div className="text-right shrink-0">
-                    <div className="text-[10px] text-[#969D88] uppercase">Target IRR</div>
-                    <div className="text-base font-black text-[#8FAF3D] flex items-center justify-end gap-0.5">
-                      <TrendingUp className="w-3.5 h-3.5" />
-                      {irr}%
+                    <div className="text-[10px] text-[#969D88] uppercase">Capital Requirement</div>
+                    <div className="text-base font-black text-[#9CAF45]">
+                      ₹{targetAmount} Lakhs
                     </div>
+                    <span className="text-[9px] text-[#969D88] block">
+                      {targetAmount >= 100 ? `(₹${(targetAmount / 100).toFixed(2)} Cr)` : 'Proposed Facility'}
+                    </span>
                   </div>
                 </div>
 
@@ -436,14 +444,18 @@ export const CapitalOpportunitiesView: React.FC = () => {
                 </div>
 
                 {/* Key Spec Metrics */}
-                <div className="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-[#080A07] border border-[#2A3320]/80 text-[10px]">
+                <div className="grid grid-cols-4 gap-2 p-2.5 rounded-xl bg-[#080A07] border border-[#2A3320]/80 text-[10px]">
                   <div>
                     <div className="text-[#969D88]">Min. Ticket</div>
                     <div className="font-bold text-[#F3F4EA]">₹{minTicket} Lakhs</div>
                   </div>
                   <div>
                     <div className="text-[#969D88]">Tenure</div>
-                    <div className="font-bold text-[#F3F4EA]">{tenure} Months</div>
+                    <div className="font-bold text-[#F3F4EA]">{tenure} Mo</div>
+                  </div>
+                  <div>
+                    <div className="text-[#969D88]">Indicative Rate</div>
+                    <div className="font-bold text-[#8FAF3D]">{irr}% (Proposed)</div>
                   </div>
                   <div>
                     <div className="text-[#969D88]">Farmers Impact</div>
@@ -623,8 +635,8 @@ export const CapitalOpportunitiesView: React.FC = () => {
                       onChange={e => setEoiTerms(e.target.value as any)}
                       className="w-full bg-[#080A07] border border-[#2A3320] rounded-xl px-3 py-2 text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
                     >
-                      <option value="STANDARD">Standard Fixed Yield / Term Loan ({selectedOppForEoi.projectedIrrPercent}% p.a.)</option>
-                      <option value="SUBSIDY_LINKED">Govt AIF / NABARD Subsidy Linked Note</option>
+                      <option value="STANDARD">Standard Commercial Credit / Term Loan ({selectedOppForEoi.projectedIrrPercent}% p.a. proposed)</option>
+                      <option value="SUBSIDY_LINKED">Agri Infra Fund (AIF) / NABARD Subsidy Linked Facility</option>
                       <option value="REVENUE_SHARE">Seasonal Harvest Revenue Share Note</option>
                       <option value="EQUITY_LINKED">Subordinated Convertible / Equity Structure</option>
                     </select>

@@ -192,7 +192,7 @@ export const AdminCommandCenterView: React.FC = () => {
             <div className="text-[9px] text-neutral-400">{metrics.pending} new / {metrics.changesReq} reqs</div>
           </div>
 
-          {/* Card 3: Fully Certified */}
+          {/* Card 3: Fully Verified */}
           <div
             onClick={() => {
               setVerificationFilter('VERIFIED');
@@ -201,13 +201,13 @@ export const AdminCommandCenterView: React.FC = () => {
             className="p-3.5 rounded-2xl bg-[#10140D] border border-emerald-500/30 hover:border-emerald-400 transition-all cursor-pointer group"
           >
             <div className="flex items-center justify-between text-[10px] text-emerald-400">
-              <span>Certified Live</span>
+              <span>FI Verified</span>
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             </div>
             <div className="text-lg font-bold text-emerald-400 mt-1">
               {metrics.verified}
             </div>
-            <div className="text-[9px] text-neutral-500">100% Stat. Vetted</div>
+            <div className="text-[9px] text-neutral-500">100% Vetted Dossiers</div>
           </div>
 
           {/* Card 4: FI 50 Constituents */}

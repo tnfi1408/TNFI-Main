@@ -33,6 +33,7 @@ import { AdminRegistrationForm } from './auth/AdminRegistrationForm';
 import { FpoRegistrationWizard } from './auth/FpoRegistrationWizard';
 import { InvestorRegistrationWizard } from './auth/InvestorRegistrationWizard';
 import { FarmerRegistrationWizard } from './auth/FarmerRegistrationWizard';
+import { FiLogo } from './FiLogo';
 
 interface RoleDetail {
   username: string;
@@ -441,9 +442,7 @@ export const LandingLogin: React.FC = () => {
       <header className="border-b border-[#2A3320]/80 bg-[#0B120D]/90 backdrop-blur-xl sticky top-0 z-40 px-6 sm:px-12 py-4 flex items-center justify-between transition-all">
         {/* Left Brand Identity */}
         <div className="flex items-center gap-3.5 group cursor-pointer" onClick={() => handleQuickRoleAccess('fpo')}>
-          <div className="w-10 h-10 rounded-xl bg-[#101811] border border-[#7A8F35]/50 flex items-center justify-center font-bold text-sm text-[#9CAF45] shadow-lg shadow-[#7A8F35]/20 group-hover:border-[#9CAF45] transition-all">
-            <span className="tracking-tighter font-mono font-black text-base text-[#F3F1E8]">FI</span>
-          </div>
+          <FiLogo size={40} />
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold text-lg text-[#F3F1E8] tracking-tight font-editorial-sans">
@@ -720,7 +719,7 @@ export const LandingLogin: React.FC = () => {
                       <span className="text-xs font-bold text-[#8FAF3D] font-mono">+2.84% ↑</span>
                     </div>
                     <span className="text-[10px] text-[#969D88] block mt-0.5 font-medium">
-                      Tamil Nadu FPO Index
+                      FI 50 — FPO Performance Index
                     </span>
                   </div>
 
@@ -922,13 +921,7 @@ export const LandingLogin: React.FC = () => {
 
             {/* Header */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#53652A] via-[#7A8F35] to-[#9CAF45] p-0.5 shadow-lg shadow-[#7A8F35]/20 shrink-0">
-                <div className="w-full h-full bg-[#10140D] rounded-[10px] flex items-center justify-center">
-                  <span className="text-sm font-black text-[#9CAF45] font-mono">
-                    FI
-                  </span>
-                </div>
-              </div>
+              <FiLogo size={40} />
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-lg text-[#F3F1E8]">FI Access Portal</span>
