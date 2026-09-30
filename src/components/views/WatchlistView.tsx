@@ -32,7 +32,6 @@ export const WatchlistView: React.FC = () => {
     watchlist,
     removeFromWatchlist,
     fpos,
-    fpoStocks,
     comparedFpoIds,
     toggleCompareFpo,
     removeFromCompare,
@@ -50,7 +49,8 @@ export const WatchlistView: React.FC = () => {
     return watchlist.map(id => {
       const match = fpos.find(f => f.id === id || f.ticker === id);
       const seed = RAW_50_FPOS_DATA.find(s => s.id === id || s.ticker === id) || (match ? {
-        stockPrice: 120,
+        mandiPricePerQtl: 2800,
+        harvestValueCr: 45.0,
         perf1D: 2.1,
         revenueCr: 24.5,
         profitMarginPercent: 16.0,
@@ -182,14 +182,14 @@ export const WatchlistView: React.FC = () => {
               <div className="space-y-1">
                 <h3 className="text-base font-bold text-[#F3F4EA]">Your Watchlist is Empty</h3>
                 <p className="text-xs text-[#969D88] font-sans max-w-md mx-auto">
-                  Add FPOs from the TNFI 50 index or FPO Research directory to monitor their agricultural yield performance and capital opportunities.
+                  Add FPOs from the FI 50 index or FPO Research directory to monitor their agricultural yield performance and capital opportunities.
                 </p>
               </div>
               <button
                 onClick={() => setCurrentView('tnfi-50')}
                 className="px-5 py-2.5 rounded-xl bg-[#7A8F35] hover:bg-[#8FAF3D] text-white text-xs font-bold transition-all shadow-lg"
               >
-                Browse TNFI 50 Index
+                Browse FI 50 Index
               </button>
             </div>
           ) : (
@@ -240,7 +240,7 @@ export const WatchlistView: React.FC = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-[9px] text-[#969D88] uppercase">TNFI Score</div>
+                          <div className="text-[9px] text-[#969D88] uppercase">FI Score</div>
                           <div className="text-xs font-black text-[#8FAF3D]">{fpo.computedScore}/100</div>
                         </div>
                       </div>
@@ -357,7 +357,7 @@ export const WatchlistView: React.FC = () => {
                   <tbody className="divide-y divide-[#2A3320]/60">
                     {/* Performance Score */}
                     <tr className="bg-[#161B11]/30">
-                      <td className="py-3 px-4 font-bold text-[#9CAF45]">TNFI Performance Score</td>
+                      <td className="py-3 px-4 font-bold text-[#9CAF45]">FI Performance Score</td>
                       {comparedFpos.map(f => (
                         <td key={f.id} className="py-3 px-4">
                           <span className="text-sm font-black text-[#8FAF3D] font-mono">
@@ -447,9 +447,9 @@ export const WatchlistView: React.FC = () => {
                       ))}
                     </tr>
 
-                    {/* TNFI 50 Benchmark Status */}
+                    {/* FI 50 Benchmark Status */}
                     <tr>
-                      <td className="py-3 px-4 font-bold text-[#F3F4EA]">TNFI 50 Status</td>
+                      <td className="py-3 px-4 font-bold text-[#F3F4EA]">FI 50 Status</td>
                       {comparedFpos.map(f => (
                         <td key={f.id} className="py-3 px-4">
                           <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#8FAF3D]/20 text-[#8FAF3D] border border-[#8FAF3D]/40">

@@ -15,7 +15,7 @@ import {
 import { useApp } from '../context/AppContext';
 
 export const FpoIndexHero: React.FC = () => {
-  const { indexData, fpoStocks, setCurrentView } = useApp();
+  const { indexData, fpos, setCurrentView } = useApp();
   const [timeframe, setTimeframe] = useState<'1D' | '1W' | '1M' | '1Y' | 'ALL'>('1W');
 
   const isPositive = (indexData.changePercent || 0) >= 0;
@@ -30,10 +30,10 @@ export const FpoIndexHero: React.FC = () => {
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#7A8F35]/15 text-[#9CAF45] border border-[#7A8F35]/30">
                 BENCHMARK INDEX • LIVE
               </span>
-              <span className="text-xs text-[#969D88]">TNFI 50 CONSTITUENT BASKET</span>
+              <span className="text-xs text-[#969D88]">FI 50 CONSTITUENT BASKET</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F3F4EA] tracking-tight">
-              Tamil Nadu Farmer Producer Index (TNFI 50)
+              Tamil Nadu Farmer Producer Index (FI 50)
             </h1>
             <p className="text-xs sm:text-sm text-[#969D88] mt-1.5 max-w-2xl leading-relaxed">
               The benchmark index tracking operational scale, audited harvest revenue, forward offtake parity, and credit solvency across 50 verified Tamil Nadu Farmer Producer Organizations.
@@ -44,7 +44,7 @@ export const FpoIndexHero: React.FC = () => {
           <div className="flex items-baseline gap-4 p-5 rounded-2xl bg-[#080A07] border border-[#2A3320]">
             <div>
               <span className="text-[10px] text-[#969D88] uppercase block font-semibold tracking-wider">
-                TNFI 50 BENCHMARK
+                FI 50 BENCHMARK
               </span>
               <span className="text-3xl sm:text-4xl font-bold text-[#F3F4EA] font-mono tracking-tight">
                 {(indexData?.indexValue ?? indexData?.currentValue ?? 1245.68).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
@@ -79,7 +79,7 @@ export const FpoIndexHero: React.FC = () => {
           </div>
           <div className="p-3 rounded-2xl bg-[#161B11] border border-[#2A3320]">
             <span className="text-[10px] text-[#969D88] block uppercase font-medium">Annual Harvest Val</span>
-            <span className="font-bold text-[#D6A83A] text-sm font-mono mt-0.5 block">₹{(indexData?.totalMarketCapCr ?? 3450).toLocaleString()} Cr</span>
+            <span className="font-bold text-[#D6A83A] text-sm font-mono mt-0.5 block">₹{(indexData?.totalHarvestValueCr ?? 3450).toLocaleString()} Cr</span>
           </div>
           <div className="p-3 rounded-2xl bg-[#161B11] border border-[#2A3320]">
             <span className="text-[10px] text-[#969D88] block uppercase font-medium">Avg Net Margin</span>
@@ -98,7 +98,7 @@ export const FpoIndexHero: React.FC = () => {
         <div className="lg:col-span-2 p-6 rounded-3xl bg-[#10140D] border border-[#2A3320] space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="font-bold text-sm text-[#F3F4EA]">TNFI 50 Composite Performance Trend</h3>
+              <h3 className="font-bold text-sm text-[#F3F4EA]">FI 50 Composite Performance Trend</h3>
               <span className="text-xs text-[#969D88]">Aggregated harvest yields and commodity mandi index</span>
             </div>
 
@@ -228,7 +228,7 @@ export const FpoIndexHero: React.FC = () => {
               <tr>
                 <th className="py-3 px-4">FPO & DISTRICT</th>
                 <th className="py-3 px-3">PRIMARY COMMODITY</th>
-                <th className="py-3 px-3">TNFI SCORE</th>
+                <th className="py-3 px-3">FI SCORE</th>
                 <th className="py-3 px-3">HARVEST VALUE</th>
                 <th className="py-3 px-3">FUNDED ACREAGE</th>
                 <th className="py-3 px-3">MEMBER FARMERS</th>
@@ -237,7 +237,7 @@ export const FpoIndexHero: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#2A3320]">
-              {fpoStocks.slice(0, 6).map(stock => {
+              {fpos.slice(0, 6).map(stock => {
                 return (
                   <tr key={stock.id} className="hover:bg-[#161B11]/60 transition-colors">
                     <td className="py-3 px-4">
@@ -253,7 +253,7 @@ export const FpoIndexHero: React.FC = () => {
                       </span>
                     </td>
                     <td className="py-3 px-3 font-bold font-mono text-[#F3F4EA]">
-                      ₹{stock.marketCapCr} Cr
+                      ₹{stock.harvestValueCr || (stock.financials?.revenueCr ? (stock.financials.revenueCr * 1.8).toFixed(1) : '75.4')} Cr
                     </td>
                     <td className="py-3 px-3 font-mono text-[#969D88]">
                       {(stock.totalAcreage ? stock.totalAcreage : 3400).toLocaleString('en-IN', { maximumFractionDigits: 0 })} Acres

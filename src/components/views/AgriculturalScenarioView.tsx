@@ -139,7 +139,7 @@ export const AgriculturalScenarioView: React.FC = () => {
             Scenario & Sensitivity Analysis
           </h1>
           <p className="text-xs sm:text-sm text-[#969D88] font-sans max-w-2xl">
-            Simulate the macro impact of monsoon rainfall deviations, mandi spot price shifts, institutional offtake demand, and capital deployment on the TNFI 50 Benchmark and farmer income realization.
+            Simulate the macro impact of monsoon rainfall deviations, mandi spot price shifts, institutional offtake demand, and capital deployment on the FI 50 Benchmark and farmer income realization.
           </p>
         </div>
 
@@ -343,7 +343,7 @@ export const AgriculturalScenarioView: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Projected Benchmark */}
             <div className="p-5 rounded-2xl bg-[#10140D] border border-[#2A3320] space-y-2 shadow-lg">
-              <div className="text-[10px] text-[#969D88] uppercase">Simulated TNFI 50</div>
+              <div className="text-[10px] text-[#969D88] uppercase">Simulated FI 50</div>
               <div className="text-2xl font-black text-[#F3F4EA] font-mono">
                 {(simulationResults.simulatedIndexValue || 0).toLocaleString()}
               </div>

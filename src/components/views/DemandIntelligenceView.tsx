@@ -193,7 +193,7 @@ export const DemandIntelligenceView: React.FC = () => {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-[#969D88] mt-1 font-sans">
-            Institutional Buyer Procurement Pipeline, Commodity Spot Realizations & Transmission to TNFI 50 Constituents
+            Institutional Buyer Procurement Pipeline, Commodity Spot Realizations & Transmission to FI 50 Constituents
           </p>
         </div>
 
@@ -206,7 +206,7 @@ export const DemandIntelligenceView: React.FC = () => {
             onClick={() => setCurrentView('tnfi-50')}
             className="px-4 py-2 rounded-xl bg-[#7A8F35] hover:bg-[#9CAF45] text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-[#7A8F35]/25"
           >
-            <span>View TNFI 50 Benchmark</span>
+            <span>View FI 50 Benchmark</span>
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>

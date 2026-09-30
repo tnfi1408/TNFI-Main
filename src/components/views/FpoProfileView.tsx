@@ -179,7 +179,7 @@ export const FpoProfileView: React.FC = () => {
             {/* Status Pill */}
             <div className="p-4 rounded-2xl bg-[#080A07] border border-[#2A3320] min-w-[200px]">
               <span className="text-[10px] font-mono text-[#969D88] uppercase block">
-                TNFI VERIFICATION STATUS
+                FI VERIFICATION STATUS
               </span>
               <div className="flex items-center gap-2 mt-1">
                 <span
@@ -208,7 +208,7 @@ export const FpoProfileView: React.FC = () => {
                 </span>
               </div>
               <span className="text-[10px] text-[#969D88] block mt-0.5">
-                {isVerified ? 'TNFI Platform Verified' : isUnderReview ? 'Review in progress' : 'Action Required'}
+                {isVerified ? 'FI Platform Verified' : isUnderReview ? 'Review in progress' : 'Action Required'}
               </span>
             </div>
 
@@ -539,7 +539,7 @@ export const FpoProfileView: React.FC = () => {
                     <span>Governance Rating: Grade A+ (Score: {fpo.governanceScore || 94}/100)</span>
                   </h4>
                   <p className="text-xs text-[#969D88] leading-relaxed">
-                    Complies with mandatory ROC annual filings, timely shareholder AGMs, and digital accounting in accordance with TNFI transparency benchmarks.
+                    Complies with mandatory ROC annual filings, timely shareholder AGMs, and digital accounting in accordance with FI transparency benchmarks.
                   </p>
                 </div>
               </div>
@@ -739,7 +739,7 @@ export const FpoProfileView: React.FC = () => {
                     <span>Statutory Compliance Dossier & Verification History</span>
                   </h3>
                   <p className="text-xs text-[#969D88] mt-0.5">
-                    Uploaded regulatory documents, certificates, and TNFI verification logs.
+                    Uploaded regulatory documents, certificates, and FI verification logs.
                   </p>
                 </div>
 
@@ -749,7 +749,7 @@ export const FpoProfileView: React.FC = () => {
                     className="px-4 py-2 rounded-xl bg-[#36C77A] hover:bg-[#45D688] text-[#080A07] font-bold text-xs transition-all cursor-pointer flex items-center gap-1.5 shadow-md shadow-[#36C77A]/25"
                   >
                     <ShieldCheck className="w-4 h-4" />
-                    <span>Submit for TNFI Verification</span>
+                    <span>Submit for FI Verification</span>
                   </button>
                 )}
               </div>
@@ -788,13 +788,13 @@ export const FpoProfileView: React.FC = () => {
               {/* Verification Audit Trail */}
               <div className="p-5 rounded-2xl bg-[#080A07] border border-[#2A3320] space-y-3">
                 <span className="text-[10px] font-mono text-[#969D88] uppercase block">
-                  TNFI AUDIT TRAIL LOG
+                  FI AUDIT TRAIL LOG
                 </span>
                 <div className="space-y-2 text-xs font-mono">
                   <div className="flex items-start gap-2 text-[#36C77A]">
                     <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                     <div>
-                      <span>TNFI 50 Benchmark Inclusion Approved</span>
+                      <span>FI 50 Benchmark Inclusion Approved</span>
                       <span className="text-[#969D88] block text-[10px]">By Admin Officer • 18 May 2026</span>
                     </div>
                   </div>

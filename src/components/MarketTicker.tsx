@@ -26,7 +26,7 @@ export const MarketTicker: React.FC = () => {
       >
         <div className="w-2 h-2 rounded-full bg-[#8FAF3D] animate-pulse" />
         <div className="flex items-center gap-2 font-mono">
-          <span className="text-[11px] font-bold text-[#F3F4EA] tracking-wide">TNFI 50</span>
+          <span className="text-[11px] font-bold text-[#F3F4EA] tracking-wide">FI 50</span>
           <span className="text-xs font-bold text-[#9CAF45]">
             {(indexData.indexValue || indexData.currentValue || 1245.68).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </span>

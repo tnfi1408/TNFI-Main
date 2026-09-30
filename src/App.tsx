@@ -6,7 +6,7 @@ import { MarketTicker } from './components/MarketTicker';
 import { Sidebar } from './components/Sidebar';
 import { FpoIndexHero } from './components/FpoIndexHero';
 import { KpiCards } from './components/KpiCards';
-import { FpoStockMarket } from './components/FpoStockMarket';
+import { FpoPerformanceMarket } from './components/FpoPerformanceMarket';
 import { AiScoringEngine } from './components/AiScoringEngine';
 import { FpoDirectory } from './components/FpoDirectory';
 import { FpoDetailView } from './components/FpoDetailView';
@@ -16,7 +16,7 @@ import { ReportsView } from './components/ReportsView';
 import { LandingLogin } from './components/LandingLogin';
 import { PageTransition } from './components/common/PageTransition';
 
-// TNFI Intelligence & Index Views
+// FI Intelligence & Index Views
 import { InvestorDashboardView } from './components/views/InvestorDashboardView';
 import { Tnfi50View } from './components/views/Tnfi50View';
 import { DemandIntelligenceView } from './components/views/DemandIntelligenceView';
@@ -98,7 +98,7 @@ const MainLayout: React.FC = () => {
       case 'fpo-directory':
         return user?.role === 'admin' ? <AdminFpoDirectoryView /> : <FpoResearchView />;
       case 'admin-fpo-directory':
-        return user?.role === 'admin' ? <AdminFpoDirectoryView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
+        return user?.role === 'admin' ? <AdminFpoDirectoryView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="FI Administrator" />;
       case 'fpo-detail':
         return <FpoDetailView key={selectedFpoId || 'detail'} />;
       case 'market-intel':
@@ -160,19 +160,19 @@ const MainLayout: React.FC = () => {
       // 3. ADMIN OPERATIONAL VIEWS
       case 'admin-command':
       case 'admin-dashboard':
-        return user?.role === 'admin' ? <AdminCommandCenterView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
+        return user?.role === 'admin' ? <AdminCommandCenterView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="FI Administrator" />;
       case 'fpo-verification':
-        return user?.role === 'admin' ? <FpoVerificationView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
+        return user?.role === 'admin' ? <FpoVerificationView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="FI Administrator" />;
       case 'fpo-verification-detail':
-        return user?.role === 'admin' ? <FpoVerificationDetailView key={selectedFpoId || 'vdetail'} /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
+        return user?.role === 'admin' ? <FpoVerificationDetailView key={selectedFpoId || 'vdetail'} /> : <RoleAccessBoundary requiredRole="admin" roleLabel="FI Administrator" />;
       case 'tnfi-50-mgmt':
       case 'rebalance':
-        return user?.role === 'admin' ? <Tnfi50ManagementView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="TNFI Administrator" />;
+        return user?.role === 'admin' ? <Tnfi50ManagementView /> : <RoleAccessBoundary requiredRole="admin" roleLabel="FI Administrator" />;
 
       // Additional Supporting Views
       case 'fpo-stocks':
       case 'fpo-performance-market':
-        return <FpoStockMarket />;
+        return <FpoPerformanceMarket />;
       case 'market-simulator':
         return <AgriculturalScenarioView />;
 

@@ -178,7 +178,7 @@ export const FpoOperatingDashboardView: React.FC = () => {
                 </span>
               </div>
               <span className="text-[10px] text-[#969D88] block mt-0.5">
-                {isVerified ? 'TNFI 50 Eligible & Audited' : isUnderReview ? 'Dossier Under Review' : 'Action Required'}
+                {isVerified ? 'FI 50 Eligible & Audited' : isUnderReview ? 'Dossier Under Review' : 'Action Required'}
               </span>
             </div>
 
@@ -212,7 +212,7 @@ export const FpoOperatingDashboardView: React.FC = () => {
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>
                 {isUnderReview
-                  ? 'Your dossier has been submitted and is currently being evaluated by the TNFI Verification Desk.'
+                  ? 'Your dossier has been submitted and is currently being evaluated by the FI Verification Desk.'
                   : isChangesReq
                   ? `Amendments Requested: ${fpo.rejectionReason || 'Please update the buyer offtake contract'}`
                   : 'Your profile is currently in draft. Complete all sections to unlock institutional capital eligibility.'}
@@ -386,7 +386,7 @@ export const FpoOperatingDashboardView: React.FC = () => {
               <div>
                 <h3 className="text-base font-bold text-[#F3F4EA] flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[#9CAF45]" />
-                  <span>TNFI Performance Index Breakdown ({fpo.tnfiScore || fpo.performanceScore || 88.4}/100)</span>
+                  <span>FI Performance Index Breakdown ({fpo.tnfiScore || fpo.performanceScore || 88.4}/100)</span>
                 </h3>
                 <p className="text-xs text-[#969D88] mt-0.5">
                   Explainable 5-pillar mathematical scoring powering index inclusion and capital interest rates.
@@ -529,7 +529,7 @@ export const FpoOperatingDashboardView: React.FC = () => {
               </div>
             ) : (
               <p className="text-xs text-[#969D88] leading-relaxed">
-                Issue verified agricultural revenue bonds or working capital lines to institutional impact investors on the TNFI platform.
+                Access verified agricultural credit facilities, warehouse receipt financing, or working capital lines from institutional impact capital providers on the FI platform.
               </p>
             )}
 

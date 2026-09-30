@@ -65,8 +65,8 @@ export const FpoDetailView: React.FC = () => {
           <h2 className="text-xl font-black text-[#F3F4EA]">Select an FPO to view agricultural performance details.</h2>
           <p className="text-xs text-[#969D88] font-sans max-w-md mx-auto">
             {selectedFpoId
-              ? `No FPO record matching identifier ${selectedFpoId} was found in the Tamil Nadu TNFI registry.`
-              : 'Choose any constituent from the FPO Research directory or TNFI 50 performance leaderboard.'}
+              ? `No FPO record matching identifier ${selectedFpoId} was found in the Tamil Nadu FI registry.`
+              : 'Choose any constituent from the FPO Research directory or FI 50 performance leaderboard.'}
           </p>
         </div>
         <div className="pt-2">
@@ -135,7 +135,7 @@ export const FpoDetailView: React.FC = () => {
               {navigationOrigin === 'compare' ? 'Back to Comparison' :
                navigationOrigin === 'watchlist' ? 'Back to Watchlist' :
                navigationOrigin === 'investor-dashboard' ? 'Back to Dashboard' :
-               navigationOrigin === 'tnfi-50' ? 'Back to TNFI 50' : 'Back to FPO Directory'}
+               navigationOrigin === 'tnfi-50' ? 'Back to FI 50' : 'Back to FPO Directory'}
             </span>
           </button>
 
@@ -181,7 +181,7 @@ export const FpoDetailView: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-3 py-1 rounded-lg text-[10px] font-bold font-mono uppercase bg-[#36C77A]/10 text-[#36C77A] border border-[#36C77A]/30 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>{activeFpo.verificationStatus || 'TNFI ACCREDITED'}</span>
+                <span>{activeFpo.verificationStatus || 'FI VERIFIED'}</span>
               </span>
               <span className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-[#161F17] text-[#9CAF45] border border-[#2A3320]">
                 {activeFpo.ticker || activeFpo.code}
@@ -268,7 +268,7 @@ export const FpoDetailView: React.FC = () => {
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#36C77A]" />
             <div>
-              <span className="text-[10px] font-mono text-[#969D88] uppercase block">TNFI Accreditation</span>
+              <span className="text-[10px] font-mono text-[#969D88] uppercase block">FI Verification</span>
               <span className="font-bold text-[#F3F4EA]">{activeFpo.verificationStatus || 'VERIFIED'}</span>
             </div>
           </div>

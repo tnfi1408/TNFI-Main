@@ -13,32 +13,32 @@ import {
 import { useApp } from '../context/AppContext';
 
 export const FpoRankings: React.FC = () => {
-  const { fpoStocks, setCurrentView } = useApp();
+  const { fpos, setCurrentView } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [sectorFilter, setSectorFilter] = useState('ALL');
-  const [sortBy, setSortBy] = useState<'score' | 'revenue' | 'marketCap' | 'profit'>('score');
+  const [sortBy, setSortBy] = useState<'score' | 'revenue' | 'harvestVal' | 'profit'>('score');
 
   const sectorsList = ['ALL', 'Horticulture', 'Paddy & Cereals', 'Dairy & Livestock', 'Spices & Plantation', 'Coconut & Oilseeds', 'Millets & Pulses'];
 
   const rankedStocks = useMemo(() => {
-    return [...fpoStocks]
+    return [...fpos]
       .filter(stock => {
         const matchesSearch =
           stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          stock.primaryCrop.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (stock.primaryCrop || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
           stock.district.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesSector = sectorFilter === 'ALL' || stock.sector === sectorFilter;
         return matchesSearch && matchesSector;
       })
       .sort((a, b) => {
-        if (sortBy === 'score') return b.tnfiScore - a.tnfiScore;
-        if (sortBy === 'revenue') return (b.financials?.revenueCr || 0) - (a.financials?.revenueCr || 0);
-        if (sortBy === 'marketCap') return b.marketCapCr - a.marketCapCr;
-        if (sortBy === 'profit') return (b.financials?.patCr || 0) - (a.financials?.patCr || 0);
+        if (sortBy === 'score') return (b.tnfiScore || b.performanceScore || 0) - (a.tnfiScore || a.performanceScore || 0);
+        if (sortBy === 'revenue') return (b.revenueCr || b.financials?.revenueCr || 0) - (a.revenueCr || a.financials?.revenueCr || 0);
+        if (sortBy === 'harvestVal') return (b.harvestValueCr || 0) - (a.harvestValueCr || 0);
+        if (sortBy === 'profit') return (b.profitCr || b.financials?.patCr || 0) - (a.profitCr || a.financials?.patCr || 0);
         return 0;
       });
-  }, [fpoStocks, searchTerm, sectorFilter, sortBy]);
+  }, [fpos, searchTerm, sectorFilter, sortBy]);
 
   return (
     <div className="rounded-2xl bg-[#0B120B] border border-[#26351B] p-5 sm:p-6 shadow-2xl space-y-5">
@@ -48,7 +48,7 @@ export const FpoRankings: React.FC = () => {
           <div className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-[#D6B45C]" />
             <h2 className="text-lg font-bold text-[#F2F1E8] tracking-tight">
-              TNFI Official FPO Performance Leaderboard
+              FI Official FPO Performance Leaderboard
             </h2>
           </div>
           <p className="text-xs text-[#A7AE9B] mt-0.5">
@@ -59,7 +59,7 @@ export const FpoRankings: React.FC = () => {
         {/* Sort Switcher */}
         <div className="flex items-center gap-1 bg-[#050905] border border-[#26351B] p-1 rounded-xl text-xs font-mono">
           <span className="text-[#68705F] px-2">Sort:</span>
-          {(['score', 'revenue', 'marketCap', 'profit'] as const).map(s => (
+          {(['score', 'revenue', 'harvestVal', 'profit'] as const).map(s => (
             <button
               key={s}
               onClick={() => setSortBy(s)}
@@ -69,7 +69,7 @@ export const FpoRankings: React.FC = () => {
                   : 'text-[#A7AE9B] hover:text-[#F2F1E8]'
               }`}
             >
-              {s === 'score' ? 'Perf Index' : s === 'revenue' ? 'Revenue Cr' : s === 'marketCap' ? 'Harvest Val' : 'Net PAT'}
+              {s === 'score' ? 'Perf Index' : s === 'revenue' ? 'Revenue Cr' : s === 'harvestVal' ? 'Harvest Val' : 'Net PAT'}
             </button>
           ))}
         </div>
@@ -154,13 +154,13 @@ export const FpoRankings: React.FC = () => {
                     </span>
                   </td>
                   <td className="py-3 px-3 font-bold font-mono-nums text-[#F2F1E8]">
-                    ₹{stock.financials?.revenueCr ?? (stock.marketCapCr * 0.4).toFixed(1)} Cr
+                    ₹{stock.revenueCr ?? stock.financials?.revenueCr ?? (stock.expectedRevenue ? (stock.expectedRevenue / 10000000).toFixed(1) : '24.0')} Cr
                   </td>
                   <td className="py-3 px-3 font-mono-nums text-[#A7AE9B]">
-                    ₹{stock.marketCapCr} Cr
+                    ₹{stock.harvestValueCr ?? (stock.harvestValue ? (stock.harvestValue / 10000000).toFixed(1) : '65.0')} Cr
                   </td>
                   <td className="py-3 px-3 font-mono-nums text-[#36C77A] font-bold">
-                    ₹{stock.financials?.patCr ?? (stock.marketCapCr * 0.06).toFixed(1)} Cr
+                    ₹{stock.profitCr ?? stock.financials?.patCr ?? '3.5'} Cr
                   </td>
                   <td className="py-3 px-3 font-mono-nums font-bold text-[#A8C94A]">
                     {stock.tnfiScore}/100

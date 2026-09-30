@@ -1,4 +1,4 @@
-import { FPO, FpoStock, SectorType, CreditRating, RiskLevel } from '../types';
+import { FPO, SectorType, CreditRating, RiskLevel } from '../types';
 import { recomputeFpoAggregates } from '../utils/calculations';
 
 export interface TnfiScoreFactorBreakdown {
@@ -39,9 +39,8 @@ export interface ConstituentFpoSeed {
   perf3M: number;
   perf1Y: number;
   subScores: TnfiScoreFactorBreakdown;
-  stockPrice: number;
-  peRatio: number;
-  dividendYield: number;
+  mandiPricePerQtl: number;
+  harvestValueCr: number;
 }
 
 // 50 Constituent Simulated Seed Data exclusively across Tamil Nadu's 38+ Districts
@@ -76,9 +75,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 16.8,
     perf1Y: 34.2,
     subScores: { financialHealth: 96, growth: 94, profitability: 95, governance: 98, marketPosition: 96, agriStrength: 92, risk: 90 },
-    stockPrice: 148.50,
-    peRatio: 11.4,
-    dividendYield: 5.8
+    mandiPricePerQtl: 3267,
+    harvestValueCr: 105.85
   },
   {
     id: 'fpo-1002',
@@ -108,9 +106,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 14.2,
     perf1Y: 28.5,
     subScores: { financialHealth: 94, growth: 90, profitability: 91, governance: 96, marketPosition: 94, agriStrength: 95, risk: 88 },
-    stockPrice: 124.80,
-    peRatio: 12.1,
-    dividendYield: 6.2
+    mandiPricePerQtl: 2746,
+    harvestValueCr: 104.9
   },
   {
     id: 'fpo-1003',
@@ -140,9 +137,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 12.8,
     perf1Y: 26.4,
     subScores: { financialHealth: 92, growth: 92, profitability: 94, governance: 93, marketPosition: 92, agriStrength: 88, risk: 86 },
-    stockPrice: 165.20,
-    peRatio: 13.5,
-    dividendYield: 5.4
+    mandiPricePerQtl: 3634,
+    harvestValueCr: 78.13
   },
   {
     id: 'fpo-1004',
@@ -172,9 +168,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 21.5,
     perf1Y: 42.1,
     subScores: { financialHealth: 91, growth: 96, profitability: 96, governance: 94, marketPosition: 95, agriStrength: 90, risk: 87 },
-    stockPrice: 182.40,
-    peRatio: 14.2,
-    dividendYield: 4.9
+    mandiPricePerQtl: 4013,
+    harvestValueCr: 73.84
   },
   {
     id: 'fpo-1005',
@@ -204,9 +199,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 15.1,
     perf1Y: 29.8,
     subScores: { financialHealth: 88, growth: 89, profitability: 90, governance: 92, marketPosition: 89, agriStrength: 90, risk: 85 },
-    stockPrice: 118.60,
-    peRatio: 10.8,
-    dividendYield: 6.5
+    mandiPricePerQtl: 2609,
+    harvestValueCr: 73.05
   },
 
   // --- RANK 6 to 15 (Next 10 - Weights sum to 29.50%) ---
@@ -238,9 +232,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 16.2,
     perf1Y: 31.4,
     subScores: { financialHealth: 87, growth: 93, profitability: 89, governance: 91, marketPosition: 88, agriStrength: 87, risk: 85 },
-    stockPrice: 112.50,
-    peRatio: 11.2,
-    dividendYield: 5.7
+    mandiPricePerQtl: 2475,
+    harvestValueCr: 65.59
   },
   {
     id: 'fpo-1007',
@@ -270,9 +263,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 13.9,
     perf1Y: 27.8,
     subScores: { financialHealth: 89, growth: 94, profitability: 90, governance: 88, marketPosition: 92, agriStrength: 88, risk: 82 },
-    stockPrice: 178.20,
-    peRatio: 13.8,
-    dividendYield: 4.8
+    mandiPricePerQtl: 3920,
+    harvestValueCr: 133.28
   },
   {
     id: 'fpo-1008',
@@ -302,9 +294,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 15.5,
     perf1Y: 30.8,
     subScores: { financialHealth: 88, growth: 89, profitability: 91, governance: 90, marketPosition: 93, agriStrength: 92, risk: 86 },
-    stockPrice: 134.00,
-    peRatio: 12.4,
-    dividendYield: 6.0
+    mandiPricePerQtl: 2948,
+    harvestValueCr: 106.13
   },
   {
     id: 'fpo-1009',
@@ -334,9 +325,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 17.5,
     perf1Y: 35.1,
     subScores: { financialHealth: 86, growth: 91, profitability: 88, governance: 88, marketPosition: 90, agriStrength: 86, risk: 83 },
-    stockPrice: 156.40,
-    peRatio: 13.0,
-    dividendYield: 5.1
+    mandiPricePerQtl: 3441,
+    harvestValueCr: 99.79
   },
   {
     id: 'fpo-1010',
@@ -366,9 +356,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 20.4,
     perf1Y: 39.2,
     subScores: { financialHealth: 85, growth: 96, profitability: 97, governance: 90, marketPosition: 91, agriStrength: 84, risk: 81 },
-    stockPrice: 142.80,
-    peRatio: 12.6,
-    dividendYield: 5.6
+    mandiPricePerQtl: 3142,
+    harvestValueCr: 35.19
   },
   {
     id: 'fpo-1011',
@@ -398,9 +387,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 12.4,
     perf1Y: 24.5,
     subScores: { financialHealth: 84, growth: 88, profitability: 87, governance: 89, marketPosition: 86, agriStrength: 91, risk: 84 },
-    stockPrice: 104.50,
-    peRatio: 11.0,
-    dividendYield: 6.1
+    mandiPricePerQtl: 2299,
+    harvestValueCr: 56.33
   },
   {
     id: 'fpo-1012',
@@ -430,9 +418,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 16.0,
     perf1Y: 32.0,
     subScores: { financialHealth: 83, growth: 90, profitability: 89, governance: 87, marketPosition: 85, agriStrength: 86, risk: 82 },
-    stockPrice: 98.40,
-    peRatio: 10.5,
-    dividendYield: 6.4
+    mandiPricePerQtl: 2165,
+    harvestValueCr: 36.37
   },
   {
     id: 'fpo-1013',
@@ -462,9 +449,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 11.2,
     perf1Y: 22.0,
     subScores: { financialHealth: 85, growth: 86, profitability: 85, governance: 88, marketPosition: 84, agriStrength: 90, risk: 85 },
-    stockPrice: 92.50,
-    peRatio: 10.2,
-    dividendYield: 6.8
+    mandiPricePerQtl: 2035,
+    harvestValueCr: 50.88
   },
   {
     id: 'fpo-1014',
@@ -494,9 +480,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 17.2,
     perf1Y: 34.5,
     subScores: { financialHealth: 84, growth: 92, profitability: 90, governance: 86, marketPosition: 87, agriStrength: 85, risk: 82 },
-    stockPrice: 115.00,
-    peRatio: 11.8,
-    dividendYield: 5.5
+    mandiPricePerQtl: 2530,
+    harvestValueCr: 51.87
   },
   {
     id: 'fpo-1015',
@@ -526,9 +511,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 14.5,
     perf1Y: 28.0,
     subScores: { financialHealth: 86, growth: 91, profitability: 92, governance: 89, marketPosition: 88, agriStrength: 86, risk: 83 },
-    stockPrice: 128.50,
-    peRatio: 12.0,
-    dividendYield: 5.2
+    mandiPricePerQtl: 2827,
+    harvestValueCr: 62.19
   },
 
   // --- RANK 16 to 30 (Next 15 - Weights sum to 27.00%) ---
@@ -560,9 +544,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 13.0,
     perf1Y: 25.4,
     subScores: { financialHealth: 82, growth: 87, profitability: 86, governance: 85, marketPosition: 83, agriStrength: 84, risk: 81 },
-    stockPrice: 88.60,
-    peRatio: 9.8,
-    dividendYield: 6.9
+    mandiPricePerQtl: 1949,
+    harvestValueCr: 30.01
   },
   {
     id: 'fpo-1017',
@@ -592,9 +575,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 10.8,
     perf1Y: 21.2,
     subScores: { financialHealth: 83, growth: 84, profitability: 84, governance: 86, marketPosition: 82, agriStrength: 88, risk: 83 },
-    stockPrice: 84.20,
-    peRatio: 9.5,
-    dividendYield: 7.1
+    mandiPricePerQtl: 1852,
+    harvestValueCr: 51.86
   },
   {
     id: 'fpo-1018',
@@ -624,9 +606,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 15.2,
     perf1Y: 29.5,
     subScores: { financialHealth: 81, growth: 88, profitability: 88, governance: 84, marketPosition: 83, agriStrength: 85, risk: 80 },
-    stockPrice: 94.00,
-    peRatio: 10.4,
-    dividendYield: 6.3
+    mandiPricePerQtl: 2068,
+    harvestValueCr: 33.5
   },
   {
     id: 'fpo-1019',
@@ -656,9 +637,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 16.5,
     perf1Y: 33.0,
     subScores: { financialHealth: 80, growth: 90, profitability: 91, governance: 83, marketPosition: 85, agriStrength: 83, risk: 79 },
-    stockPrice: 102.00,
-    peRatio: 11.1,
-    dividendYield: 5.8
+    mandiPricePerQtl: 2244,
+    harvestValueCr: 33.21
   },
   {
     id: 'fpo-1020',
@@ -688,9 +668,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 9.2,
     perf1Y: 18.0,
     subScores: { financialHealth: 79, growth: 82, profitability: 81, governance: 84, marketPosition: 80, agriStrength: 86, risk: 76 },
-    stockPrice: 76.50,
-    peRatio: 9.0,
-    dividendYield: 7.5
+    mandiPricePerQtl: 1683,
+    harvestValueCr: 32.82
   },
   {
     id: 'fpo-1021',
@@ -720,9 +699,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 11.8,
     perf1Y: 23.2,
     subScores: { financialHealth: 81, growth: 85, profitability: 85, governance: 86, marketPosition: 82, agriStrength: 89, risk: 81 },
-    stockPrice: 86.00,
-    peRatio: 9.6,
-    dividendYield: 7.0
+    mandiPricePerQtl: 1892,
+    harvestValueCr: 39.73
   },
   {
     id: 'fpo-1022',
@@ -752,9 +730,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 14.1,
     perf1Y: 27.5,
     subScores: { financialHealth: 78, growth: 86, profitability: 87, governance: 83, marketPosition: 81, agriStrength: 82, risk: 78 },
-    stockPrice: 91.20,
-    peRatio: 10.1,
-    dividendYield: 6.5
+    mandiPricePerQtl: 2006,
+    harvestValueCr: 27.08
   },
   {
     id: 'fpo-1023',
@@ -784,9 +761,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 13.0,
     perf1Y: 25.0,
     subScores: { financialHealth: 77, growth: 85, profitability: 86, governance: 82, marketPosition: 80, agriStrength: 81, risk: 77 },
-    stockPrice: 87.50,
-    peRatio: 9.8,
-    dividendYield: 6.7
+    mandiPricePerQtl: 1925,
+    harvestValueCr: 24.64
   },
   {
     id: 'fpo-1024',
@@ -816,9 +792,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 19.5,
     perf1Y: 38.0,
     subScores: { financialHealth: 80, growth: 93, profitability: 94, governance: 85, marketPosition: 87, agriStrength: 83, risk: 79 },
-    stockPrice: 138.00,
-    peRatio: 12.2,
-    dividendYield: 5.3
+    mandiPricePerQtl: 3036,
+    harvestValueCr: 33.4
   },
   {
     id: 'fpo-1025',
@@ -848,9 +823,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 13.8,
     perf1Y: 26.8,
     subScores: { financialHealth: 79, growth: 87, profitability: 89, governance: 84, marketPosition: 82, agriStrength: 85, risk: 80 },
-    stockPrice: 108.00,
-    peRatio: 11.5,
-    dividendYield: 5.9
+    mandiPricePerQtl: 2376,
+    harvestValueCr: 33.26
   },
   {
     id: 'fpo-1026',
@@ -880,9 +854,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 11.0,
     perf1Y: 21.5,
     subScores: { financialHealth: 76, growth: 84, profitability: 85, governance: 81, marketPosition: 79, agriStrength: 82, risk: 77 },
-    stockPrice: 79.50,
-    peRatio: 9.2,
-    dividendYield: 7.2
+    mandiPricePerQtl: 1749,
+    harvestValueCr: 26.58
   },
   {
     id: 'fpo-1027',
@@ -912,9 +885,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 15.0,
     perf1Y: 29.0,
     subScores: { financialHealth: 78, growth: 88, profitability: 89, governance: 83, marketPosition: 82, agriStrength: 84, risk: 79 },
-    stockPrice: 96.50,
-    peRatio: 10.6,
-    dividendYield: 6.2
+    mandiPricePerQtl: 2123,
+    harvestValueCr: 35.03
   },
   {
     id: 'fpo-1028',
@@ -944,9 +916,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 12.5,
     perf1Y: 24.2,
     subScores: { financialHealth: 77, growth: 85, profitability: 86, governance: 82, marketPosition: 80, agriStrength: 83, risk: 78 },
-    stockPrice: 89.00,
-    peRatio: 9.9,
-    dividendYield: 6.6
+    mandiPricePerQtl: 1958,
+    harvestValueCr: 27.02
   },
   {
     id: 'fpo-1029',
@@ -976,9 +947,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 10.4,
     perf1Y: 20.5,
     subScores: { financialHealth: 76, growth: 83, profitability: 84, governance: 81, marketPosition: 79, agriStrength: 85, risk: 78 },
-    stockPrice: 81.00,
-    peRatio: 9.4,
-    dividendYield: 7.1
+    mandiPricePerQtl: 1782,
+    harvestValueCr: 25.84
   },
   {
     id: 'fpo-1030',
@@ -1008,9 +978,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 9.8,
     perf1Y: 19.2,
     subScores: { financialHealth: 75, growth: 82, profitability: 83, governance: 80, marketPosition: 78, agriStrength: 83, risk: 77 },
-    stockPrice: 77.00,
-    peRatio: 9.1,
-    dividendYield: 7.4
+    mandiPricePerQtl: 1694,
+    harvestValueCr: 27.1
   },
 
   // --- RANK 31 to 50 (Remaining 20 - Weights sum to 22.50%) ---
@@ -1042,9 +1011,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 16.0,
     perf1Y: 31.0,
     subScores: { financialHealth: 76, growth: 89, profitability: 90, governance: 81, marketPosition: 82, agriStrength: 80, risk: 76 },
-    stockPrice: 95.00,
-    peRatio: 10.5,
-    dividendYield: 6.3
+    mandiPricePerQtl: 2090,
+    harvestValueCr: 20.48
   },
   {
     id: 'fpo-1032',
@@ -1074,9 +1042,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 13.5,
     perf1Y: 26.5,
     subScores: { financialHealth: 77, growth: 87, profitability: 91, governance: 83, marketPosition: 83, agriStrength: 82, risk: 79 },
-    stockPrice: 112.00,
-    peRatio: 11.8,
-    dividendYield: 5.6
+    mandiPricePerQtl: 2464,
+    harvestValueCr: 20.94
   },
   {
     id: 'fpo-1033',
@@ -1106,9 +1073,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 10.2,
     perf1Y: 20.0,
     subScores: { financialHealth: 74, growth: 83, profitability: 84, governance: 80, marketPosition: 77, agriStrength: 81, risk: 76 },
-    stockPrice: 75.00,
-    peRatio: 9.0,
-    dividendYield: 7.5
+    mandiPricePerQtl: 1650,
+    harvestValueCr: 19.8
   },
   {
     id: 'fpo-1034',
@@ -1138,9 +1104,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 17.0,
     perf1Y: 33.5,
     subScores: { financialHealth: 75, growth: 90, profitability: 91, governance: 82, marketPosition: 81, agriStrength: 80, risk: 76 },
-    stockPrice: 98.00,
-    peRatio: 10.8,
-    dividendYield: 6.1
+    mandiPricePerQtl: 2156,
+    harvestValueCr: 16.82
   },
   {
     id: 'fpo-1035',
@@ -1170,9 +1135,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 14.8,
     perf1Y: 28.8,
     subScores: { financialHealth: 76, growth: 91, profitability: 89, governance: 82, marketPosition: 84, agriStrength: 83, risk: 78 },
-    stockPrice: 93.50,
-    peRatio: 10.3,
-    dividendYield: 6.4
+    mandiPricePerQtl: 2057,
+    harvestValueCr: 27.77
   },
   {
     id: 'fpo-1036',
@@ -1202,9 +1166,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 15.6,
     perf1Y: 30.5,
     subScores: { financialHealth: 77, growth: 88, profitability: 90, governance: 83, marketPosition: 83, agriStrength: 86, risk: 80 },
-    stockPrice: 105.00,
-    peRatio: 11.2,
-    dividendYield: 5.8
+    mandiPricePerQtl: 2310,
+    harvestValueCr: 32.8
   },
   {
     id: 'fpo-1037',
@@ -1234,9 +1197,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 12.0,
     perf1Y: 23.5,
     subScores: { financialHealth: 76, growth: 85, profitability: 87, governance: 82, marketPosition: 80, agriStrength: 84, risk: 79 },
-    stockPrice: 88.00,
-    peRatio: 9.8,
-    dividendYield: 6.8
+    mandiPricePerQtl: 1936,
+    harvestValueCr: 30.59
   },
   {
     id: 'fpo-1038',
@@ -1266,9 +1228,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 14.0,
     perf1Y: 27.0,
     subScores: { financialHealth: 75, growth: 87, profitability: 89, governance: 81, marketPosition: 81, agriStrength: 83, risk: 78 },
-    stockPrice: 91.00,
-    peRatio: 10.1,
-    dividendYield: 6.5
+    mandiPricePerQtl: 2002,
+    harvestValueCr: 26.03
   },
   {
     id: 'fpo-1039',
@@ -1298,9 +1259,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 18.5,
     perf1Y: 36.0,
     subScores: { financialHealth: 76, growth: 92, profitability: 95, governance: 84, marketPosition: 85, agriStrength: 81, risk: 77 },
-    stockPrice: 125.00,
-    peRatio: 12.0,
-    dividendYield: 5.4
+    mandiPricePerQtl: 2750,
+    harvestValueCr: 19.8
   },
   {
     id: 'fpo-1040',
@@ -1330,9 +1290,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 11.5,
     perf1Y: 22.8,
     subScores: { financialHealth: 74, growth: 85, profitability: 86, governance: 80, marketPosition: 79, agriStrength: 82, risk: 77 },
-    stockPrice: 84.00,
-    peRatio: 9.5,
-    dividendYield: 7.0
+    mandiPricePerQtl: 1848,
+    harvestValueCr: 21.25
   },
   {
     id: 'fpo-1041',
@@ -1362,9 +1321,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 14.8,
     perf1Y: 28.5,
     subScores: { financialHealth: 76, growth: 89, profitability: 92, governance: 83, marketPosition: 83, agriStrength: 82, risk: 78 },
-    stockPrice: 108.00,
-    peRatio: 11.4,
-    dividendYield: 5.7
+    mandiPricePerQtl: 2376,
+    harvestValueCr: 19.48
   },
   {
     id: 'fpo-1042',
@@ -1394,9 +1352,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 12.6,
     perf1Y: 24.5,
     subScores: { financialHealth: 74, growth: 86, profitability: 88, governance: 81, marketPosition: 80, agriStrength: 81, risk: 77 },
-    stockPrice: 87.00,
-    peRatio: 9.8,
-    dividendYield: 6.8
+    mandiPricePerQtl: 1914,
+    harvestValueCr: 17.61
   },
   {
     id: 'fpo-1043',
@@ -1426,9 +1383,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 8.8,
     perf1Y: 17.5,
     subScores: { financialHealth: 72, growth: 80, profitability: 81, governance: 79, marketPosition: 76, agriStrength: 84, risk: 74 },
-    stockPrice: 72.00,
-    peRatio: 8.8,
-    dividendYield: 7.8
+    mandiPricePerQtl: 1584,
+    harvestValueCr: 19.8
   },
   {
     id: 'fpo-1044',
@@ -1458,9 +1414,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 15.8,
     perf1Y: 30.2,
     subScores: { financialHealth: 75, growth: 88, profitability: 89, governance: 82, marketPosition: 82, agriStrength: 84, risk: 79 },
-    stockPrice: 96.00,
-    peRatio: 10.4,
-    dividendYield: 6.3
+    mandiPricePerQtl: 2112,
+    harvestValueCr: 24.92
   },
   {
     id: 'fpo-1045',
@@ -1490,9 +1445,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 17.5,
     perf1Y: 34.0,
     subScores: { financialHealth: 77, growth: 91, profitability: 94, governance: 84, marketPosition: 84, agriStrength: 82, risk: 78 },
-    stockPrice: 118.00,
-    peRatio: 11.9,
-    dividendYield: 5.5
+    mandiPricePerQtl: 2596,
+    harvestValueCr: 19.47
   },
   {
     id: 'fpo-1046',
@@ -1522,9 +1476,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 11.8,
     perf1Y: 23.0,
     subScores: { financialHealth: 73, growth: 85, profitability: 86, governance: 80, marketPosition: 78, agriStrength: 81, risk: 77 },
-    stockPrice: 82.50,
-    peRatio: 9.3,
-    dividendYield: 7.1
+    mandiPricePerQtl: 1815,
+    harvestValueCr: 16.34
   },
   {
     id: 'fpo-1047',
@@ -1554,9 +1507,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 12.8,
     perf1Y: 25.0,
     subScores: { financialHealth: 72, growth: 86, profitability: 87, governance: 79, marketPosition: 79, agriStrength: 82, risk: 76 },
-    stockPrice: 79.00,
-    peRatio: 9.1,
-    dividendYield: 7.3
+    mandiPricePerQtl: 1738,
+    harvestValueCr: 18.25
   },
   {
     id: 'fpo-1048',
@@ -1586,9 +1538,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 12.2,
     perf1Y: 24.0,
     subScores: { financialHealth: 74, growth: 85, profitability: 86, governance: 81, marketPosition: 79, agriStrength: 83, risk: 77 },
-    stockPrice: 85.00,
-    peRatio: 9.6,
-    dividendYield: 6.9
+    mandiPricePerQtl: 1870,
+    harvestValueCr: 20.94
   },
   {
     id: 'fpo-1049',
@@ -1618,9 +1569,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 14.2,
     perf1Y: 27.5,
     subScores: { financialHealth: 73, growth: 87, profitability: 88, governance: 80, marketPosition: 80, agriStrength: 81, risk: 76 },
-    stockPrice: 89.00,
-    peRatio: 9.9,
-    dividendYield: 6.6
+    mandiPricePerQtl: 1958,
+    harvestValueCr: 19.19
   },
   {
     id: 'fpo-1050',
@@ -1650,9 +1600,8 @@ export const RAW_50_FPOS_DATA: ConstituentFpoSeed[] = [
     perf3M: 19.0,
     perf1Y: 37.5,
     subScores: { financialHealth: 75, growth: 93, profitability: 96, governance: 84, marketPosition: 85, agriStrength: 81, risk: 78 },
-    stockPrice: 132.00,
-    peRatio: 12.1,
-    dividendYield: 5.2
+    mandiPricePerQtl: 2904,
+    harvestValueCr: 18.0
   }
 ];
 
@@ -1682,7 +1631,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
     const secAcres = Math.round((seed.fundedAcres * 0.35) / Math.max(1, seed.secondaryCrops.length));
     const secHarvest = Math.round((seed.expectedHarvestTonnes * 0.25) / Math.max(1, seed.secondaryCrops.length));
     const secYield = Number((secHarvest / Math.max(1, secAcres)).toFixed(1));
-    const secPrice = Math.round(seed.stockPrice * 18 + sIdx * 200);
+    const secPrice = Math.round(seed.mandiPricePerQtl * 0.85 + sIdx * 150);
     const secOfftake = 88;
     const secHarvestValRupees = secPrice * secHarvest * 10;
     const secHarvestValLakhs = Number((secHarvestValRupees / 100000).toFixed(2));
@@ -1727,7 +1676,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
   const primaryAcres = Math.round(seed.fundedAcres * (seed.secondaryCrops && seed.secondaryCrops.length > 0 ? 0.65 : 1.0));
   const primaryHarvestTonnes = Math.round(seed.expectedHarvestTonnes * (seed.secondaryCrops && seed.secondaryCrops.length > 0 ? 0.75 : 1.0));
   const primaryYieldPerAcre = Number((primaryHarvestTonnes / Math.max(1, primaryAcres)).toFixed(1));
-  const primaryPricePerQtl = Math.round(seed.stockPrice * 22);
+  const primaryPricePerQtl = seed.mandiPricePerQtl;
   const primaryOfftake = 94;
   const primaryHarvestValRupees = primaryPricePerQtl * primaryHarvestTonnes * 10;
   const primaryHarvestValLakhs = Number((primaryHarvestValRupees / 100000).toFixed(2));
@@ -1775,12 +1724,12 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
   let documentsStatus: 'All Submitted' | 'Verified' | 'Missing Documents' | 'Changes Required' = 'Verified';
   let surveyStatus: 'Completed' | 'Pending' | 'Outdated' | 'In Review' | 'Changes Required' = 'Completed';
   let verifiedDate: string | undefined = '2026-08-10';
-  let verifiedBy: string | undefined = 'TNFI State Verification Cell';
+  let verifiedBy: string | undefined = 'FI Verification Desk';
   let submittedDate: string | undefined = '2026-08-01';
   let rejectionReason: string | undefined = undefined;
-  let lastAdminAction: string | undefined = 'Verified & Admitted to TNFI Live Registry';
+  let lastAdminAction: string | undefined = 'Verified & Admitted to FI Live Registry';
   let lastActionDate: string | undefined = '2026-08-10';
-  let lastActionBy: string | undefined = 'Admin Supervisor (TNFI)';
+  let lastActionBy: string | undefined = 'Admin Supervisor (FI)';
   let isInTnfi50: boolean = true;
 
   if (idx >= 38 && idx < 42) {
@@ -1792,7 +1741,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
     submittedDate = '2026-08-26';
     lastAdminAction = 'Assigned to Verification Auditor';
     lastActionDate = '2026-08-27';
-    lastActionBy = 'TNFI System';
+    lastActionBy = 'FI System';
     isInTnfi50 = false;
   } else if (idx >= 42 && idx < 45) {
     verificationStatus = 'SUBMITTED';
@@ -1814,7 +1763,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
     submittedDate = '2026-08-20';
     lastAdminAction = 'Changes Requested';
     lastActionDate = '2026-08-25';
-    lastActionBy = 'TNFI Audit Desk';
+    lastActionBy = 'FI Audit Desk';
     rejectionReason = 'Buyer offtake escrow agreements and updated crop acreage geo-coordinates missing.';
     isInTnfi50 = false;
   } else if (idx >= 48) {
@@ -1826,7 +1775,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
     submittedDate = '2026-08-14';
     lastAdminAction = 'Application Rejected';
     lastActionDate = '2026-08-22';
-    lastActionBy = 'TNFI Senior Auditor';
+    lastActionBy = 'FI Senior Auditor';
     rejectionReason = 'Audited balance sheet not submitted and farmer land records inconsistent with revenue claims.';
     isInTnfi50 = false;
   }
@@ -1919,9 +1868,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
     riskLevel: seed.riskLevel,
     riskRating: seed.riskRating,
     indexWeight: seed.indexWeight,
-    stockPrice: seed.stockPrice,
-    peRatio: seed.peRatio,
-    dividendYield: seed.dividendYield,
+    harvestValueCr: seed.harvestValueCr,
     perf1D: seed.perf1D,
     perf1W: seed.perf1W,
     perf1M: seed.perf1M,
@@ -1967,8 +1914,8 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
               action: 'VERIFIED' as const,
               actionDate: verifiedDate || '2026-08-10',
               actionTime: '04:15 PM',
-              performedBy: 'TNFI Verification Desk (Admin)',
-              notes: 'All 9 compliance and telemetry criteria verified. Admitted to TNFI Registry.'
+              performedBy: 'FI Verification Desk (Admin)',
+              notes: 'All 9 compliance and telemetry criteria verified. Admitted to FI Registry.'
             }
           ]
         : verificationStatus === 'CHANGES REQUESTED'
@@ -1990,7 +1937,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
               action: 'REJECTED' as const,
               actionDate: lastActionDate || '2026-08-22',
               actionTime: '11:00 AM',
-              performedBy: 'TNFI Senior Auditor',
+              performedBy: 'FI Senior Auditor',
               reason: rejectionReason || 'Audit compliance failure',
               notes: 'Application rejected due to data discrepancies.'
             }
@@ -2001,7 +1948,7 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
               action: 'UNDER_REVIEW' as const,
               actionDate: lastActionDate || '2026-08-27',
               actionTime: '09:30 AM',
-              performedBy: 'TNFI Verification Queue',
+              performedBy: 'FI Verification Queue',
               notes: 'Telemetry validation in progress by agri field auditors.'
             }
           ]),
@@ -2031,80 +1978,17 @@ export const TNFI_50_FPOS: FPO[] = RAW_50_FPOS_DATA.map((seed, idx) => {
     crops: allCrops,
     cropPortfolio: allCrops,
     history: [
-      { date: 'Jul 15', indexValue: Math.round(seed.stockPrice * 54), open: Math.round(seed.stockPrice * 53), high: Math.round(seed.stockPrice * 55), low: Math.round(seed.stockPrice * 52), close: Math.round(seed.stockPrice * 54), volumeTonnes: 45 },
-      { date: 'Jul 22', indexValue: Math.round(seed.stockPrice * 55), open: Math.round(seed.stockPrice * 54), high: Math.round(seed.stockPrice * 56), low: Math.round(seed.stockPrice * 53.5), close: Math.round(seed.stockPrice * 55), volumeTonnes: 60 },
-      { date: 'Jul 29', indexValue: Math.round(seed.stockPrice * 56), open: Math.round(seed.stockPrice * 55), high: Math.round(seed.stockPrice * 57), low: Math.round(seed.stockPrice * 54.5), close: Math.round(seed.stockPrice * 56), volumeTonnes: 85 },
-      { date: 'Aug 05', indexValue: Math.round(seed.stockPrice * 57), open: Math.round(seed.stockPrice * 56), high: Math.round(seed.stockPrice * 58), low: Math.round(seed.stockPrice * 55.5), close: Math.round(seed.stockPrice * 57), volumeTonnes: 90 },
-      { date: 'Aug 14', indexValue: Math.round(tnfiScore * 14.2 + 80), open: Math.round(seed.stockPrice * 57), high: Math.round(seed.stockPrice * 59), low: Math.round(seed.stockPrice * 56.5), close: Math.round(tnfiScore * 14.2 + 80), volumeTonnes: 110 }
+      { date: 'Jul 15', indexValue: Math.round(tnfiScore * 13.5 + 40), open: Math.round(tnfiScore * 13.3 + 40), high: Math.round(tnfiScore * 13.8 + 40), low: Math.round(tnfiScore * 13.0 + 40), close: Math.round(tnfiScore * 13.5 + 40), volumeTonnes: 45 },
+      { date: 'Jul 22', indexValue: Math.round(tnfiScore * 13.7 + 40), open: Math.round(tnfiScore * 13.5 + 40), high: Math.round(tnfiScore * 14.0 + 40), low: Math.round(tnfiScore * 13.3 + 40), close: Math.round(tnfiScore * 13.7 + 40), volumeTonnes: 60 },
+      { date: 'Jul 29', indexValue: Math.round(tnfiScore * 13.8 + 40), open: Math.round(tnfiScore * 13.6 + 40), high: Math.round(tnfiScore * 14.1 + 40), low: Math.round(tnfiScore * 13.4 + 40), close: Math.round(tnfiScore * 13.8 + 40), volumeTonnes: 85 },
+      { date: 'Aug 05', indexValue: Math.round(tnfiScore * 14.0 + 40), open: Math.round(tnfiScore * 13.8 + 40), high: Math.round(tnfiScore * 14.3 + 40), low: Math.round(tnfiScore * 13.6 + 40), close: Math.round(tnfiScore * 14.0 + 40), volumeTonnes: 90 },
+      { date: 'Aug 14', indexValue: Math.round(tnfiScore * 14.2 + 40), open: Math.round(tnfiScore * 14.0 + 40), high: Math.round(tnfiScore * 14.5 + 40), low: Math.round(tnfiScore * 13.9 + 40), close: Math.round(tnfiScore * 14.2 + 40), volumeTonnes: 110 }
     ]
   };
 
   return recomputeFpoAggregates(initialFpo);
 });
 
-// Convert 50 seeds into FpoStock objects for exchange views
-export const TNFI_50_STOCKS: FpoStock[] = RAW_50_FPOS_DATA.map((seed, idx) => {
-  const rank = idx + 1;
-  const tnfiScore = calculateTnfiScore(seed.subScores);
-  const patCr = Number((seed.revenueCr * (seed.profitMarginPercent / 100)).toFixed(2));
-  const changeValue = Number(((seed.stockPrice * seed.perf1D) / 100).toFixed(2));
-  const prevClose = Number((seed.stockPrice - changeValue).toFixed(2));
-  const high = Number((Math.max(seed.stockPrice, seed.stockPrice * 1.025)).toFixed(2));
-  const low = Number((Math.min(seed.stockPrice, seed.stockPrice * 0.975)).toFixed(2));
-
-  return {
-    id: seed.id,
-    ticker: seed.ticker,
-    name: seed.name,
-    sector: seed.sector,
-    district: seed.district,
-    state: seed.state,
-    primaryCrop: seed.primaryCrop,
-    currentPrice: seed.stockPrice,
-    changePercent: seed.perf1D,
-    changeValue: changeValue,
-    prevClose: prevClose,
-    high: high,
-    low: low,
-    volume: Math.round(4500 + seed.indexWeight * 3200),
-    marketCapCr: Number((seed.revenueCr * 0.95).toFixed(1)),
-    peRatio: seed.peRatio,
-    dividendYieldPercent: seed.dividendYield,
-    riskLevel: seed.riskLevel,
-    establishedYear: seed.establishedYear,
-    totalMembers: seed.farmerCount,
-    totalAcreage: seed.fundedAcres,
-    tnfiScore: tnfiScore,
-    governanceScore: seed.subScores.governance,
-    creditRating: seed.creditRating,
-    ceoName: seed.ceoName,
-    contactEmail: `contact@${seed.ticker.toLowerCase()}fpo.tnfi.in`,
-    auditStatus: seed.auditStatus,
-    priceHistory7D: [
-      Number((seed.stockPrice * 0.95).toFixed(2)),
-      Number((seed.stockPrice * 0.96).toFixed(2)),
-      Number((seed.stockPrice * 0.975).toFixed(2)),
-      Number((seed.stockPrice * 0.97).toFixed(2)),
-      Number((seed.stockPrice * 0.985).toFixed(2)),
-      Number((prevClose).toFixed(2)),
-      seed.stockPrice
-    ],
-    financials: {
-      revenueCr: seed.revenueCr,
-      ebitdaCr: Number((patCr * 1.35).toFixed(2)),
-      patCr: patCr,
-      operatingMarginPercent: Number((seed.profitMarginPercent * 1.2).toFixed(1)),
-      netMarginPercent: seed.profitMarginPercent,
-      annualGrowthPercent: seed.revenueGrowth,
-      debtToEquity: Number((0.25 + (idx % 8) * 0.08).toFixed(2)),
-      currentRatio: Number((1.6 + (idx % 6) * 0.15).toFixed(2)),
-      returnOnEquityPercent: Number((14 + (idx % 10) * 0.8).toFixed(1)),
-      reserveFundsLakhs: Math.round(seed.revenueCr * 12)
-    },
-    topOfftakeBuyers: [
-      { buyerName: 'ITC Agri Business', percentShare: 42, contractStatus: 'LONG_TERM_ESCROW' },
-      { buyerName: 'WayCool Foods', percentShare: 35, contractStatus: 'LONG_TERM_ESCROW' },
-      { buyerName: 'Local APMC Mandi', percentShare: 23, contractStatus: 'SPOT_MARKET' }
-    ]
-  };
-});
+// Authoritative export of 50 constituent FPOs
+export const TNFI_50_PERFORMANCE_RECORDS: FPO[] = TNFI_50_FPOS;
+export const TNFI_50_STOCKS: FPO[] = TNFI_50_FPOS;

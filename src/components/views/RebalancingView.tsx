@@ -56,7 +56,7 @@ export const RebalancingView: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-black text-[#F2F1E8] tracking-tight">
-              TNFI 50 INDEX REBALANCING
+              FI 50 INDEX REBALANCING
             </h1>
             <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#303B16] text-[#A8C94A] border border-[#718C2C]/40">
               QUARTERLY BENCHMARK REVIEW

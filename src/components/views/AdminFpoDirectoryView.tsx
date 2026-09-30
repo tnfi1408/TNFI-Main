@@ -251,14 +251,14 @@ export const AdminFpoDirectoryView: React.FC = () => {
           </div>
 
           <div>
-            <label className="text-[10px] text-neutral-500 block mb-1 uppercase">TNFI 50 Index</label>
+            <label className="text-[10px] text-neutral-500 block mb-1 uppercase">FI 50 Index</label>
             <select
               value={tnfi50Filter}
               onChange={e => setTnfi50Filter(e.target.value)}
               className="w-full bg-[#080A07] border border-[#2A3320] text-xs text-white rounded-xl p-2 focus:outline-none focus:border-[#7A8F35]"
             >
               <option value="ALL">All FPOs</option>
-              <option value="IN_INDEX">TNFI 50 Constituents</option>
+              <option value="IN_INDEX">FI 50 Constituents</option>
               <option value="ELIGIBLE">Eligible (Outside Index)</option>
               <option value="OUTSIDE">Outside Index</option>
             </select>
@@ -309,7 +309,7 @@ export const AdminFpoDirectoryView: React.FC = () => {
                   <th className="p-3.5">Data Health</th>
                   <th className="p-3.5">Score</th>
                   <th className="p-3.5">Verification</th>
-                  <th className="p-3.5">TNFI 50</th>
+                  <th className="p-3.5">FI 50</th>
                   <th className="p-3.5 text-right">Actions</th>
                 </tr>
               </thead>
@@ -474,7 +474,7 @@ export const AdminFpoDirectoryView: React.FC = () => {
 
                 <div className="flex items-center justify-between pt-2 border-t border-[#2A3320] text-xs">
                   <span className="text-neutral-400 text-[10px]">
-                    {fpo.isInTnfi50 ? 'TNFI 50 Constituent' : elig.isEligible ? 'Eligible for TNFI 50' : 'Outside Index'}
+                    {fpo.isInTnfi50 ? 'FI 50 Constituent' : elig.isEligible ? 'Eligible for FI 50' : 'Outside Index'}
                   </span>
                   <div className="flex items-center gap-2">
                     <button

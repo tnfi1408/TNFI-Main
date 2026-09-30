@@ -1,5 +1,4 @@
 import {
-  FpoStock,
   TnfiIndexData,
   CapitalRaiseCampaign,
   FpoAiEvaluation,
@@ -23,19 +22,16 @@ export const TNFI_INDEX_DATA: TnfiIndexData = {
   prevClose: 1227.26,
   yearHigh: 1380.00,
   yearLow: 980.50,
-  peRatio: 12.8,
-  pbRatio: 1.94,
-  dividendYield: 5.62,
-  totalMarketCapCr: 1845.6,
+  totalHarvestValueCr: 1845.6,
   totalMembers: 134200,
   listedFposCount: 50,
   sectorWeights: [
-    { sector: 'Horticulture', weightPercent: 28.0, return24h: 2.1, marketCapCr: 516.8, fpoCount: 14 },
-    { sector: 'Paddy & Cereals', weightPercent: 24.0, return24h: 1.4, marketCapCr: 442.9, fpoCount: 11 },
-    { sector: 'Spices & Plantation', weightPercent: 18.0, return24h: 2.3, marketCapCr: 332.2, fpoCount: 9 },
-    { sector: 'Coconut & Oilseeds', weightPercent: 14.0, return24h: 1.1, marketCapCr: 258.4, fpoCount: 7 },
-    { sector: 'Dairy & Livestock', weightPercent: 10.0, return24h: 1.6, marketCapCr: 184.6, fpoCount: 5 },
-    { sector: 'Millets & Pulses', weightPercent: 6.0, return24h: 0.9, marketCapCr: 110.7, fpoCount: 4 }
+    { sector: 'Horticulture', weightPercent: 28.0, return24h: 2.1, harvestValueCr: 516.8, fpoCount: 14 },
+    { sector: 'Paddy & Cereals', weightPercent: 24.0, return24h: 1.4, harvestValueCr: 442.9, fpoCount: 11 },
+    { sector: 'Spices & Plantation', weightPercent: 18.0, return24h: 2.3, harvestValueCr: 332.2, fpoCount: 9 },
+    { sector: 'Coconut & Oilseeds', weightPercent: 14.0, return24h: 1.1, harvestValueCr: 258.4, fpoCount: 7 },
+    { sector: 'Dairy & Livestock', weightPercent: 10.0, return24h: 1.6, harvestValueCr: 184.6, fpoCount: 5 },
+    { sector: 'Millets & Pulses', weightPercent: 6.0, return24h: 0.9, harvestValueCr: 110.7, fpoCount: 4 }
   ],
   history: [
     { date: 'Aug 08', indexValue: 1210.20, open: 1205.00, high: 1215.40, low: 1202.10, close: 1210.20, volume: 14200 },
@@ -48,22 +44,20 @@ export const TNFI_INDEX_DATA: TnfiIndexData = {
   ]
 };
 
-export const LISTED_FPO_STOCKS: FpoStock[] = TNFI_50_STOCKS;
+export const LISTED_FPO_STOCKS: FPO[] = TNFI_50_STOCKS;
 
 export const CAPITAL_RAISE_CAMPAIGNS: CapitalRaiseCampaign[] = [
   {
-    id: 'ipo-1',
+    id: 'cap-raise-1',
     fpoId: 'fpo-1001',
     fpoName: 'Kaveri Horticulture FPO Ltd',
     ticker: 'KAVERI',
     sector: 'Horticulture',
     district: 'Tiruppur',
-    instrumentType: 'Growth Equity (Series A)',
+    instrumentType: 'Agri-Infra Term Facility',
     targetAmountCr: 5.0,
     raisedAmountCr: 4.25,
     minInvestment: 25000,
-    unitPrice: 140.00,
-    valuationCr: 24.0,
     purpose: 'Expanding IQF blast-freezing plant & automated banana ripening chambers to serve export buyers.',
     status: 'CLOSING_SOON',
     deadline: 'Aug 25, 2026',
@@ -71,7 +65,7 @@ export const CAPITAL_RAISE_CAMPAIGNS: CapitalRaiseCampaign[] = [
     creditRating: 'AAA'
   },
   {
-    id: 'ipo-2',
+    id: 'cap-raise-2',
     fpoId: 'fpo-1004',
     fpoName: 'Kongu Coconut & Oilseed Producers FPO',
     ticker: 'KONGU',
@@ -83,8 +77,6 @@ export const CAPITAL_RAISE_CAMPAIGNS: CapitalRaiseCampaign[] = [
     minInvestment: 50000,
     tenureMonths: 36,
     expectedYieldPercent: 9.40,
-    unitPrice: 10000,
-    valuationCr: 32.0,
     purpose: 'Constructing 2,500 MT solar-powered desiccated coconut & virgin cold-press refinery.',
     status: 'OPEN',
     deadline: 'Sep 10, 2026',
@@ -92,18 +84,16 @@ export const CAPITAL_RAISE_CAMPAIGNS: CapitalRaiseCampaign[] = [
     creditRating: 'AA+'
   },
   {
-    id: 'ipo-3',
+    id: 'cap-raise-3',
     fpoId: 'fpo-1003',
     fpoName: 'Nilgiris Dairy & Green Tea FPO',
     ticker: 'NILGIRI',
     sector: 'Dairy & Livestock',
     district: 'Nilgiris',
-    instrumentType: 'Growth Equity (Series A)',
+    instrumentType: 'Agri-Infra Term Facility',
     targetAmountCr: 4.0,
     raisedAmountCr: 4.0,
     minInvestment: 20000,
-    unitPrice: 210.00,
-    valuationCr: 20.0,
     purpose: 'Direct-to-consumer A2 milk bottling and cold-chain refrigerated delivery fleet in Coimbatore & Chennai.',
     status: 'OVER_SUBSCRIBED',
     deadline: 'Aug 18, 2026',
@@ -111,7 +101,7 @@ export const CAPITAL_RAISE_CAMPAIGNS: CapitalRaiseCampaign[] = [
     creditRating: 'AAA'
   },
   {
-    id: 'ipo-4',
+    id: 'cap-raise-4',
     fpoId: 'fpo-1005',
     fpoName: 'Madurai Jasmine & Floriculture FPO',
     ticker: 'MADURAI',
@@ -123,8 +113,6 @@ export const CAPITAL_RAISE_CAMPAIGNS: CapitalRaiseCampaign[] = [
     minInvestment: 15000,
     tenureMonths: 18,
     expectedYieldPercent: 8.90,
-    unitPrice: 5000,
-    valuationCr: 16.5,
     purpose: 'Daily spot auction liquidity support and international air cargo cold-transit packaging.',
     status: 'OPEN',
     deadline: 'Sep 30, 2026',
@@ -207,7 +195,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 5.4,
     cropHealthPercent: 94,
     shareholdingUnits: 450,
-    dividendsEarnedRs: 12850,
+    patronageBonusRs: 12850,
     creditSanctionedLakhs: 2.5,
     creditDisbursedLakhs: 2.5,
     phone: '+91 94431 82710'
@@ -225,7 +213,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 42.0,
     cropHealthPercent: 96,
     shareholdingUnits: 500,
-    dividendsEarnedRs: 15400,
+    patronageBonusRs: 15400,
     creditSanctionedLakhs: 3.0,
     creditDisbursedLakhs: 3.0,
     phone: '+91 98422 33411'
@@ -243,7 +231,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 4.2,
     cropHealthPercent: 92,
     shareholdingUnits: 350,
-    dividendsEarnedRs: 9800,
+    patronageBonusRs: 9800,
     creditSanctionedLakhs: 1.8,
     creditDisbursedLakhs: 1.8,
     phone: '+91 94421 90876'
@@ -261,7 +249,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 8.4,
     cropHealthPercent: 95,
     shareholdingUnits: 280,
-    dividendsEarnedRs: 11200,
+    patronageBonusRs: 11200,
     creditSanctionedLakhs: 2.0,
     creditDisbursedLakhs: 2.0,
     phone: '+91 97880 14523'
@@ -279,7 +267,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 7.8,
     cropHealthPercent: 90,
     shareholdingUnits: 620,
-    dividendsEarnedRs: 17500,
+    patronageBonusRs: 17500,
     creditSanctionedLakhs: 3.5,
     creditDisbursedLakhs: 3.5,
     phone: '+91 94435 67891'
@@ -297,7 +285,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 26,
     cropHealthPercent: 91,
     shareholdingUnits: 600,
-    dividendsEarnedRs: 18400,
+    patronageBonusRs: 18400,
     creditSanctionedLakhs: 3.2,
     creditDisbursedLakhs: 3.2,
     phone: '+91 94862 10934'
@@ -315,7 +303,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 14,
     cropHealthPercent: 96,
     shareholdingUnits: 320,
-    dividendsEarnedRs: 15600,
+    patronageBonusRs: 15600,
     creditSanctionedLakhs: 2.0,
     creditDisbursedLakhs: 2.0,
     phone: '+91 94420 55192'
@@ -333,7 +321,7 @@ export const INITIAL_FARMERS: Farmer[] = [
     expectedHarvestTonnes: 48,
     cropHealthPercent: 95,
     shareholdingUnits: 800,
-    dividendsEarnedRs: 24000,
+    patronageBonusRs: 24000,
     creditSanctionedLakhs: 4.5,
     creditDisbursedLakhs: 4.5,
     phone: '+91 94433 22110'
@@ -354,7 +342,6 @@ export const INITIAL_DISTRICTS: DistrictData[] = [
     harvestTonnes: 124000,
     harvestValueCr: 410.5,
     profitCr: 122.8,
-    marketCapCr: 840.0,
     primaryCrops: ['Coconut', 'Groundnut', 'Dairy', 'Poultry']
   },
   {
@@ -370,7 +357,6 @@ export const INITIAL_DISTRICTS: DistrictData[] = [
     harvestTonnes: 215000,
     harvestValueCr: 540.2,
     profitCr: 168.0,
-    marketCapCr: 920.5,
     primaryCrops: ['Paddy Samba', 'Kuruvai', 'Pulses', 'Banana']
   },
   {
@@ -386,7 +372,6 @@ export const INITIAL_DISTRICTS: DistrictData[] = [
     harvestTonnes: 48000,
     harvestValueCr: 210.0,
     profitCr: 74.5,
-    marketCapCr: 420.0,
     primaryCrops: ['Tea', 'Dairy', 'Exotic Vegetables']
   },
   {
@@ -402,7 +387,6 @@ export const INITIAL_DISTRICTS: DistrictData[] = [
     harvestTonnes: 94000,
     harvestValueCr: 320.0,
     profitCr: 96.0,
-    marketCapCr: 560.0,
     primaryCrops: ['Turmeric', 'Sugarcane', 'Millets', 'Banana']
   },
   {
@@ -418,7 +402,6 @@ export const INITIAL_DISTRICTS: DistrictData[] = [
     harvestTonnes: 68000,
     harvestValueCr: 260.0,
     profitCr: 82.0,
-    marketCapCr: 480.0,
     primaryCrops: ['Jasmine', 'Pulses', 'Cotton', 'Millets']
   }
 ];
@@ -497,8 +480,8 @@ export const INITIAL_INSIGHTS: AiInsight[] = [
     type: 'FPO_EARNINGS',
     headline: 'Kaveri Horticulture Q2 Net Profit Jumps +31.2% YoY',
     explanation: 'Surge in export-grade cold-stored banana shipments to Gulf markets expanded EBITDA margins from 11.2% to 14.2%.',
-    impact: 'Upward earnings revision with TNFI composite score rising to 92/100.',
-    recommendedAction: 'Accumulate KAVERI stock units or allocate to TNFI Horticulture sub-basket.',
+    impact: 'Upward earnings revision with FI composite score rising to 92/100.',
+    recommendedAction: 'Review Kaveri FPO verification report and explore working capital facility deployment.',
     urgency: 'HIGH',
     timestamp: '28 mins ago',
     targetTicker: 'KAVERI'
@@ -506,13 +489,13 @@ export const INITIAL_INSIGHTS: AiInsight[] = [
   {
     id: 'ins-2',
     type: 'INDEX_REBALANCE',
-    headline: 'TNFI Index Semi-Annual Rebalancing: Dairy Sector Weight Increased',
+    headline: 'FI 50 Index Semi-Annual Rebalancing: Dairy Sector Weight Increased',
     explanation: 'Due to steady year-round cash flows and premium pricing in A2 milk cooperatives, dairy weight increased from 15% to 18%.',
-    impact: 'Institutional capital inflows of ₹42 Cr anticipated into NILGIRI and NAMAKKAL equities.',
-    recommendedAction: 'Rebalance portfolio towards updated benchmark weights.',
+    impact: 'Institutional capital allocations of ₹42 Cr anticipated into NILGIRI and NAMAKKAL dairy credit facilities.',
+    recommendedAction: 'Align commodity offtake allocation with updated FI performance benchmark weights.',
     urgency: 'MEDIUM',
     timestamp: '2 hours ago',
-    targetTicker: 'TNFI-ETF'
+    targetTicker: 'FI-50'
   },
   {
     id: 'ins-3',
@@ -548,7 +531,7 @@ export const INITIAL_NOTIFICATIONS: PlatformNotification[] = [
   },
   {
     id: 'notif-3',
-    title: 'TNFI Index Hits Benchmark Level 1,248.90',
+    title: 'FI 50 Index Hits Benchmark Level 1,248.90',
     message: 'Broad-based performance across Horticulture (+2.4%) and Coconut (+3.1%) constituents drove the composite.',
     type: 'index',
     targetView: 'tnfi-50',

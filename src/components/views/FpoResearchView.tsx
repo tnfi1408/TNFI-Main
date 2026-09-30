@@ -31,7 +31,7 @@ import { useApp } from '../../context/AppContext';
 import { RAW_50_FPOS_DATA, calculateTnfiScore, TnfiScoreFactorBreakdown } from '../../data/tnfi50Data';
 
 export const FpoResearchView: React.FC = () => {
-  const { fpos, fpoStocks, setCurrentView } = useApp();
+  const { fpos, setCurrentView } = useApp();
 
   // Search & Filter States
   const [searchTerm, setSearchTerm] = useState('');
@@ -65,8 +65,6 @@ export const FpoResearchView: React.FC = () => {
       const seed =
         RAW_50_FPOS_DATA.find(s => s.id === fpo.id || s.ticker === fpo.ticker) ||
         RAW_50_FPOS_DATA[idx % RAW_50_FPOS_DATA.length];
-      const stock = fpoStocks.find(s => s.id === fpo.id || s.ticker === fpo.ticker);
-
       const score = fpo.performanceScore ?? fpo.tnfiScore ?? (seed.subScores ? calculateTnfiScore(seed.subScores) : 82.5);
       const revenueCr = (fpo as any).revenueCr ?? (fpo.expectedRevenue ? Number((fpo.expectedRevenue / 10000000).toFixed(2)) : seed.revenueCr || 22.0);
       const margin = fpo.profitMarginPercent ?? (fpo as any).margin ?? seed.profitMarginPercent ?? 16.5;
@@ -103,7 +101,8 @@ export const FpoResearchView: React.FC = () => {
         riskLevel: seed.riskLevel || 'LOW',
         creditRating: seed.creditRating || fpo.creditRating || 'A+',
         perf1D,
-        stockPrice: seed.stockPrice || stock?.currentPrice || 120.0
+        mandiPricePerQtl: seed.mandiPricePerQtl || fpo.currentCropMarketPrice || 3200,
+        harvestValueCr: seed.harvestValueCr || fpo.harvestValueCr || Number(((harvestTonnes * 32) / 1000).toFixed(2))
       };
     });
 
@@ -112,7 +111,7 @@ export const FpoResearchView: React.FC = () => {
       ...item,
       rank: sortedIdx + 1
     }));
-  }, [fpos, fpoStocks]);
+  }, [fpos]);
 
   // Extract unique districts and crops for filter dropdowns
   const uniqueDistricts = useMemo(() => {
@@ -320,7 +319,7 @@ export const FpoResearchView: React.FC = () => {
               FPO RESEARCH
             </h1>
             <p className="text-xs sm:text-sm text-[#969D88] max-w-3xl leading-relaxed font-sans">
-              Explore and compare FPOs across the TNFI ecosystem. Inspect audited financials, crop portfolios, institutional credit ratings, and 7-factor TNFI Performance Scores for all Tamil Nadu Farmer Producer Organizations.
+              Explore and compare FPOs across the FI ecosystem. Inspect audited financials, crop portfolios, institutional credit ratings, and 7-factor FI Performance Scores for all Tamil Nadu Farmer Producer Organizations.
             </p>
           </div>
 
@@ -590,7 +589,7 @@ export const FpoResearchView: React.FC = () => {
                     onClick={() => toggleSort('score')}
                   >
                     <div className="flex items-center justify-center gap-1">
-                      <span>TNFI Score</span>
+                      <span>FI Score</span>
                       <ArrowUpDown className="w-3 h-3 text-[#969D88]" />
                     </div>
                   </th>
@@ -681,7 +680,7 @@ export const FpoResearchView: React.FC = () => {
                         </span>
                       </td>
 
-                      {/* TNFI Performance Score */}
+                      {/* FI Performance Score */}
                       <td className="py-3.5 px-3 text-center">
                         <button
                           type="button"
@@ -816,7 +815,7 @@ export const FpoResearchView: React.FC = () => {
                     {/* Score Box */}
                     <div className="text-right shrink-0">
                       <span className="text-lg font-black text-[#D6A83A] block">{fpo.tnfiScore}</span>
-                      <span className="text-[9px] text-[#969D88] uppercase block">TNFI Score</span>
+                      <span className="text-[9px] text-[#969D88] uppercase block">FI Score</span>
                     </div>
                   </div>
 
@@ -904,7 +903,7 @@ export const FpoResearchView: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* 4. TNFI SCORE FACTOR BREAKDOWN MODAL                                      */}
+      {/* 4. FI SCORE FACTOR BREAKDOWN MODAL                                        */}
       {/* ========================================================================= */}
       <AnimatePresence>
         {scoreModalFpo && (
@@ -946,7 +945,7 @@ export const FpoResearchView: React.FC = () => {
 
               <div className="p-4 rounded-2xl bg-[#080A07] border border-[#2A3320] flex items-center justify-between">
                 <div>
-                  <div className="text-[10px] text-[#969D88] uppercase">Composite TNFI Score</div>
+                  <div className="text-[10px] text-[#969D88] uppercase">Composite FI Score</div>
                   <div className="text-2xl font-black text-[#D6A83A] mt-0.5">{scoreModalFpo.score} / 100</div>
                 </div>
                 <div className="text-right text-[11px] text-[#969D88]">

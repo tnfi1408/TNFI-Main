@@ -646,7 +646,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
                   <div className="p-3 rounded-xl bg-[#080A07] border border-[#2A3320] text-[10px] text-[#969D88] flex items-start gap-2">
                     <Info className="w-4 h-4 text-[#8FAF3D] shrink-0 mt-0.5" />
                     <span>
-                      This expression of interest is non-binding. Upon submission, the TNFI Agricultural Investment Desk coordinates confidential access to the FPO data room, statutory audit filings, and bilateral negotiation terms.
+                      This expression of interest is non-binding. Upon submission, the FI Capital Discovery Desk coordinates confidential access to the FPO data room, MCA statutory filings, and bilateral negotiation terms.
                     </span>
                   </div>
 

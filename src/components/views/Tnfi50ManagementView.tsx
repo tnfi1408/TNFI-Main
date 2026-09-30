@@ -39,14 +39,14 @@ export const Tnfi50ManagementView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSubTab, setActiveSubTab] = useState<'constituents' | 'eligible' | 'at-risk' | 'rebalance'>('constituents');
 
-  // Active Constituents in TNFI 50
+  // Active Constituents in FI 50
   const constituents = useMemo(() => {
     return fpos
       .filter(f => f.isInTnfi50)
       .sort((a, b) => (b.indexWeight || 0) - (a.indexWeight || 0));
   }, [fpos]);
 
-  // Eligible FPOs outside TNFI 50
+  // Eligible FPOs outside FI 50
   const eligibleCandidates = useMemo(() => {
     return fpos
       .filter(f => !f.isInTnfi50 && checkTnfi50Eligibility(f).isEligible)
@@ -68,20 +68,20 @@ export const Tnfi50ManagementView: React.FC = () => {
     setTimeout(() => {
       rebalanceIndexWeights();
       setRebalancing(false);
-      setSuccessToast('TNFI 50 Index weights recalculated and normalized across all constituents.');
+      setSuccessToast('FI 50 Index weights recalculated and normalized across all constituents.');
       setTimeout(() => setSuccessToast(null), 4000);
     }, 700);
   };
 
   const handleAdmit = (fpoId: string, name: string) => {
     admitFpoToTnfi50(fpoId);
-    setSuccessToast(`${name} has been admitted to the TNFI 50 Index!`);
+    setSuccessToast(`${name} has been admitted to the FI 50 Index!`);
     setTimeout(() => setSuccessToast(null), 4000);
   };
 
   const handleRemove = (fpoId: string, name: string) => {
     removeFpoFromTnfi50(fpoId, 'Supervisor constituent float replacement');
-    setSuccessToast(`${name} removed from TNFI 50 Index.`);
+    setSuccessToast(`${name} removed from FI 50 Index.`);
     setTimeout(() => setSuccessToast(null), 4000);
   };
 
@@ -111,7 +111,7 @@ export const Tnfi50ManagementView: React.FC = () => {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              TNFI 50 BENCHMARK MANAGEMENT
+              FI 50 BENCHMARK MANAGEMENT
             </h1>
             <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#7A8F35]/20 text-[#A8C94A] border border-[#7A8F35]/40">
               INDEX GOVERNANCE
@@ -305,7 +305,7 @@ export const Tnfi50ManagementView: React.FC = () => {
                               handleRemove(fpo.id, fpo.name);
                             }}
                             className="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 text-xs font-bold border border-rose-500/40 cursor-pointer"
-                            title="Remove from TNFI 50"
+                            title="Remove from FI 50"
                           >
                             Remove
                           </button>
@@ -325,7 +325,7 @@ export const Tnfi50ManagementView: React.FC = () => {
         <div className="space-y-4">
           <div className="p-4 rounded-2xl bg-[#10140D] border border-[#2A3320] flex items-center justify-between text-xs">
             <div>
-              <span className="font-bold text-emerald-400">Eligible FPOs Meeting All TNFI 50 Entry Requirements</span>
+              <span className="font-bold text-emerald-400">Eligible FPOs Meeting All FI 50 Entry Requirements</span>
               <span className="text-neutral-400 ml-2">
                 (Verified Status + ≥80% Data Completeness + ≥70 Performance Score)
               </span>
@@ -382,7 +382,7 @@ export const Tnfi50ManagementView: React.FC = () => {
                       className="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
-                      <span>Admit to TNFI 50</span>
+                      <span>Admit to FI 50</span>
                     </button>
                   </div>
                 </div>
@@ -399,7 +399,7 @@ export const Tnfi50ManagementView: React.FC = () => {
             <div>
               <span className="font-bold">Constituents Requiring Supervisor Remediation</span>
               <span className="text-neutral-400 ml-2">
-                These FPOs currently sit in TNFI 50 but have data completeness &lt; 80%, lapsed verification, or low score.
+                These FPOs currently sit in FI 50 but have data completeness &lt; 80%, lapsed verification, or low score.
               </span>
             </div>
             <span className="font-bold text-white">{atRiskConstituents.length} Entities Flagged</span>
@@ -424,7 +424,7 @@ export const Tnfi50ManagementView: React.FC = () => {
                     <div className="text-neutral-300 font-bold">Identified Issues:</div>
                     <ul className="list-disc list-inside text-[11px] text-amber-400/90 space-y-1">
                       {fpo.verificationStatus !== 'VERIFIED' && (
-                        <li>Status is "{fpo.verificationStatus}" (Needs Verified certification)</li>
+                        <li>Status is "{fpo.verificationStatus}" (Needs FI Verified status)</li>
                       )}
                       {comp.totalScore < 80 && (
                         <li>Data Completeness is {comp.totalScore}% (Threshold is ≥ 80%)</li>
@@ -462,10 +462,10 @@ export const Tnfi50ManagementView: React.FC = () => {
           <div className="border-b border-[#2A3320] pb-3">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
               <Sliders className="w-5 h-5 text-[#A8C94A]" />
-              TNFI 50 Index Governance & Weight Calculation Methodology
+              FI 50 Index Governance & Weight Calculation Methodology
             </h3>
             <p className="text-xs text-neutral-400 mt-1">
-              Statutory benchmark governance framework formulated under Tamil Nadu Agricultural Marketing guidelines.
+              Benchmark governance framework formulated under Tamil Nadu agricultural development guidelines.
             </p>
           </div>
 
@@ -476,7 +476,7 @@ export const Tnfi50ManagementView: React.FC = () => {
                 Admission & Continuity Criteria
               </h4>
               <p className="text-neutral-400 leading-relaxed">
-                1. <strong>Verification Certification:</strong> Must hold an active <code className="text-[#9CAF45]">VERIFIED</code> supervisory certificate issued by the TNFI Verification Desk.
+                1. <strong>FI Verification:</strong> Must hold an active <code className="text-[#9CAF45]">VERIFIED</code> review status approved by the FI Verification Desk.
               </p>
               <p className="text-neutral-400 leading-relaxed">
                 2. <strong>Data Completeness SLA:</strong> Must maintain <code className="text-[#9CAF45]">≥ 80.0%</code> on the 9-pillar completeness checklist including audited financials and satellite telemetry.

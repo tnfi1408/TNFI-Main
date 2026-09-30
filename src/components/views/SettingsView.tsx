@@ -34,7 +34,7 @@ export const SettingsView: React.FC = () => {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-[#A7AE9B] mt-1">
-            User Account Settings, Telemetry Notification Preferences & TNFI Strategic Product Roadmap
+            User Account Settings, Telemetry Notification Preferences & FI Strategic Product Roadmap
           </p>
         </div>
 
@@ -97,7 +97,7 @@ export const SettingsView: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Strategic TNFI Product Roadmap (Explicitly Labeled) */}
+        {/* Right Column: Strategic FI Product Roadmap (Explicitly Labeled) */}
         <div className="p-6 rounded-3xl bg-[#0B120B] border border-[#26351B] space-y-5 shadow-xl">
           <div className="flex items-center justify-between border-b border-[#26351B] pb-3">
             <h3 className="text-sm font-bold text-[#F2F1E8] flex items-center gap-2">
@@ -117,7 +117,7 @@ export const SettingsView: React.FC = () => {
                 <span className="text-[10px] font-bold text-[#36C77A]">ACTIVE PILOT PLATFORM</span>
               </div>
               <p className="text-[#A7AE9B] text-[11px] leading-relaxed">
-                Vetting 50 high-performing FPOs across Tamil Nadu, standardizing 6-factor composite scoring and launching the TNFI 50 demonstration index.
+                Vetting 50 high-performing FPOs across Tamil Nadu, standardizing 6-factor composite scoring and launching the FI 50 demonstration index.
               </p>
             </div>
 

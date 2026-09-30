@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   User,
   UserRole,
-  FpoStock,
   TnfiIndexData,
   CapitalRaiseCampaign,
   FpoAiEvaluation,
@@ -13,7 +12,7 @@ import {
   BuyerOfftake,
   AiInsight,
   PlatformNotification,
-  FpoMarketSimulatorState,
+  FpoPerformanceRecord,
   FpoCropItem,
   SectorType,
   VerificationStatus,
@@ -27,7 +26,6 @@ import {
 } from '../types';
 import {
   TNFI_INDEX_DATA,
-  LISTED_FPO_STOCKS,
   CAPITAL_RAISE_CAMPAIGNS,
   AI_EVALUATIONS,
   INITIAL_FPOS,
@@ -86,7 +84,7 @@ interface AppContextType {
 
   // Data collections
   indexData: TnfiIndexData;
-  fpoStocks: FpoStock[];
+  fpoPerformanceRecords: FpoPerformanceRecord[];
   capitalCampaigns: CapitalRaiseCampaign[];
   aiEvaluations: FpoAiEvaluation[];
   fpos: FPO[];
@@ -133,19 +131,13 @@ interface AppContextType {
   updateBuyer: (id: string, updates: Partial<BuyerOfftake>) => { success: boolean; message: string };
   deleteBuyer: (id: string) => { success: boolean; message: string };
 
-  // Market Simulator
-  simulatorState: FpoMarketSimulatorState;
-  updateSimulator: (field: keyof FpoMarketSimulatorState, value: number) => void;
-  applySimulatorToLive: () => void;
-  resetSimulator: () => void;
-
   // Notifications
   markNotificationRead: (id: string) => void;
   clearAllNotifications: () => void;
 
   // Aggregate Market Stats
   marketStats: {
-    totalMarketCapCr: number;
+    totalHarvestValueCr: number;
     totalMembers: number;
     totalListedFpos: number;
     advancingCount: number;
@@ -153,8 +145,7 @@ interface AppContextType {
     averageNetMargin: number;
   };
 
-  // Selected Stock Helper
-  activeStock: FpoStock | undefined;
+  // Selected FPO Helper
   activeFpo: FPO | undefined;
 
   // Investor Watchlist, Comparison & Capital Opportunities
@@ -214,8 +205,8 @@ const INITIAL_ADMIN_ACTIVITY: AdminActivityItem[] = [
   },
   {
     id: 'act-4',
-    fpoName: 'TNFI 50 Benchmark Index',
-    ticker: 'TNFI-50',
+    fpoName: 'FI 50 Benchmark Index',
+    ticker: 'FI-50',
     action: 'Index Weights Recalibrated',
     details: 'Quarterly constituent float adjustment executed across 50 verified entities.',
     timestamp: '11:42',
@@ -464,7 +455,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Core Data
   const [indexData, setIndexData] = useState<TnfiIndexData>(TNFI_INDEX_DATA);
-  const [fpoStocks, setFpoStocks] = useState<FpoStock[]>(LISTED_FPO_STOCKS);
   const [capitalCampaigns, setCapitalCampaigns] = useState<CapitalRaiseCampaign[]>(() => {
     try {
       const saved = localStorage.getItem('tnfi_capital_campaigns');
@@ -480,6 +470,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e) {}
     return INITIAL_FPOS;
   });
+  // Canonical FPO performance records mapped to active FPOs
+  const fpoPerformanceRecords = fpos;
   const [farmers, setFarmers] = useState<Farmer[]>(() => {
     try {
       const saved = localStorage.getItem('tnfi_farmers');
@@ -678,7 +670,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       {
         id: `notif-eoi-${Date.now()}`,
         title: 'Expression of Interest Dispatched',
-        message: `Your ₹${data.interestedAmountLakhs} Lakhs capital interest for ${data.fpoName} (${data.crop}) has been routed to the FPO board & TNFI liaison desk.`,
+        message: `Your ₹${data.interestedAmountLakhs} Lakhs capital interest for ${data.fpoName} (${data.crop}) has been routed to the FPO board & FI liaison desk.`,
         time: 'Just now',
         read: false,
         type: 'funding'
@@ -697,19 +689,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [adminActivityLog, setAdminActivityLog] = useState<AdminActivityItem[]>(INITIAL_ADMIN_ACTIVITY);
   const [verificationFilter, setVerificationFilter] = useState<string>('ALL');
 
-  // Market Simulator State
-  const [simulatorState, setSimulatorState] = useState<FpoMarketSimulatorState>({
-    avgRevenueGrowthPercent: 24.5,
-    baseRevenueGrowthPercent: 24.5,
-    ebitdaMultiple: 12.8,
-    baseEbitdaMultiple: 12.8,
-    interestRatePercent: 7.2,
-    baseInterestRatePercent: 7.2,
-    institutionalInflowCr: 150,
-    baseInstitutionalInflowCr: 150,
-    projectedIndexTarget: 1380.50
-  });
-
   const [registeredUsers, setRegisteredUsers] = useState<Array<User & { password?: string }>>(() => {
     try {
       const saved = localStorage.getItem('tnfi_registered_users');
@@ -720,11 +699,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return [
       {
         id: 'usr-adm-1',
-        name: 'TNFI Exchange Administrator',
-        email: 'exchange@tnfi.gov.in',
+        name: 'FI Platform Administrator',
+        email: 'admin@fi-platform.in',
         role: 'admin',
         avatar: 'AD',
-        orgName: 'TN Agricultural Marketing Board',
+        orgName: 'FI Verification Desk & Platform Operations',
         password: 'password123',
         joinedDate: '2024-06-01',
         is2FAEnabled: true
@@ -732,7 +711,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       {
         id: 'usr-fpo-1',
         name: 'K. Sundaram (CEO)',
-        email: 'sundar@coimbatoreagro.tnfi.in',
+        email: 'sundar@coimbatoreagro.fi-agri.in',
         role: 'fpo',
         avatar: 'FP',
         fpoId: 'fpo-1001',
@@ -745,11 +724,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       {
         id: 'usr-inv-1',
         name: 'Tamil Nadu Agri Growth Fund',
-        email: 'investor@tnfi.in',
+        email: 'investor@fi-capital.in',
         role: 'investor',
         avatar: 'IN',
         orgName: 'TN Agri Venture Capital Fund',
-        portfolioValue: 3591466,
         password: 'password123',
         joinedDate: '2025-01-15',
         is2FAEnabled: true
@@ -757,7 +735,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       {
         id: 'usr-frm-1',
         name: 'M. Chinnasamy',
-        email: 'farmer@tnfi.tn.gov.in',
+        email: 'farmer@fi-agri.in',
         role: 'farmer',
         avatar: 'MC',
         orgName: 'Kaveri Delta Smallholder Farmers',
@@ -774,12 +752,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       },
       {
         id: 'usr-user-official',
-        name: 'TNFI Institutional Portfolio Lead',
+        name: 'FI Agri Capital Lead',
         email: 'tnfi1408@gmail.com',
         role: 'investor',
-        avatar: 'TN',
-        orgName: 'TNFI Growth Syndicate',
-        portfolioValue: 5240000,
+        avatar: 'FI',
+        orgName: 'FI Agri Capital Syndicate',
         password: 'password123',
         joinedDate: '2026-08-14',
         is2FAEnabled: true
@@ -789,24 +766,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const login = (role: UserRole, customName?: string, customEmail?: string, customOrg?: string) => {
     let name = customName || 'Institutional Agri Fund';
-    let email = customEmail || 'investor@tnfi.in';
+    let email = customEmail || 'investor@fi-capital.in';
     let fpoId: string | undefined = undefined;
     let fpoName: string | undefined = undefined;
-    let orgName = customOrg || 'TNFI Capital Network';
+    let orgName = customOrg || 'FI Capital Network';
 
     if (role === 'fpo') {
       name = customName || 'Coimbatore Agro Producers FPO (CEO)';
-      email = customEmail || 'sundar@coimbatoreagro.tnfi.in';
+      email = customEmail || 'sundar@coimbatoreagro.fi-agri.in';
       fpoId = 'fpo-1001';
       fpoName = 'Kaveri Horticulture FPO Ltd';
       orgName = customOrg || 'Kaveri Horticulture Producers Co-op';
     } else if (role === 'admin') {
-      name = customName || 'TNFI Exchange Administrator';
-      email = customEmail || 'exchange@tnfi.gov.in';
-      orgName = customOrg || 'TN Agricultural Marketing Board';
+      name = customName || 'FI Platform Administrator';
+      email = customEmail || 'admin@fi-platform.in';
+      orgName = customOrg || 'FI Verification Desk & Platform Operations';
     } else if (role === 'farmer') {
       name = customName || 'M. Chinnasamy';
-      email = customEmail || 'farmer@tnfi.tn.gov.in';
+      email = customEmail || 'farmer@fi-agri.in';
       fpoId = 'fpo-1001';
       fpoName = 'Kaveri Horticulture FPO Ltd';
       orgName = customOrg || 'Kaveri Delta Smallholder Farmers';
@@ -821,7 +798,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       fpoId,
       fpoName,
       orgName,
-      portfolioValue: role === 'investor' ? 3591466 : undefined,
       joinedDate: new Date().toISOString().split('T')[0],
       is2FAEnabled: role === 'investor' || role === 'admin'
     };
@@ -890,7 +866,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         orgName: found.orgName,
         phone: found.phone,
         panCinNumber: found.panCinNumber,
-        portfolioValue: found.portfolioValue,
         joinedDate: found.joinedDate,
         is2FAEnabled: found.is2FAEnabled,
         village: found.village,
@@ -1000,7 +975,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       investorPreferences: data.investorPreferences,
       fpoId: data.fpoId || (data.role === 'fpo' ? `fpo-${Date.now().toString().slice(-4)}` : undefined),
       fpoName: data.fpoName || (data.role === 'fpo' ? data.name : undefined),
-      portfolioValue: data.role === 'investor' ? 1000000 : undefined,
       password: data.password || 'password123',
       joinedDate: new Date().toISOString().split('T')[0],
       is2FAEnabled: true
@@ -1041,7 +1015,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNotifications(prev => [
       {
         id: `notif-otp-${Date.now()}`,
-        title: `TNFI Password Recovery Code`,
+        title: `FI Password Recovery Code`,
         message: `Verification code for ${cleanEmail} is ${generatedOtp}. Valid for 10 minutes.`,
         time: 'Just now',
         read: false,
@@ -1099,7 +1073,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const cleanTarget = targetId.trim();
       setSelectedFpoId(cleanTarget);
       
-      // Match against full FPO and stock registry
+      // Match against full FPO registry
       const matchFpo = fpos.find(
         f =>
           f.id.toLowerCase() === cleanTarget.toLowerCase() ||
@@ -1111,14 +1085,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (matchFpo) {
         setSelectedFpoId(matchFpo.id);
         setSelectedTicker(matchFpo.ticker);
-      } else {
-        const matchStock = fpoStocks.find(s => s.id.toLowerCase() === cleanTarget.toLowerCase() || s.ticker.toLowerCase() === cleanTarget.toLowerCase());
-        if (matchStock) {
-          setSelectedFpoId(matchStock.id);
-          setSelectedTicker(matchStock.ticker);
-        } else if (cleanTarget.startsWith('dist-')) {
-          setSelectedDistrictId(cleanTarget);
-        }
+      } else if (cleanTarget.startsWith('dist-')) {
+        setSelectedDistrictId(cleanTarget);
       }
     }
 
@@ -1341,7 +1309,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNotifications(prev => [
       {
         id: `notif-${Date.now()}`,
-        title: 'TNFI 50 Index Rebalance Completed',
+        title: 'FI 50 Index Rebalance Completed',
         message: 'Constituent weights normalized across all vetted Producer Organizations based on latest agricultural metrics.',
         type: 'index',
         time: 'Just now',
@@ -1444,10 +1412,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             action: isVerified ? 'VERIFIED' : isChanges ? 'CHANGES_REQUESTED' : isRejected ? 'REJECTED' : 'UNDER_REVIEW',
             actionDate: todayStr,
             actionTime: timeStr,
-            performedBy: user?.name || 'Admin Supervisor (TNFI)',
+            performedBy: user?.name || 'Admin Supervisor (FI)',
             reason: reasonOrRemarks,
             notes: isVerified
-              ? 'All 9 compliance and telemetry criteria verified. Admitted to TNFI Live Registry.'
+              ? 'All 9 compliance and telemetry criteria verified. Admitted to FI Live Registry.'
               : isChanges
               ? `Changes requested: ${reasonOrRemarks || 'Document amendment required'}`
               : isRejected
@@ -1467,7 +1435,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           ...fpo,
           verificationStatus: status,
           verifiedDate: isVerified ? todayStr : fpo.verifiedDate,
-          verifiedBy: isVerified ? (user?.name || 'Admin Supervisor (TNFI)') : fpo.verifiedBy,
+          verifiedBy: isVerified ? (user?.name || 'Admin Supervisor (FI)') : fpo.verifiedBy,
           rejectionReason: (isChanges || isRejected) ? reasonOrRemarks : undefined,
           lastAdminAction: isVerified
             ? 'Verification Approved'
@@ -1477,7 +1445,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             ? 'Application Rejected'
             : 'Marked Under Review',
           lastActionDate: todayStr,
-          lastActionBy: user?.name || 'Admin Supervisor (TNFI)',
+          lastActionBy: user?.name || 'Admin Supervisor (FI)',
           documentsStatus: isVerified ? 'Verified' : isChanges ? 'Changes Required' : isRejected ? 'Missing Documents' : fpo.documentsStatus,
           documents: updatedDocs || fpo.documents,
           verificationHistory: updatedHistory,
@@ -1580,7 +1548,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const admitFpoToTnfi50 = (fpoId: string) => {
     // Role Authorization Check: Only Admin can admit to benchmark
     if (user?.role !== 'admin') {
-      console.warn('Unauthorized: Only Admin supervisors can manage TNFI 50 constituents.');
+      console.warn('Unauthorized: Only Admin supervisors can manage FI 50 constituents.');
       return;
     }
 
@@ -1607,7 +1575,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         fpoId,
         fpoName: targetFpo?.name || fpoId,
         ticker: targetFpo?.ticker,
-        action: 'Admitted to TNFI 50 Index',
+        action: 'Admitted to FI 50 Index',
         details: `${targetFpo?.name || fpoId} promoted to active constituent benchmark.`,
         timestamp: timeStr,
         timeAgo: 'Just now',
@@ -1619,8 +1587,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNotifications(prev => [
       {
         id: `notif-admit-${Date.now()}`,
-        title: `TNFI 50 Benchmark Constituent Added`,
-        message: `${targetFpo?.name || fpoId} has been admitted to the TNFI 50 Index.`,
+        title: `FI 50 Benchmark Constituent Added`,
+        message: `${targetFpo?.name || fpoId} has been admitted to the FI 50 Index.`,
         time: 'Just now',
         read: false,
         type: 'index'
@@ -1632,7 +1600,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const removeFpoFromTnfi50 = (fpoId: string, reason?: string) => {
     // Role Authorization Check: Only Admin can remove from benchmark
     if (user?.role !== 'admin') {
-      console.warn('Unauthorized: Only Admin supervisors can manage TNFI 50 constituents.');
+      console.warn('Unauthorized: Only Admin supervisors can manage FI 50 constituents.');
       return;
     }
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -1657,7 +1625,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         fpoId,
         fpoName: targetFpo?.name || fpoId,
         ticker: targetFpo?.ticker,
-        action: 'Removed from TNFI 50 Index',
+        action: 'Removed from FI 50 Index',
         details: reason || 'Constituent removed due to benchmark float recalibration.',
         timestamp: timeStr,
         timeAgo: 'Just now',
@@ -1680,64 +1648,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     ]);
   };
 
-  // Simulator
-  const updateSimulator = (field: keyof FpoMarketSimulatorState, value: number) => {
-    setSimulatorState(prev => {
-      const updated = { ...prev, [field]: value };
-      // Recalculate projected TNFI index target
-      const growthFactor = (updated.avgRevenueGrowthPercent / 20);
-      const multipleFactor = (updated.ebitdaMultiple / 12);
-      const ratePenalty = (8 - updated.interestRatePercent) * 15;
-      const inflowBoost = (updated.institutionalInflowCr / 10);
-      const target = Math.round(1200 * growthFactor * multipleFactor + ratePenalty + inflowBoost);
-
-      return {
-        ...updated,
-        projectedIndexTarget: target
-      };
-    });
-  };
-
-  const applySimulatorToLive = () => {
-    const delta = simulatorState.projectedIndexTarget - indexData.indexValue;
-    const deltaPercent = (delta / indexData.indexValue) * 100;
-
-    setIndexData(prev => ({
-      ...prev,
-      indexValue: simulatorState.projectedIndexTarget,
-      changeValue: Number(delta.toFixed(2)),
-      changePercent: Number(deltaPercent.toFixed(2)),
-      dayHigh: Math.max(prev.dayHigh, simulatorState.projectedIndexTarget)
-    }));
-
-    // Update stock prices proportionally
-    setFpoStocks(prev =>
-      prev.map(s => {
-        const factor = 1 + (deltaPercent / 100);
-        const newPrice = Number((s.currentPrice * factor).toFixed(2));
-        return {
-          ...s,
-          currentPrice: newPrice,
-          changePercent: Number((s.changePercent + deltaPercent * 0.5).toFixed(2))
-        };
-      })
-    );
-  };
-
-  const resetSimulator = () => {
-    setSimulatorState({
-      avgRevenueGrowthPercent: 24.5,
-      baseRevenueGrowthPercent: 24.5,
-      ebitdaMultiple: 12.8,
-      baseEbitdaMultiple: 12.8,
-      interestRatePercent: 7.2,
-      baseInterestRatePercent: 7.2,
-      institutionalInflowCr: 150,
-      baseInstitutionalInflowCr: 150,
-      projectedIndexTarget: 1380.50
-    });
-  };
-
   const markNotificationRead = (id: string) => {
     setNotifications(prev =>
       prev.map(n => (n.id === id ? { ...n, read: true } : n))
@@ -1750,22 +1660,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Aggregate Market Stats
   const marketStats = useMemo(() => {
-    const advancing = fpoStocks.filter(s => s.changePercent > 0).length;
-    const declining = fpoStocks.filter(s => s.changePercent < 0).length;
+    const advancing = fpos.filter(s => s.changePercent > 0).length;
+    const declining = fpos.filter(s => s.changePercent < 0).length;
+
+    const totalHarvestVal = fpos.reduce((acc, f) => acc + (f.harvestValueCr || 0), 0);
 
     return {
-      totalMarketCapCr: indexData.totalMarketCapCr,
+      totalHarvestValueCr: Number(totalHarvestVal.toFixed(1)) || (indexData.totalHarvestValueCr || 1845.6),
       totalMembers: indexData.totalMembers,
-      totalListedFpos: fpoStocks.length,
+      totalListedFpos: fpos.length,
       advancingCount: advancing,
       decliningCount: declining,
       averageNetMargin: 14.8
     };
-  }, [fpoStocks, indexData]);
-
-  const activeStock = useMemo(() => {
-    return fpoStocks.find(s => s.ticker === selectedTicker) || fpoStocks[0];
-  }, [fpoStocks, selectedTicker]);
+  }, [fpos, indexData]);
 
   const activeFpo = useMemo(() => {
     if (!selectedFpoId && !selectedTicker) {
@@ -1972,7 +1880,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       profitMarginPercent,
       revenueGrowth: 21.4,
       ceoName: data.ceoName || 'Authorized CEO',
-      contactEmail: data.officialEmail || `${ticker.toLowerCase()}@tnfi.agri.tn.gov.in`,
+      contactEmail: data.officialEmail || `${ticker.toLowerCase()}@fi-agri.in`,
       contactPhone: data.phone || '+91 94432 10892',
       authorizedPerson: data.authorizedPerson || data.ceoName || 'Managing Director',
       cinNumber: data.cinNumber || `U01111TN${establishedYear}PTC${Math.floor(100000 + Math.random() * 900000)}`,
@@ -1993,7 +1901,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           actionDate: new Date().toISOString().split('T')[0],
           actionTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           performedBy: data.ceoName || 'FPO Authorized Signatory',
-          notes: data.isDraft ? 'Initial draft saved.' : 'Complete FPO onboarding application submitted for TNFI verification.'
+          notes: data.isDraft ? 'Initial draft saved.' : 'Complete FPO onboarding application submitted for FI verification.'
         }
       ],
       fundingRecords: data.fundingReceivedLakhs ? [
@@ -2033,7 +1941,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const newUser: User & { password?: string } = {
       id: `usr-fpo-${Date.now()}`,
       name: data.ceoName || data.name,
-      email: (data.officialEmail || `${ticker.toLowerCase()}@tnfi.agri.tn.gov.in`).toLowerCase(),
+      email: (data.officialEmail || `${ticker.toLowerCase()}@fi-agri.in`).toLowerCase(),
       role: 'fpo',
       avatar: (data.name || 'FP').slice(0, 2).toUpperCase(),
       fpoId,
@@ -2086,7 +1994,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         title: data.isDraft ? 'FPO Draft Saved' : 'Application Submitted for Verification',
         message: data.isDraft
           ? 'Your profile draft has been saved. Please sign in to continue.'
-          : 'Your FPO application has been submitted to the TNFI Verification Desk. Please sign in to monitor status.',
+          : 'Your FPO application has been submitted to the FI Verification Desk. Please sign in to monitor status.',
         type: 'funding',
         time: 'Just now',
         read: false
@@ -2187,7 +2095,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       {
         id: `notif-${Date.now()}`,
         title: 'Verification In Progress',
-        message: 'Your FPO application is now under review by the TNFI Verification Desk.',
+        message: 'Your FPO application is now under review by the FI Verification Desk.',
         time: 'Just now',
         read: false,
         type: 'trade'
@@ -2197,7 +2105,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     return {
       success: true,
-      message: 'Your FPO information has been submitted for TNFI verification. Desk review in progress.'
+      message: 'Your FPO information has been submitted for FI verification. Desk review in progress.'
     };
   };
 
@@ -2329,8 +2237,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       raisedSoFarCr: 0,
       minInvestment: Number(data.minInvestment) || 25000,
       minTicketRs: Number(data.minInvestment) || 25000,
-      unitPrice: Number(data.unitPrice) || 1000,
-      pricePerShare: Number(data.unitPrice) || 1000,
       expectedYieldPercent: Number(data.expectedYieldPercent) || 9.2,
       expectedAnnualYieldPercent: Number(data.expectedYieldPercent) || 9.2,
       tenureMonths: Number(data.tenureMonths) || 36,
@@ -2388,7 +2294,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         selectedSector,
         setSelectedSector,
         indexData,
-        fpoStocks,
+        fpoPerformanceRecords,
         capitalCampaigns,
         aiEvaluations,
         fpos,
@@ -2420,14 +2326,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateBuyer,
         deleteBuyer,
         fpoSnapshots,
-        simulatorState,
-        updateSimulator,
-        applySimulatorToLive,
-        resetSimulator,
         markNotificationRead,
         clearAllNotifications,
         marketStats,
-        activeStock,
         activeFpo,
         currentFpo,
         registerFpo,

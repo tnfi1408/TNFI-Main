@@ -205,7 +205,7 @@ export const FpoVerificationDetailView: React.FC = () => {
               {fpo.isInTnfi50 && (
                 <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-[#7A8F35]/20 text-[#A8C94A] border border-[#7A8F35]/40 flex items-center gap-1">
                   <Sparkles className="w-3 h-3" />
-                  TNFI 50 CONSTITUENT
+                  FI 50 CONSTITUENT
                 </span>
               )}
             </div>
@@ -237,7 +237,7 @@ export const FpoVerificationDetailView: React.FC = () => {
               className="px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>Approve (TNFI Verified)</span>
+              <span>Approve (FI Verified)</span>
             </button>
             <button
               onClick={() => setActionModal({ open: true, action: 'CHANGES REQUESTED', reason: '' })}
@@ -313,7 +313,7 @@ export const FpoVerificationDetailView: React.FC = () => {
           </div>
 
           <div className="p-3 rounded-2xl bg-[#080A07] border border-[#2A3320]">
-            <div className="text-[10px] text-neutral-400 uppercase">TNFI 50 Eligibility</div>
+            <div className="text-[10px] text-neutral-400 uppercase">FI 50 Eligibility</div>
             <div className="flex items-baseline gap-2 mt-1">
               <span className={`text-base font-bold ${eligibility.isEligible ? 'text-emerald-400' : 'text-amber-400'}`}>
                 {eligibility.isEligible ? 'ELIGIBLE' : 'CONDITIONAL'}
@@ -415,9 +415,9 @@ export const FpoVerificationDetailView: React.FC = () => {
         <div className="space-y-6">
           <div className="p-4 rounded-2xl bg-[#10140D] border border-[#2A3320] flex items-center justify-between text-xs">
             <div>
-              <span className="font-bold text-white">9 Statutory Verification Pillars</span>
+              <span className="font-bold text-white">9 Verification Pillars</span>
               <span className="text-neutral-400 ml-2">
-                All 9 areas must meet compliance standards for TNFI 50 admission.
+                All 9 areas must meet compliance standards for FI 50 admission.
               </span>
             </div>
             <div className="text-neutral-300">

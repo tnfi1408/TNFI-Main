@@ -27,10 +27,10 @@ export const AdminRegistrationForm: React.FC<AdminRegistrationFormProps> = ({
 
   const [formData, setFormData] = useState({
     name: '',
-    department: 'TN Agri Marketing & Agri Business Department',
+    department: 'FI Verification Desk & Platform Operations',
     email: '',
     phone: '',
-    adminId: `TNFI-ADM-${Math.floor(1000 + Math.random() * 9000)}`,
+    adminId: `FI-ADM-${Math.floor(1000 + Math.random() * 9000)}`,
     password: '',
     confirmPassword: '',
     statutoryAck: false
@@ -66,7 +66,7 @@ export const AdminRegistrationForm: React.FC<AdminRegistrationFormProps> = ({
       err.confirmPassword = 'Passwords do not match';
     }
     if (!formData.statutoryAck) {
-      err.statutoryAck = 'You must acknowledge statutory authority';
+      err.statutoryAck = 'You must acknowledge verification responsibility';
     }
 
     setErrors(err);
@@ -154,7 +154,7 @@ export const AdminRegistrationForm: React.FC<AdminRegistrationFormProps> = ({
               required
               value={formData.name}
               onChange={e => setFormData({ ...formData, name: e.target.value })}
-              placeholder="e.g. Dr. S. Ramanathan, IAS"
+              placeholder="e.g. S. Ramanathan (Operations Lead)"
               className={`w-full px-4 py-2.5 rounded-xl bg-[#080A07] border ${
                 errors.name ? 'border-[#D65C5C]' : 'border-[#2A3320] focus:border-[#7A8F35]'
               } text-xs font-sans text-[#F3F4EA] placeholder-[#969D88]/50 focus:outline-hidden transition-all`}
@@ -174,7 +174,7 @@ export const AdminRegistrationForm: React.FC<AdminRegistrationFormProps> = ({
               required
               value={formData.department}
               onChange={e => setFormData({ ...formData, department: e.target.value })}
-              placeholder="e.g. TN Department of Agricultural Marketing & Agri Business"
+              placeholder="e.g. FI Platform Administration & Verification Cell"
               className={`w-full px-4 py-2.5 rounded-xl bg-[#080A07] border ${
                 errors.department ? 'border-[#D65C5C]' : 'border-[#2A3320] focus:border-[#7A8F35]'
               } text-xs font-sans text-[#F3F4EA] placeholder-[#969D88]/50 focus:outline-hidden transition-all`}
@@ -194,7 +194,7 @@ export const AdminRegistrationForm: React.FC<AdminRegistrationFormProps> = ({
               required
               value={formData.email}
               onChange={e => setFormData({ ...formData, email: e.target.value })}
-              placeholder="admin@tnfi.agri.tn.gov.in"
+              placeholder="admin@fi-platform.in"
               className={`w-full px-4 py-2.5 rounded-xl bg-[#080A07] border ${
                 errors.email ? 'border-[#D65C5C]' : 'border-[#2A3320] focus:border-[#7A8F35]'
               } text-xs font-sans text-[#F3F4EA] placeholder-[#969D88]/50 focus:outline-hidden transition-all`}
@@ -230,7 +230,7 @@ export const AdminRegistrationForm: React.FC<AdminRegistrationFormProps> = ({
             required
             value={formData.adminId}
             onChange={e => setFormData({ ...formData, adminId: e.target.value })}
-            placeholder="TNFI-ADM-XXXX"
+            placeholder="FI-ADM-XXXX"
             className={`w-full px-4 py-2.5 rounded-xl bg-[#080A07] border ${
               errors.adminId ? 'border-[#D65C5C]' : 'border-[#2A3320] focus:border-[#7A8F35]'
             } text-xs font-mono text-[#9CAF45] font-bold focus:outline-hidden transition-all`}
@@ -305,7 +305,7 @@ export const AdminRegistrationForm: React.FC<AdminRegistrationFormProps> = ({
               className="mt-0.5 w-4 h-4 rounded-md border-[#2A3320] bg-[#161B11] text-[#7A8F35] focus:ring-[#7A8F35]"
             />
             <span className="text-xs text-[#969D88] leading-relaxed">
-              I acknowledge my statutory authority and official responsibility for vetting FPO compliance dossiers, verifying agricultural telemetry, and maintaining TNFI governance integrity.
+              I acknowledge my official responsibility for vetting FPO compliance dossiers, verifying agricultural telemetry, and maintaining FI platform verification integrity.
             </span>
           </label>
           {errors.statutoryAck && (

@@ -177,7 +177,7 @@ export const FarmerRegistrationWizard: React.FC<FarmerRegistrationWizardProps> =
     try {
       const res = registerUser({
         name: formData.name.trim(),
-        email: (formData.email.trim() || `farmer.${formData.phone.replace(/\D/g, '')}@tnfi.agri.tn.gov.in`).toLowerCase(),
+        email: (formData.email.trim() || `farmer.${formData.phone.replace(/\D/g, '')}@fi-agri.in`).toLowerCase(),
         role: 'farmer',
         phone: formData.phone.trim(),
         password: formData.password,
@@ -672,7 +672,7 @@ export const FarmerRegistrationWizard: React.FC<FarmerRegistrationWizardProps> =
           <div className="p-3 rounded-xl bg-[#7A8F35]/10 border border-[#7A8F35]/30 text-xs text-[#969D88] flex items-start gap-2">
             <Sparkles className="w-4 h-4 text-[#9CAF45] shrink-0 mt-0.5" />
             <span>
-              Once registered, your farming profile will be activated on the TNFI Farmer Portal with real-time APMC Mandi prices, seasonal crop advisories, and direct FPO member benefits.
+              Once registered, your farming profile will be activated on the FI Farmer Portal with real-time APMC Mandi prices, seasonal crop advisories, and direct FPO member benefits.
             </span>
           </div>
         </div>

@@ -667,7 +667,7 @@ export function checkTnfi50Eligibility(fpo: Partial<FPO>): {
   const details: string[] = [];
 
   if (!isVerified) {
-    details.push(`TNFI Verification Status: ${fpo.verificationStatus || 'UNDER REVIEW'} (Requires 'TNFI VERIFIED')`);
+    details.push(`FI Verification Status: ${fpo.verificationStatus || 'UNDER REVIEW'} (Requires 'FI VERIFIED')`);
   }
   if (!hasAdequateData) {
     details.push(`Data Completeness: ${completeness.overallPercentage}% (Requires ≥ 80%)`);
@@ -679,10 +679,10 @@ export function checkTnfi50Eligibility(fpo: Partial<FPO>): {
   if (isVerified && hasAdequateData && hasPassingScore) {
     return {
       isEligible: true,
-      reason: 'Meets all constituent eligibility thresholds (TNFI Verified, ≥80% Data Completeness, ≥70 Score).',
+      reason: 'Meets all constituent eligibility thresholds (FI Verified, ≥80% Data Completeness, ≥70 Score).',
       badge: 'ELIGIBLE',
-      details: ['TNFI Platform Verified', `Data Completeness: ${completeness.overallPercentage}%`, `Composite Score: ${score.toFixed(1)}/100`],
-      reasons: ['TNFI Platform Verified', `Data Completeness: ${completeness.overallPercentage}%`, `Composite Score: ${score.toFixed(1)}/100`]
+      details: ['FI Platform Verified', `Data Completeness: ${completeness.overallPercentage}%`, `Composite Score: ${score.toFixed(1)}/100`],
+      reasons: ['FI Platform Verified', `Data Completeness: ${completeness.overallPercentage}%`, `Composite Score: ${score.toFixed(1)}/100`]
     };
   }
 
@@ -746,11 +746,11 @@ export function calculateDataConfidence(fpo: Partial<FPO>): {
   }
 
   if (isVerified) {
-    reasons.push('TNFI Verification Desk approved with verified audit trail');
+    reasons.push('FI Verification Desk approved with verified audit trail');
   } else if (isUnderReview) {
-    reasons.push('Under active review by TNFI Verification Desk');
+    reasons.push('Under active review by FI Verification Desk');
   } else {
-    reasons.push('Statutory verification pending or requires update');
+    reasons.push('FI verification pending or requires update');
   }
 
   if (verifiedDocs > 0) {

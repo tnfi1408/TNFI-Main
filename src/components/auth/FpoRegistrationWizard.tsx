@@ -490,7 +490,7 @@ export const FpoRegistrationWizard: React.FC<FpoRegistrationWizardProps> = ({
         <span className="text-[#2A3320]">→</span>
         <span className="text-[#969D88]">4. ADMIN VERIFICATION</span>
         <span className="text-[#2A3320]">→</span>
-        <span className="text-[#969D88]">5. TNFI VERIFIED</span>
+        <span className="text-[#969D88]">5. FI VERIFIED</span>
       </div>
 
       {/* Step Progress Bar / Tabs */}
@@ -532,7 +532,7 @@ export const FpoRegistrationWizard: React.FC<FpoRegistrationWizardProps> = ({
             </span>
           </h2>
           <p className="text-xs text-[#969D88] mt-0.5">
-            Complete full agricultural telemetry to qualify for TNFI institutional capital.
+            Complete full agricultural telemetry to qualify for FI institutional capital.
           </p>
         </div>
 
@@ -555,7 +555,7 @@ export const FpoRegistrationWizard: React.FC<FpoRegistrationWizardProps> = ({
           <CheckCircle2 className="w-5 h-5 shrink-0 animate-pulse" />
           <div>
             <div className="font-bold text-sm font-mono">{successMessage}</div>
-            <div className="text-xs text-[#969D88]">Dossier lodged in TNFI Verification Desk. Switching to Sign In...</div>
+            <div className="text-xs text-[#969D88]">Dossier lodged in FI Verification Desk. Switching to Sign In...</div>
           </div>
         </div>
       )}
@@ -1326,7 +1326,7 @@ export const FpoRegistrationWizard: React.FC<FpoRegistrationWizardProps> = ({
             <div className="p-3 rounded-xl bg-[#7A8F35]/10 border border-[#7A8F35]/30 text-xs text-[#969D88] flex items-start gap-2">
               <Sparkles className="w-4 h-4 text-[#9CAF45] shrink-0 mt-0.5" />
               <span>
-                Upon submission, your dossier will transition to <strong className="text-[#F3F4EA]">UNDER REVIEW</strong> in the TNFI Administrator Verification Queue for statutory compliance check.
+                Upon submission, your dossier will transition to <strong className="text-[#F3F4EA]">UNDER REVIEW</strong> in the FI Platform Verification Queue for operational review.
               </span>
             </div>
           </div>

@@ -398,7 +398,7 @@ export const DistrictAnalyticsView: React.FC = () => {
               </div>
 
               <div className="pt-2 border-t border-[#2A3320] flex items-center justify-between text-[10px]">
-                <span className="text-[#D6A83A] font-bold">TNFI Score: {f.performanceScore} / 100</span>
+                <span className="text-[#D6A83A] font-bold">FI Score: {f.performanceScore} / 100</span>
                 <span className="text-[#9CAF45] flex items-center gap-1 font-semibold group-hover:text-[#8FAF3D]">
                   FPO Dossier <ChevronRight className="w-3 h-3" />
                 </span>

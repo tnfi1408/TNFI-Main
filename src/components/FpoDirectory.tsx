@@ -112,7 +112,7 @@ export const FpoDirectory: React.FC = () => {
 
                 <div className="text-right font-mono">
                   <span className="text-xs font-black text-[#A8C94A]">{(fpo.performanceScore ?? fpo.tnfiScore ?? 85)}/100</span>
-                  <span className="text-[9px] text-[#A7AE9B] block font-sans">TNFI Score</span>
+                  <span className="text-[9px] text-[#A7AE9B] block font-sans">FI Score</span>
                 </div>
               </div>
 

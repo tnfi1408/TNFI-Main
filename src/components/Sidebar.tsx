@@ -63,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     { id: 'fpo-funding', label: 'Funding & Debt History', icon: DollarSign, badge: 'DEBT' },
     { id: 'fpo-capital-raise', label: 'Capital Requirement', icon: Coins, badge: 'PRIMARY' },
     { id: 'market-intel', label: 'Mandi Price Intel', icon: Globe, badge: 'MANDIS' },
-    { id: 'tnfi-50', label: 'TNFI 50 Benchmark', icon: TrendingUp, badge: 'INDEX' }
+    { id: 'tnfi-50', label: 'FI 50 Benchmark', icon: TrendingUp, badge: 'INDEX' }
   ];
 
   const adminNav = [
@@ -76,10 +76,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
       badgeHighlight: pendingVerificationCount > 0
     },
     { id: 'fpo-directory', label: 'FPO Management', icon: Layers, badge: `${fpos.length} FPOs` },
-    { id: 'tnfi-50-mgmt', label: 'TNFI 50 Management', icon: TrendingUp, badge: 'ELIGIBILITY' },
+    { id: 'tnfi-50-mgmt', label: 'FI 50 Management', icon: TrendingUp, badge: 'ELIGIBILITY' },
     { id: 'district-analytics', label: 'District Hubs', icon: MapPin, badge: 'HUBS' },
     { id: 'demand-intel', label: 'Commodity Demand', icon: Building2, badge: 'OFFTAKE' },
-    { id: 'reports', label: 'Statutory Reports', icon: FileText, badge: 'AUDIT' }
+    { id: 'reports', label: 'Compliance Reports', icon: FileText, badge: 'AUDIT' }
   ];
 
   const investorNav = [
@@ -91,7 +91,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
     { id: 'demand-intel', label: 'Demand Intelligence', icon: Building2, badge: 'BUYERS' },
     { id: 'district-analytics', label: 'District Analytics', icon: MapPin, badge: '38 HUBS' },
     { id: 'market-intel', label: 'Mandi Price Intel', icon: Globe, badge: 'MANDIS' },
-    { id: 'tnfi-50', label: 'TNFI 50 Benchmark', icon: TrendingUp, badge: 'INDEX' },
+    { id: 'tnfi-50', label: 'FI 50 Benchmark', icon: TrendingUp, badge: 'INDEX' },
     { id: 'scenario-analysis', label: 'Scenario Analysis', icon: Sliders, badge: 'SIMULATOR' },
     { id: 'investor-profile', label: 'Investment Preferences', icon: Settings, badge: 'PROFILE' },
     { id: 'ai-analyst', label: 'AI Analyst', icon: BrainCircuit, badge: 'AI' }
@@ -136,14 +136,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onCloseMobile }) =
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#53652A] via-[#7A8F35] to-[#9CAF45] p-0.5 shadow-lg shadow-[#7A8F35]/20">
               <div className="w-full h-full bg-[#10140D] rounded-[10px] flex items-center justify-center">
                 <span className="text-sm font-black text-[#9CAF45] font-mono">
-                  TN
+                  FI
                 </span>
               </div>
             </div>
             <div>
               <div className="text-xs font-black text-[#F3F4EA] tracking-wider font-mono flex items-center gap-1">
-                <span>TNFI</span>
-                <span className="text-[10px] text-[#9CAF45] font-normal">TAMIL NADU</span>
+                <span>FI</span>
+                <span className="text-[10px] text-[#9CAF45] font-normal">AGRI FINANCE</span>
               </div>
               <div className="text-[9px] font-mono text-[#8FAF3D] font-bold uppercase">
                 {role === 'investor'

@@ -22,7 +22,6 @@ export interface User {
   adminId?: string;
   phone?: string;
   panCinNumber?: string;
-  portfolioValue?: number;
   farmerId?: string;
   state?: string;
   district?: string;
@@ -140,15 +139,13 @@ export interface FpoFinancials {
   patCr: number;
   netMarginPercent: number;
   operatingMarginPercent?: number;
-  eps?: number;
-  bookValuePerShare?: number;
   debtToEquity: number;
   roePercent?: number;
   returnOnEquityPercent?: number;
   currentRatio?: number;
   reserveFundsLakhs?: number;
   annualGrowthPercent: number;
-  dividendYieldPercent?: number;
+  patronageBonusYieldPercent?: number;
 }
 
 export interface FpoFundingRecord {
@@ -293,8 +290,6 @@ export interface FPO {
     close: number;
     volumeTonnes: number;
   }>;
-  stockPrice?: number;
-  marketCapCr?: number;
   change24h?: number;
   // Verification & Admin Workflow Fields
   verificationStatus?: VerificationStatus;
@@ -333,8 +328,6 @@ export interface FPO {
   buyerNames?: string[];
   climateSuitabilityScore?: number;
   totalFundingRaised?: number;
-  peRatio?: number;
-  dividendYield?: number;
   registrationNumber?: string;
   subScores?: TnfiScoreFactorBreakdown;
 }
@@ -366,7 +359,7 @@ export interface Farmer {
   soilMoisturePercent?: number;
   fertilizerSchedule?: string;
   shareholdingUnits: number;
-  dividendsEarnedRs?: number;
+  patronageBonusRs?: number;
   creditSanctionedLakhs: number;
   creditDisbursedLakhs: number;
   creditScore?: number;
@@ -419,7 +412,6 @@ export interface DistrictData {
   waterRiskScore?: number;
   avgFpoIndex?: number;
   primaryCrops: string[];
-  marketCapCr?: number;
 }
 
 export interface CropMarketQuote {
@@ -499,7 +491,7 @@ export interface PlatformNotification {
   id: string;
   title: string;
   message: string;
-  type: 'trade' | 'harvest' | 'climate' | 'water' | 'demand' | 'funding' | 'index' | 'dividend' | string;
+  type: 'harvest' | 'climate' | 'water' | 'demand' | 'funding' | 'index' | 'eoi' | 'verification' | string;
   targetView?: string;
   targetId?: string;
   time: string;
@@ -522,66 +514,13 @@ export interface AgriMarketSimulatorState {
   baseWaterRiskScore: number;
   buyerReadinessPercent: number;
   baseBuyerReadiness: number;
-  projectedIndexTarget?: number;
-  avgRevenueGrowthPercent?: number;
-  ebitdaMultiple?: number;
-  interestRatePercent?: number;
-  institutionalInflowCr?: number;
   [key: string]: any;
 }
 
 export type FpoMarketSimulatorState = AgriMarketSimulatorState;
 
-export interface FpoStock {
-  id: string;
-  ticker: string;
-  name: string;
-  district: string;
-  state?: string;
-  sector: SectorType;
-  primaryCrop?: string;
-  currentPrice?: number;
-  price?: number;
-  changeValue?: number;
-  changePercent?: number;
-  change24h?: number;
-  open?: number;
-  high?: number;
-  low?: number;
-  prevClose?: number;
-  yearHigh?: number;
-  yearLow?: number;
-  volumeUnits?: number;
-  volumeTonnes?: number;
-  marketCapCr: number;
-  peRatio?: number;
-  pbRatio?: number;
-  dividendYieldPercent?: number;
-  creditRating: CreditRating;
-  tnfiScore?: number;
-  totalMembers?: number;
-  totalAcreage?: number;
-  establishedYear?: number;
-  ceoName?: string;
-  contactEmail?: string;
-  auditStatus?: string;
-  governanceScore?: number;
-  riskLevel?: RiskLevel;
-  risk?: RiskLevel;
-  fpoIndex?: number;
-  revenueCr?: number;
-  profitCr?: number;
-  financials: FpoFinancials;
-  priceHistory?: Array<{ time: string; price: number; volume: number }>;
-  history?: Array<{
-    date: string;
-    open: number;
-    high: number;
-    low: number;
-    close: number;
-    volumeTonnes: number;
-  }>;
-}
+// Canonical FPO Performance Record model (based on verified agricultural and governance data)
+export type FpoPerformanceRecord = FPO;
 
 export interface TnfiIndexData {
   indexValue: number;
@@ -596,22 +535,19 @@ export interface TnfiIndexData {
   prevClose?: number;
   yearHigh?: number;
   yearLow?: number;
-  peRatio?: number;
-  pbRatio?: number;
-  dividendYield?: number;
-  totalMarketCapCr: number;
+  totalHarvestValueCr: number;
   totalMembers?: number;
   listedFposCount?: number;
+  constituentFposCount?: number;
   volumeTonnes?: number;
   advances?: number;
   declines?: number;
   unchanged?: number;
-  projectedIndexTarget?: number;
   sectorWeights?: Array<{
     sector: SectorType;
     weightPercent: number;
     return24h: number;
-    marketCapCr: number;
+    harvestValueCr: number;
     fpoCount: number;
   }>;
   history?: Array<{
@@ -702,8 +638,6 @@ export interface CapitalRaiseCampaign {
   raisedAmountCr?: number;
   minTicketRs?: number;
   minInvestment?: number;
-  pricePerShare?: number;
-  unitPrice?: number;
   expectedYieldPercent?: number;
   expectedAnnualYieldPercent?: number;
   tenureMonths?: number;
@@ -715,7 +649,6 @@ export interface CapitalRaiseCampaign {
   creditRating?: CreditRating;
   instrumentType?: string;
   sector?: SectorType;
-  valuationCr?: number;
   status: 'LIVE' | 'UPCOMING' | 'CLOSED' | string;
 }
 

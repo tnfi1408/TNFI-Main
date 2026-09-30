@@ -106,7 +106,7 @@ export const FpoCapitalRequirementView: React.FC = () => {
         farmerBeneficiaries: fpo.totalFarmers || 1450,
         offtakeBuyer: fpo.buyerNames?.[0] || 'Secured Institutional Buyer',
         buyerReadiness: fpo.buyerReadiness || 90,
-        strengths: [formData.collateralSummary, 'TNFI Platform Audited & Verified'],
+        strengths: [formData.collateralSummary, 'FI Platform Audited & Verified'],
         risks: ['Agricultural weather variability hedged via crop insurance'],
         dataCompleteness: 95
       });
@@ -158,7 +158,7 @@ export const FpoCapitalRequirementView: React.FC = () => {
             <span>Capital Raise Campaign Published Successfully!</span>
           </div>
           <p className="text-xs text-[#969D88]">
-            Your proposal of ₹{successCampaign.targetAmountCr} Cr for "{successCampaign.purpose}" is now listed in the TNFI Primary Market board and visible to institutional investors.
+            Your proposal of ₹{successCampaign.targetAmountCr} Cr for "{successCampaign.purpose}" is now listed in the FI Primary Market board and visible to institutional capital providers.
           </p>
           <div className="pt-2 flex items-center gap-3">
             <button
@@ -388,7 +388,7 @@ export const FpoCapitalRequirementView: React.FC = () => {
             <div className="pt-3 border-t border-[#2A3320] flex items-center justify-between text-xs">
               <span className="text-[10px] font-mono text-[#36C77A] flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>TNFI Platform Verified</span>
+                <span>FI Platform Verified</span>
               </span>
               <span className="text-[10px] font-mono text-[#969D88]">Primary Issue</span>
             </div>

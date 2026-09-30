@@ -342,7 +342,7 @@ export const InvestorDashboardView: React.FC = () => {
               <span>Top-Performing Farmer Producer Organisations</span>
             </h2>
             <p className="text-xs text-[#969D88] mt-0.5">
-              Ranked by the TNFI FPO Performance Index based on verified agricultural harvest, financial margins, and buyer offtake commitments.
+              Ranked by the FI FPO Performance Index based on verified agricultural harvest, financial margins, and buyer offtake commitments.
             </p>
           </div>
 
@@ -379,7 +379,7 @@ export const InvestorDashboardView: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono uppercase bg-[#36C77A]/10 text-[#36C77A] border border-[#36C77A]/30 flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3 text-[#36C77A]" />
-                      <span>{fpo.verificationStatus || 'TNFI VERIFIED'}</span>
+                      <span>{fpo.verificationStatus || 'FI VERIFIED'}</span>
                     </span>
 
                     <div className="flex items-center gap-1.5">

@@ -45,7 +45,7 @@ export const AiScoringEngine: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#718C2C] text-[#050905] shadow-md shadow-[#718C2C]/30">
-                TNFI AI ANALYST
+                FI AI ANALYST
               </span>
               <span className="text-xs text-[#A8C94A] font-bold">
                 MULTI-FACTOR AGRI SCORING ENGINE
@@ -265,7 +265,7 @@ export const AiScoringEngine: React.FC = () => {
                     <span className="text-[#36C77A] font-black">Top 10% Cluster</span>
                   </div>
                   <div className="text-[11px] text-[#F2F1E8] font-semibold">
-                    {(activeFpo.indexWeight || 2.5).toFixed(2)}% TNFI 50 Benchmark Weight
+                    {(activeFpo.indexWeight || 2.5).toFixed(2)}% FI 50 Benchmark Weight
                   </div>
                   <p className="text-[10px] text-[#A7AE9B]">
                     Dominant regional market share in {activeFpo.district} APMC trading yards.

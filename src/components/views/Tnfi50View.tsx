@@ -34,7 +34,7 @@ import { RiskLevel } from '../../types';
 import { RAW_50_FPOS_DATA, calculateTnfiScore, TnfiScoreFactorBreakdown } from '../../data/tnfi50Data';
 
 export const Tnfi50View: React.FC = () => {
-  const { fpos, fpoStocks, indexData, setCurrentView } = useApp();
+  const { fpos, indexData, setCurrentView } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('ALL');
@@ -60,14 +60,6 @@ export const Tnfi50View: React.FC = () => {
   const combinedList = useMemo(() => {
     const list = fpos.map((fpo, index) => {
       const seed = RAW_50_FPOS_DATA.find(s => s.id === fpo.id || s.ticker === fpo.ticker) || RAW_50_FPOS_DATA[index % RAW_50_FPOS_DATA.length];
-      const stock = fpoStocks.find(s => s.id === fpo.id || s.ticker === fpo.ticker) || {
-        currentPrice: seed.stockPrice,
-        changePercent: seed.perf1D,
-        changeValue: Number(((seed.stockPrice * seed.perf1D) / 100).toFixed(2)),
-        high: seed.stockPrice * 1.02,
-        low: seed.stockPrice * 0.98,
-        volume: 24000 + index * 1200
-      };
 
       const computedScore = fpo.performanceScore ?? fpo.tnfiScore ?? (seed.subScores ? calculateTnfiScore(seed.subScores) : 82.5);
       const revenueCr = (fpo as any).revenueCr ?? (fpo.expectedRevenue ? Number((fpo.expectedRevenue / 10000000).toFixed(2)) : seed.revenueCr || 25.0);
@@ -92,25 +84,24 @@ export const Tnfi50View: React.FC = () => {
         perf1M: seed.perf1M,
         perf3M: seed.perf3M,
         perf1Y: seed.perf1Y,
-        stockPrice: seed.stockPrice,
-        peRatio: seed.peRatio,
+        mandiPricePerQtl: seed.mandiPricePerQtl,
+        harvestValueCr: seed.harvestValueCr || fpo.harvestValueCr || Number(((harvestTonnes * (seed.mandiPricePerQtl || 2800) * 10) / 10000000).toFixed(2)),
         revenueCr,
         profitCr,
         expectedHarvestTonnes: harvestTonnes,
         fundedAcres: acres,
         farmerCount: seed.farmerCount || fpo.totalFarmers || 1800,
-        riskRating: seed.riskRating,
-        stock
+        riskRating: seed.riskRating
       };
     });
 
-    // Dynamic ranking strictly driven by authoritative performance / TNFI score
+    // Dynamic ranking strictly driven by authoritative performance / FI score
     const sorted = [...list].sort((a, b) => (b.tnfiScore || 0) - (a.tnfiScore || 0) || (b.revenueCr || 0) - (a.revenueCr || 0));
     return sorted.map((item, sortedIdx) => ({
       ...item,
       rank: sortedIdx + 1
     }));
-  }, [fpos, fpoStocks]);
+  }, [fpos]);
 
   // Total Index Weight calculation (must equal 100.00%)
   const totalIndexWeight = useMemo(() => {
@@ -153,7 +144,7 @@ export const Tnfi50View: React.FC = () => {
     };
   }, [combinedList]);
 
-  // "Why is TNFI Moving?" - Attribution Analysis
+  // "Why is FI Moving?" - Attribution Analysis
   const attributionAnalysis = useMemo(() => {
     const indexBase = indexData.indexValue || 1245.68;
     const scoredList = combinedList.map(fpo => {
@@ -282,7 +273,7 @@ export const Tnfi50View: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-2xl sm:text-3xl font-black text-[#F3F4EA] tracking-tight">
-              TNFI 50
+              FI 50
             </h1>
             <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#161B11] text-[#9CAF45] border border-[#7A8F35]/40 shadow-sm">
               TAMIL NADU BENCHMARK INDEX
@@ -299,7 +290,7 @@ export const Tnfi50View: React.FC = () => {
         {/* Live Index Capsule & Multi-Timeframe Selector */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="px-4 py-2.5 rounded-xl bg-[#10140D] border border-[#2A3320] shadow-md">
-            <div className="text-[10px] text-[#969D88] uppercase font-semibold">TNFI 50 INDEX LEVEL</div>
+            <div className="text-[10px] text-[#969D88] uppercase font-semibold">FI 50 INDEX LEVEL</div>
             <div className="flex items-center gap-2">
               <span className="text-xl font-black text-[#F3F4EA]">{(indexData.indexValue || 1245.68).toFixed(2)}</span>
               <span className={`text-xs font-bold flex items-center ${aggregateMetrics.weighted1D >= 0 ? 'text-[#8FAF3D]' : 'text-[#D65C5C]'}`}>
@@ -368,7 +359,7 @@ export const Tnfi50View: React.FC = () => {
         </div>
 
         <div className="p-3.5 rounded-2xl bg-[#10140D] border border-[#2A3320]">
-          <div className="text-[10px] text-[#969D88] uppercase font-semibold">Avg TNFI Score</div>
+          <div className="text-[10px] text-[#969D88] uppercase font-semibold">Avg FI Score</div>
           <div className="text-lg font-black text-[#D6A83A] mt-0.5">{aggregateMetrics.avgScore} <span className="text-xs text-[#969D88]">/ 100</span></div>
           <div className="text-[10px] text-[#8FAF3D] mt-0.5">7-Factor Fundamentals</div>
         </div>
@@ -544,7 +535,7 @@ export const Tnfi50View: React.FC = () => {
                 className="px-2.5 py-1.5 rounded-lg bg-[#080A07] border border-[#2A3320] text-xs text-[#F3F4EA] focus:outline-none cursor-pointer"
               >
                 <option value="weight">Index Weight (High → Low)</option>
-                <option value="score">TNFI Score (High → Low)</option>
+                <option value="score">FI Score (High → Low)</option>
                 <option value="perf1D">1D Performance %</option>
                 <option value="perf1M">1M Performance %</option>
                 <option value="revenue">Revenue (High → Low)</option>
@@ -576,7 +567,7 @@ export const Tnfi50View: React.FC = () => {
 
         <div className="flex flex-wrap items-center justify-between text-[11px] text-[#969D88] pt-2 border-t border-[#2A3320] gap-2">
           <div>
-            Showing <span className="text-[#F3F4EA] font-bold">{Math.min(filteredList.length, (currentPage - 1) * itemsPerPage + 1)}–{Math.min(filteredList.length, currentPage * itemsPerPage)}</span> of <span className="text-[#F3F4EA] font-bold">{filteredList.length}</span> constituent FPOs in TNFI 50 (Page {currentPage} of {totalPages})
+            Showing <span className="text-[#F3F4EA] font-bold">{Math.min(filteredList.length, (currentPage - 1) * itemsPerPage + 1)}–{Math.min(filteredList.length, currentPage * itemsPerPage)}</span> of <span className="text-[#F3F4EA] font-bold">{filteredList.length}</span> constituent FPOs in FI 50 (Page {currentPage} of {totalPages})
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[#9CAF45]">Total Allocated Weight: <strong className="text-[#F3F4EA]">100.00%</strong></span>
@@ -598,7 +589,7 @@ export const Tnfi50View: React.FC = () => {
                   <th className="py-3.5 px-3">District</th>
                   <th className="py-3.5 px-3">Primary Crop</th>
                   <th className="py-3.5 px-3 text-right">Index Weight</th>
-                  <th className="py-3.5 px-3 text-center">TNFI Score</th>
+                  <th className="py-3.5 px-3 text-center">FI Score</th>
                   <th className="py-3.5 px-3 text-right">Exp. Harvest</th>
                   <th className="py-3.5 px-3 text-right">Revenue (Cr)</th>
                   <th className="py-3.5 px-3 text-right">Net Profit (Cr)</th>
@@ -664,7 +655,7 @@ export const Tnfi50View: React.FC = () => {
                         </div>
                       </td>
 
-                      {/* TNFI Score */}
+                      {/* FI Score */}
                       <td className="py-3 px-3 text-center">
                         <button
                           type="button"
@@ -809,7 +800,7 @@ export const Tnfi50View: React.FC = () => {
                   <span className="text-xs font-black text-[#F3F4EA]">{fpo.indexWeight.toFixed(2)}%</span>
                 </div>
                 <div>
-                  <span className="text-[9px] text-[#969D88] block">TNFI SCORE</span>
+                  <span className="text-[9px] text-[#969D88] block">FI SCORE</span>
                   <span className="text-xs font-black text-[#D6A83A]">{fpo.tnfiScore}</span>
                 </div>
                 <div>
@@ -873,7 +864,7 @@ export const Tnfi50View: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-[11px] text-[#969D88] mt-0.5">
-                    {scoreModalFpo.district}, {scoreModalFpo.state} • Official TNFI Scorecard
+                    {scoreModalFpo.district}, {scoreModalFpo.state} • Official FI Scorecard
                   </div>
                 </div>
                 <button
@@ -886,7 +877,7 @@ export const Tnfi50View: React.FC = () => {
 
               <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#080A07] border border-[#2A3320]">
                 <div>
-                  <div className="text-[10px] text-[#969D88] uppercase">COMPOSITE TNFI SCORE</div>
+                  <div className="text-[10px] text-[#969D88] uppercase">COMPOSITE FI SCORE</div>
                   <div className="text-2xl font-black text-[#D6A83A]">{scoreModalFpo.score} <span className="text-xs text-[#969D88]">/ 100</span></div>
                 </div>
                 <div className="text-right">

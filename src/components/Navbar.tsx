@@ -56,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
         {/* Platform Title on Mobile */}
         <div className="lg:hidden font-mono font-black text-sm text-[#F3F4EA] flex items-center gap-1.5">
           <Sprout className="w-4 h-4 text-[#8FAF3D]" />
-          <span>TNFI TERMINAL</span>
+          <span>FI TERMINAL</span>
         </div>
 
         {/* State Tag on Desktop */}

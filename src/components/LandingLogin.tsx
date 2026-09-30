@@ -197,9 +197,9 @@ export const LandingLogin: React.FC = () => {
       tagline: 'Supervise 50 Tamil Nadu FPO entities, index float weights, and audited governance metrics.',
       bullets: [
         'Supervise 50 verified Tamil Nadu FPOs',
-        'TNFI 50 index weights & quarterly rebalancing',
+        'FI 50 index weights & quarterly rebalancing',
         'Commodity & district market intelligence',
-        'Statutory audit & governance verification'
+        'Audit & governance verification'
       ],
       cta: 'ENTER COMMAND CENTER →'
     },
@@ -208,9 +208,9 @@ export const LandingLogin: React.FC = () => {
       pass: 'password123',
       title: 'FPO PRODUCER ORGANIZATION',
       badge: 'Producer Organization',
-      tagline: 'Track operational scale, TNFI 50 performance ranking, and access institutional offtake tenders.',
+      tagline: 'Track operational scale, FI 50 performance ranking, and access institutional offtake tenders.',
       bullets: [
-        'Live TNFI 50 constituent performance index',
+        'Live FI 50 constituent performance index',
         'Crop portfolio, acreage & harvest yield ledger',
         'Buyer forward contracts & green credit tenders',
         'Audited 7-factor financial scorecard'
@@ -224,7 +224,7 @@ export const LandingLogin: React.FC = () => {
       badge: 'Market Intelligence',
       tagline: 'Discover vetted Tamil Nadu FPOs, analyze agricultural fundamentals, and submit Expressions of Interest for capital opportunities.',
       bullets: [
-        'Analyze TNFI 50 constituent performance index',
+        'Analyze FI 50 constituent performance index',
         'Evaluate audited cash flows & solvency ratios',
         'Review vetted FPO capital opportunities',
         'Multi-crop risk resilience models'
@@ -442,19 +442,19 @@ export const LandingLogin: React.FC = () => {
         {/* Left Brand Identity */}
         <div className="flex items-center gap-3.5 group cursor-pointer" onClick={() => handleQuickRoleAccess('fpo')}>
           <div className="w-10 h-10 rounded-xl bg-[#101811] border border-[#7A8F35]/50 flex items-center justify-center font-bold text-sm text-[#9CAF45] shadow-lg shadow-[#7A8F35]/20 group-hover:border-[#9CAF45] transition-all">
-            <span className="tracking-tighter font-mono font-black text-base text-[#F3F1E8]">TN</span>
+            <span className="tracking-tighter font-mono font-black text-base text-[#F3F1E8]">FI</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold text-lg text-[#F3F1E8] tracking-tight font-editorial-sans">
-                TNFI
+                FI
               </span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-[#7A8F35]/15 text-[#9CAF45] border border-[#7A8F35]/35 tracking-wider">
                 TAMIL NADU
               </span>
             </div>
             <span className="text-[11px] text-[#969D88] tracking-wide block font-medium">
-              Tamil Nadu FPO Finance & Market Intelligence
+              Agri Finance & FPO Market Intelligence
             </span>
           </div>
         </div>
@@ -462,7 +462,7 @@ export const LandingLogin: React.FC = () => {
         {/* Center Indicator (Hidden on small mobile) */}
         <div className="hidden lg:flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#101811] border border-[#2A3320] text-xs text-[#969D88]">
           <span className="w-2 h-2 rounded-full bg-[#8FAF3D] animate-pulse" />
-          <span className="text-[#F3F1E8] font-semibold">TNFI 50 Benchmark:</span>
+          <span className="text-[#F3F1E8] font-semibold">FI 50 Benchmark:</span>
           <span className="font-mono text-[#9CAF45] font-bold">1,245.68</span>
           <span className="text-[#8FAF3D] font-mono font-bold text-[11px]">+2.84% ↑</span>
         </div>
@@ -493,7 +493,7 @@ export const LandingLogin: React.FC = () => {
             onClick={() => handleQuickRoleAccess('fpo')}
             className="px-4 sm:px-5 py-2 rounded-xl bg-[#7A8F35] hover:bg-[#8FAF3D] text-white font-semibold text-xs transition-all shadow-md shadow-[#7A8F35]/25 flex items-center gap-1.5 cursor-pointer"
           >
-            <span>Explore TNFI</span>
+            <span>Explore FI</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -521,7 +521,7 @@ export const LandingLogin: React.FC = () => {
             {/* Concise Product Description with WHO / WHAT / WHY */}
             <div className="space-y-3 text-[#969D88] text-sm sm:text-base leading-relaxed max-w-xl font-normal">
               <p className="text-[#F3F1E8]/90 font-medium">
-                TNFI is an Agri Finance & FPO Market Intelligence platform that connects agricultural performance data with capital opportunities.
+                FI is an Agri Finance & FPO Market Intelligence platform that connects agricultural performance data with capital opportunities.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
                 <div className="p-2.5 rounded-xl bg-[#101811] border border-[#2A3320]">
@@ -545,7 +545,7 @@ export const LandingLogin: React.FC = () => {
                 onClick={() => handleQuickRoleAccess('fpo')}
                 className="px-6 py-3.5 rounded-xl bg-[#7A8F35] hover:bg-[#8FAF3D] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-[#7A8F35]/30 flex items-center gap-2 cursor-pointer group"
               >
-                <span>EXPLORE TNFI</span>
+                <span>EXPLORE FI</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -709,10 +709,10 @@ export const LandingLogin: React.FC = () => {
 
                   {/* 4 FLOATING DATA CARDS (Positioned around the visualization) */}
                   
-                  {/* Floating Card 1: TNFI 50 Benchmark (Top Right) */}
+                  {/* Floating Card 1: FI 50 Benchmark (Top Right) */}
                   <div className="absolute top-0 right-0 sm:right-2 z-30 p-3 sm:p-3.5 rounded-2xl bg-[#101811]/95 border border-[#7A8F35]/50 shadow-xl backdrop-blur-md max-w-[200px]">
                     <div className="flex items-center justify-between text-[10px] text-[#969D88] uppercase font-semibold">
-                      <span>TNFI 50 INDEX</span>
+                      <span>FI 50 INDEX</span>
                       <span className="w-1.5 h-1.5 rounded-full bg-[#8FAF3D]" />
                     </div>
                     <div className="flex items-baseline gap-2 mt-1">
@@ -849,10 +849,10 @@ export const LandingLogin: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. CONCEPT FLOW CHAIN (FPO → CROPS → ACREAGE → HARVEST → DEMAND → RISK → REVENUE / PROFIT → TNFI PERFORMANCE) */}
+        {/* 4. CONCEPT FLOW CHAIN (FPO → CROPS → ACREAGE → HARVEST → DEMAND → RISK → REVENUE / PROFIT → FI PERFORMANCE) */}
         <div className="mt-8 p-5 sm:p-6 rounded-3xl bg-[#0B120D] border border-[#2A3320]">
           <div className="text-[11px] font-semibold text-[#969D88] uppercase tracking-wider mb-3">
-            THE TNFI STANDARDIZED AGRICULTURAL FUNDAMENTAL CHAIN
+            THE FI STANDARDIZED AGRICULTURAL FUNDAMENTAL CHAIN
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#F3F1E8]">
             <span className="px-3 py-1.5 rounded-xl bg-[#101811] border border-[#7A8F35]/40 text-[#9CAF45]">
@@ -884,7 +884,7 @@ export const LandingLogin: React.FC = () => {
             </span>
             <ArrowRight className="w-3.5 h-3.5 text-[#969D88]" />
             <span className="px-3.5 py-1.5 rounded-xl bg-[#7A8F35] text-white shadow-md">
-              8. TNFI 50 PERFORMANCE
+              8. FI 50 PERFORMANCE
             </span>
           </div>
         </div>
@@ -894,7 +894,7 @@ export const LandingLogin: React.FC = () => {
       {/* 5. FOOTER */}
       <footer className="border-t border-[#2A3320] bg-[#0B120D] px-6 sm:px-12 py-5 text-xs text-[#969D88] flex flex-col sm:flex-row items-center justify-between gap-3 z-20">
         <div>
-          <span className="font-bold text-[#F3F1E8]">TNFI</span> • Tamil Nadu FPO Finance & Market Intelligence Platform
+          <span className="font-bold text-[#F3F1E8]">FI</span> • Agri Finance & FPO Market Intelligence Platform
         </div>
         <div className="flex items-center gap-4 text-xs text-[#969D88]">
           <span>38 Districts Standardized</span>
@@ -923,7 +923,7 @@ export const LandingLogin: React.FC = () => {
             {/* Header */}
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-lg text-[#F3F1E8]">TNFI Access Portal</span>
+                <span className="font-bold text-lg text-[#F3F1E8]">FI Access Portal</span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#7A8F35]/20 text-[#9CAF45]">
                   TAMIL NADU
                 </span>
@@ -1143,17 +1143,17 @@ export const LandingLogin: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[#9CAF45] animate-pulse shrink-0" />
                     <span className="text-[#F3F1E8] font-medium">
-                      {regRole === 'fpo' && 'Join TNFI and build your verified agricultural profile.'}
+                      {regRole === 'fpo' && 'Join FI and build your verified agricultural profile.'}
                       {regRole === 'investor' && 'Create your agricultural investment intelligence profile.'}
                       {regRole === 'farmer' && 'Create your farming profile and connect with your FPO.'}
-                      {regRole === 'admin' && 'Access the TNFI ecosystem management system.'}
+                      {regRole === 'admin' && 'Access the FI ecosystem management system.'}
                     </span>
                   </div>
                   <span className="text-[10px] font-mono font-bold text-[#8FAF3D] uppercase shrink-0">
                     {regRole === 'fpo' && '7-Step Dossier'}
                     {regRole === 'investor' && '3-Step Setup'}
                     {regRole === 'farmer' && '5-Step Linkage'}
-                    {regRole === 'admin' && 'Statutory Auth'}
+                    {regRole === 'admin' && 'Verification Auth'}
                   </span>
                 </div>
 

@@ -10,20 +10,20 @@ import {
 import { useApp } from '../context/AppContext';
 
 export const ReportsView: React.FC = () => {
-  const { fpoStocks, indexData } = useApp();
+  const { indexData } = useApp();
   const [downloadToast, setDownloadToast] = useState<string | null>(null);
 
   const handleDownload = (title: string) => {
-    setDownloadToast(`Preparing certified dossier for: ${title}`);
+    setDownloadToast(`Preparing verified dossier for: ${title}`);
     setTimeout(() => {
-      setDownloadToast(`Downloaded verified statutory copy of: ${title}`);
+      setDownloadToast(`Downloaded verified compliance copy of: ${title}`);
       setTimeout(() => setDownloadToast(null), 3500);
     }, 800);
   };
 
   const reports = [
     {
-      title: 'TNFI Index Semi-Annual Factsheet (Q2 FY26)',
+      title: 'FI 50 Index Semi-Annual Factsheet (Q2 FY26)',
       type: 'Market Factsheet',
       date: 'Aug 14, 2026',
       size: '2.4 MB',
@@ -77,13 +77,13 @@ export const ReportsView: React.FC = () => {
             <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono uppercase bg-[#718C2C]/20 text-[#A8C94A] border border-[#718C2C]/30">
               DISCLOSURES & FILINGS
             </span>
-            <span className="text-xs text-[#A7AE9B] font-mono">SEBI / NABARD COMPLIANT</span>
+            <span className="text-xs text-[#A7AE9B] font-mono">NABARD / ROC COMPLIANT</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F2F1E8] tracking-tight">
-            Exchange Filings, Factsheets & Audit Reports
+            FPO Filings, Factsheets & Compliance Reports
           </h1>
           <p className="text-xs sm:text-sm text-[#A7AE9B] mt-1 max-w-2xl">
-            Official regulatory disclosures, statutory auditor certifications, and periodic financial statements submitted by listed FPOs.
+            Official compliance disclosures, statutory auditor filings, and periodic financial statements submitted by verified FPOs.
           </p>
         </div>
       </div>

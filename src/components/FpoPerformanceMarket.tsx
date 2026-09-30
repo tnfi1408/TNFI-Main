@@ -25,11 +25,10 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { FpoStock, SectorType } from '../types';
+import { FpoPerformanceRecord, SectorType } from '../types';
 
 export const FpoPerformanceMarket: React.FC = () => {
   const {
-    fpoStocks,
     fpos,
     capitalOpportunities,
     selectedSector,
@@ -47,7 +46,7 @@ export const FpoPerformanceMarket: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   // Expression of Interest Modal State
-  const [eoiModalStock, setEoiModalStock] = useState<FpoStock | null>(null);
+  const [eoiModalFpo, setEoiModalFpo] = useState<FpoPerformanceRecord | null>(null);
   const [eoiFacilityType, setEoiFacilityType] = useState('Seasonal Working Capital');
   const [eoiAmountLakhs, setEoiAmountLakhs] = useState<number>(25);
   const [eoiInvestorName, setEoiInvestorName] = useState(user?.name || 'Institutional Capital Partner');
@@ -66,38 +65,38 @@ export const FpoPerformanceMarket: React.FC = () => {
     'Millets & Pulses'
   ];
 
-  const filteredStocks = useMemo(() => {
-    return fpoStocks.filter(stock => {
-      const matchesSector = selectedSector === 'ALL' || stock.sector === selectedSector;
+  const filteredFpos = useMemo(() => {
+    return fpos.filter(fpo => {
+      const matchesSector = selectedSector === 'ALL' || fpo.sector === selectedSector;
       const matchesSearch =
-        stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        stock.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        stock.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        stock.primaryCrop.toLowerCase().includes(searchTerm.toLowerCase());
+        fpo.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        fpo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        fpo.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        fpo.primaryCrop.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesSector && matchesSearch;
     });
-  }, [fpoStocks, selectedSector, searchTerm]);
+  }, [fpos, selectedSector, searchTerm]);
 
-  const handleOpenEoi = (stock: FpoStock, e?: React.MouseEvent) => {
+  const handleOpenEoi = (fpo: FpoPerformanceRecord, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    setEoiModalStock(stock);
+    setEoiModalFpo(fpo);
     setEoiAmountLakhs(25);
     setEoiFeedback(null);
   };
 
   const handleExecuteEoi = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!eoiModalStock) return;
+    if (!eoiModalFpo) return;
 
     // Check if there is an existing matching opportunity or create a verified inquiry
-    const existingOpp = capitalOpportunities.find(o => o.fpoId === eoiModalStock.id || o.fpoName === eoiModalStock.name);
-    const oppId = existingOpp?.id || `opp-direct-${eoiModalStock.id}`;
+    const existingOpp = capitalOpportunities.find(o => o.fpoId === eoiModalFpo.id || o.fpoName === eoiModalFpo.name);
+    const oppId = existingOpp?.id || `opp-direct-${eoiModalFpo.id}`;
 
     const res = submitExpressionOfInterest({
       opportunityId: oppId,
-      fpoId: eoiModalStock.id,
-      fpoName: eoiModalStock.name,
-      crop: eoiModalStock.primaryCrop || 'Multi-Crop',
+      fpoId: eoiModalFpo.id,
+      fpoName: eoiModalFpo.name,
+      crop: eoiModalFpo.primaryCrop || 'Multi-Crop',
       investorName: eoiInvestorName,
       investorEntity: eoiEntity,
       organisation: eoiEntity,
@@ -111,7 +110,7 @@ export const FpoPerformanceMarket: React.FC = () => {
     setEoiFeedback(res);
     if (res.success) {
       setTimeout(() => {
-        setEoiModalStock(null);
+        setEoiModalFpo(null);
         setEoiFeedback(null);
       }, 2000);
     }
@@ -210,14 +209,14 @@ export const FpoPerformanceMarket: React.FC = () => {
       {/* Grid View */}
       {viewMode === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredStocks.map(stock => {
-            const isPositive = stock.changePercent >= 0;
-            const isWatchlisted = watchlist.includes(stock.id) || watchlist.includes(stock.ticker);
-            const isCompared = comparedFpoIds.includes(stock.id);
+          {filteredFpos.map(fpo => {
+            const isPositive = fpo.changePercent >= 0;
+            const isWatchlisted = watchlist.includes(fpo.id) || watchlist.includes(fpo.ticker);
+            const isCompared = comparedFpoIds.includes(fpo.id);
 
             return (
               <div
-                key={stock.id}
+                key={fpo.id}
                 className="p-5 rounded-2xl bg-[#10140D] hover:bg-[#161B11] border border-[#2A3320] hover:border-[#7A8F35]/50 transition-all shadow-xl flex flex-col justify-between group relative overflow-hidden"
               >
                 {/* Top Row: Ticker & Rating */}
@@ -226,33 +225,33 @@ export const FpoPerformanceMarket: React.FC = () => {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-lg font-black text-[#F3F4EA] font-mono tracking-wide">
-                          {stock.ticker}
+                          {fpo.ticker}
                         </span>
                         <span className="px-2 py-0.5 rounded text-[10px] font-extrabold font-mono bg-[#8FAF3D]/15 text-[#8FAF3D] border border-[#8FAF3D]/30">
-                          {stock.creditRating}
+                          {fpo.creditRating}
                         </span>
                         <span className="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-[#161B11] text-[#9CAF45] border border-[#2A3320]">
-                          {stock.sector}
+                          {fpo.sector}
                         </span>
                       </div>
                       <h3 className="font-semibold text-xs text-[#F3F4EA] mt-0.5 line-clamp-1">
-                        {stock.name}
+                        {fpo.name}
                       </h3>
                       <span className="text-[11px] text-[#969D88]">
-                        {stock.district}, TN • {(stock.totalMembers || 0).toLocaleString()} Members
+                        {fpo.district}, TN • {(fpo.totalMembers || 0).toLocaleString()} Members
                       </span>
                     </div>
 
-                    {/* AI TNFI Score badge */}
+                    {/* AI FI Score badge */}
                     <div className="flex flex-col items-end">
                       <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-[#161B11] border border-[#7A8F35]/30">
                         <Sparkles className="w-3 h-3 text-[#D6A83A]" />
                         <span className="text-xs font-black text-[#9CAF45] font-mono">
-                          {stock.tnfiScore}
+                          {fpo.tnfiScore}
                         </span>
                         <span className="text-[9px] text-[#969D88] font-mono">/100</span>
                       </div>
-                      <span className="text-[9px] text-[#969D88] font-mono mt-0.5">TNFI Score</span>
+                      <span className="text-[9px] text-[#969D88] font-mono mt-0.5">FI Score</span>
                     </div>
                   </div>
 
@@ -262,7 +261,7 @@ export const FpoPerformanceMarket: React.FC = () => {
                       <span className="text-[10px] text-[#969D88] block font-mono uppercase">PERFORMANCE BENCHMARK</span>
                       <div className="flex items-baseline gap-2">
                         <span className="text-2xl font-black text-[#F3F4EA] font-mono-nums">
-                          {stock.tnfiScore}
+                          {fpo.tnfiScore}
                         </span>
                         <span className="text-xs text-[#969D88] font-mono">INDEX PTS</span>
                       </div>
@@ -275,7 +274,7 @@ export const FpoPerformanceMarket: React.FC = () => {
                       }`}
                     >
                       {isPositive ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
-                      {isPositive ? '+' : ''}{(stock.changePercent || 0).toFixed(2)}% Trend
+                      {isPositive ? '+' : ''}{(fpo.changePercent || 0).toFixed(2)}% Trend
                     </div>
                   </div>
 
@@ -283,9 +282,9 @@ export const FpoPerformanceMarket: React.FC = () => {
                   <div className="p-2 rounded-xl bg-[#080A07] border border-[#2A3320] mb-2.5 space-y-1 text-[10px] font-mono">
                     <div className="flex justify-between items-center text-[#969D88]">
                       <span className="text-[#F3F4EA] font-sans font-medium">
-                        Crop: <strong className="text-[#9CAF45] font-mono">{stock.primaryCrop || 'Multi-Crop'}</strong>
+                        Crop: <strong className="text-[#9CAF45] font-mono">{fpo.primaryCrop || 'Multi-Crop'}</strong>
                       </span>
-                      <span className="text-[#8FAF3D] font-bold">Mandi Realization: +{(((stock.changePercent || 0) + 1.2)).toFixed(1)}%</span>
+                      <span className="text-[#8FAF3D] font-bold">Mandi Realization: +{(((fpo.changePercent || 0) + 1.2)).toFixed(1)}%</span>
                     </div>
                     <div className="flex items-center gap-1 text-[9px] text-[#969D88] overflow-x-auto custom-scroll">
                       <span className="px-1.5 py-0.5 rounded bg-[#161B11] border border-[#2A3320] text-[#9CAF45] whitespace-nowrap">
@@ -304,41 +303,41 @@ export const FpoPerformanceMarket: React.FC = () => {
                   <div className="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-[#080A07] border border-[#2A3320] text-xs font-mono-nums mb-3">
                     <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Harvest Scale</span>
-                      <span className="font-bold text-[#F3F4EA]">₹{stock.marketCapCr} Cr</span>
+                      <span className="font-bold text-[#F3F4EA]">₹{fpo.harvestValueCr || (fpo.financials?.revenueCr ? (fpo.financials.revenueCr * 1.8).toFixed(1) : '75.4')} Cr</span>
                     </div>
                     <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Revenue</span>
-                      <span className="font-bold text-[#9CAF45]">₹{stock.financials.revenueCr} Cr</span>
+                      <span className="font-bold text-[#9CAF45]">₹{fpo.financials.revenueCr} Cr</span>
                     </div>
                     <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Net PAT</span>
-                      <span className="font-bold text-[#8FAF3D]">₹{stock.financials.patCr} Cr</span>
+                      <span className="font-bold text-[#8FAF3D]">₹{fpo.financials.patCr} Cr</span>
                     </div>
                     <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Margin</span>
-                      <span className="font-bold text-[#F3F4EA]">{stock.financials.roePercent}%</span>
+                      <span className="font-bold text-[#F3F4EA]">{fpo.financials.roePercent}%</span>
                     </div>
                     <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Farmers</span>
-                      <span className="font-bold text-[#8FAF3D]">{(stock.totalMembers || 1500).toLocaleString()}</span>
+                      <span className="font-bold text-[#8FAF3D]">{(fpo.totalMembers || 1500).toLocaleString()}</span>
                     </div>
                     <div>
                       <span className="text-[9px] text-[#969D88] block font-sans">Rating</span>
-                      <span className="font-bold text-[#D6A83A]">{stock.creditRating}</span>
+                      <span className="font-bold text-[#D6A83A]">{fpo.creditRating}</span>
                     </div>
                   </div>
 
                   {/* Harvest & Season Progress Bar */}
                   <div className="space-y-1 mb-4">
                     <div className="flex justify-between text-[10px] text-[#969D88] font-mono">
-                      <span>Harvest Target: ₹{stock.yearLow || 85}L</span>
-                      <span>Target Realized: ₹{stock.yearHigh || 140}L</span>
+                      <span>Harvest Target: ₹{fpo.yearLow || 85}L</span>
+                      <span>Target Realized: ₹{fpo.yearHigh || 140}L</span>
                     </div>
                     <div className="w-full h-1.5 rounded-full bg-[#080A07] overflow-hidden">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-[#53652A] to-[#8FAF3D]"
                         style={{
-                          width: `${Math.min(100, Math.max(15, stock.tnfiScore))}%`
+                          width: `${Math.min(100, Math.max(15, fpo.tnfiScore))}%`
                         }}
                       />
                     </div>
@@ -348,7 +347,7 @@ export const FpoPerformanceMarket: React.FC = () => {
                 {/* Bottom Action Buttons */}
                 <div className="flex items-center gap-2 pt-2 border-t border-[#2A3320]">
                   <button
-                    onClick={() => setCurrentView('fpo-detail', stock.id)}
+                    onClick={() => setCurrentView('fpo-detail', fpo.id)}
                     className="flex-1 py-2 rounded-lg bg-[#080A07] hover:bg-[#161B11] text-[#969D88] hover:text-[#F3F4EA] border border-[#2A3320] text-xs font-bold transition-colors text-center cursor-pointer flex items-center justify-center gap-1"
                   >
                     <FileText className="w-3.5 h-3.5" />
@@ -356,7 +355,7 @@ export const FpoPerformanceMarket: React.FC = () => {
                   </button>
 
                   <button
-                    onClick={(e) => handleOpenEoi(stock, e)}
+                    onClick={(e) => handleOpenEoi(fpo, e)}
                     className="flex-1 py-2 rounded-lg bg-[#7A8F35] hover:bg-[#9CAF45] text-white text-xs font-bold transition-colors shadow-md shadow-[#7A8F35]/30 cursor-pointer flex items-center justify-center gap-1"
                   >
                     <Send className="w-3.5 h-3.5" />
@@ -364,7 +363,7 @@ export const FpoPerformanceMarket: React.FC = () => {
                   </button>
 
                   <button
-                    onClick={() => toggleWatchlist(stock.id)}
+                    onClick={() => toggleWatchlist(fpo.id)}
                     className={`p-2 rounded-lg border text-xs font-bold transition-colors cursor-pointer ${
                       isWatchlisted
                         ? 'bg-[#D6A83A]/20 border-[#D6A83A]/40 text-[#D6A83A]'
@@ -399,58 +398,58 @@ export const FpoPerformanceMarket: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#2A3320]/60 font-sans">
-                {filteredStocks.map(stock => {
-                  const isPositive = stock.changePercent >= 0;
+                {filteredFpos.map(fpo => {
+                  const isPositive = fpo.changePercent >= 0;
                   return (
                     <tr
-                      key={stock.id}
-                      onClick={() => setCurrentView('fpo-detail', stock.id)}
+                      key={fpo.id}
+                      onClick={() => setCurrentView('fpo-detail', fpo.id)}
                       className="hover:bg-[#161B11] transition-colors cursor-pointer"
                     >
                       <td className="py-3.5 px-4">
-                        <div className="font-bold text-[#F3F4EA] font-mono text-sm">{stock.ticker}</div>
-                        <div className="text-[11px] text-[#969D88] line-clamp-1">{stock.name}</div>
+                        <div className="font-bold text-[#F3F4EA] font-mono text-sm">{fpo.ticker}</div>
+                        <div className="text-[11px] text-[#969D88] line-clamp-1">{fpo.name}</div>
                       </td>
                       <td className="py-3.5 px-3 text-[#969D88]">
                         <span className="px-2 py-0.5 rounded bg-[#161B11] border border-[#2A3320] text-[#9CAF45] text-[10px]">
-                          {stock.sector}
+                          {fpo.sector}
                         </span>
                       </td>
                       <td className="py-3.5 px-3 font-bold font-mono-nums text-[#9CAF45] text-sm">
-                        {stock.tnfiScore}/100
+                        {fpo.tnfiScore}/100
                       </td>
                       <td className="py-3.5 px-3 font-bold font-mono-nums">
                         <span className={isPositive ? 'text-[#8FAF3D]' : 'text-[#D65C5C]'}>
-                          {isPositive ? '+' : ''}{(stock.changePercent || 0).toFixed(2)}%
+                          {isPositive ? '+' : ''}{(fpo.changePercent || 0).toFixed(2)}%
                         </span>
                       </td>
                       <td className="py-3.5 px-3 font-mono-nums text-[#F3F4EA]">
-                        ₹{stock.marketCapCr} Cr
+                        ₹{fpo.harvestValueCr || (fpo.financials?.revenueCr ? (fpo.financials.revenueCr * 1.8).toFixed(1) : '75.4')} Cr
                       </td>
                       <td className="py-3.5 px-3 font-mono-nums text-[#F3F4EA] font-bold">
-                        ₹{stock.financials.revenueCr} Cr
+                        ₹{fpo.financials.revenueCr} Cr
                       </td>
                       <td className="py-3.5 px-3 font-mono-nums text-[#8FAF3D] font-bold">
-                        ₹{stock.financials.patCr} Cr
+                        ₹{fpo.financials.patCr} Cr
                       </td>
                       <td className="py-3.5 px-3 font-mono-nums text-[#969D88]">
-                        {(stock.totalMembers || 1500).toLocaleString()}
+                        {(fpo.totalMembers || 1500).toLocaleString()}
                       </td>
                       <td className="py-3.5 px-3 font-mono">
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8FAF3D]/15 text-[#8FAF3D] border border-[#8FAF3D]/30">
-                          {stock.creditRating}
+                          {fpo.creditRating}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5" onClick={e => e.stopPropagation()}>
                           <button
-                            onClick={() => setCurrentView('fpo-detail', stock.id)}
+                            onClick={() => setCurrentView('fpo-detail', fpo.id)}
                             className="px-2.5 py-1 rounded bg-[#080A07] hover:bg-[#161B11] text-[#969D88] hover:text-[#F3F4EA] border border-[#2A3320] font-bold text-[11px] transition-colors cursor-pointer"
                           >
                             Dossier
                           </button>
                           <button
-                            onClick={(e) => handleOpenEoi(stock, e)}
+                            onClick={(e) => handleOpenEoi(fpo, e)}
                             className="px-2.5 py-1 rounded bg-[#7A8F35] hover:bg-[#9CAF45] text-white font-bold text-[11px] transition-colors cursor-pointer"
                           >
                             Express Interest
@@ -467,11 +466,11 @@ export const FpoPerformanceMarket: React.FC = () => {
       )}
 
       {/* Expression of Interest (EOI) Modal */}
-      {eoiModalStock && (
+      {eoiModalFpo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <div className="w-full max-w-lg rounded-2xl bg-[#10140D] border border-[#7A8F35]/40 p-6 shadow-2xl relative space-y-4">
             <button
-              onClick={() => setEoiModalStock(null)}
+              onClick={() => setEoiModalFpo(null)}
               className="absolute top-4 right-4 text-[#969D88] hover:text-[#F3F4EA] p-1 rounded-lg bg-[#080A07] border border-[#2A3320] cursor-pointer"
             >
               <X className="w-4 h-4" />
@@ -481,16 +480,16 @@ export const FpoPerformanceMarket: React.FC = () => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black text-[#F3F4EA] font-mono">
-                  {eoiModalStock.ticker}
+                  {eoiModalFpo.ticker}
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#7A8F35]/15 text-[#9CAF45] border border-[#7A8F35]/30">
-                  {eoiModalStock.creditRating} RATED
+                  {eoiModalFpo.creditRating} RATED
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#161B11] text-[#969D88] border border-[#2A3320]">
-                  {eoiModalStock.sector}
+                  {eoiModalFpo.sector}
                 </span>
               </div>
-              <h3 className="text-sm font-semibold text-[#F3F4EA] mt-1">{eoiModalStock.name}</h3>
+              <h3 className="text-sm font-semibold text-[#F3F4EA] mt-1">{eoiModalFpo.name}</h3>
               <p className="text-xs text-[#969D88] mt-0.5">
                 Submit an institutional Expression of Interest (EOI) to structure capital support for this verified FPO.
               </p>
@@ -586,7 +585,7 @@ export const FpoPerformanceMarket: React.FC = () => {
                 </div>
                 <div className="flex justify-between text-[#8FAF3D] font-bold pt-1 border-t border-[#2A3320]">
                   <span>FPO Performance Rating:</span>
-                  <span>{eoiModalStock.creditRating} • {eoiModalStock.tnfiScore}/100</span>
+                  <span>{eoiModalFpo.creditRating} • {eoiModalFpo.tnfiScore}/100</span>
                 </div>
               </div>
 
@@ -617,12 +616,9 @@ export const FpoPerformanceMarket: React.FC = () => {
       {/* Regulatory & Institutional Notice */}
       <div className="p-4 rounded-xl bg-[#0A0D08] border border-[#2A3320] text-center">
         <p className="text-[11px] text-[#78826B] font-mono leading-relaxed max-w-4xl mx-auto">
-          <strong className="text-[#9CAF45]">REGULATORY & COOPERATIVE NOTICE:</strong> TNFI is an agricultural finance intelligence and cooperative performance evaluation platform. It is not a stock exchange, broker-dealer, or securities trading system. Valuations and performance scores reflect audited cooperative balance sheets, crop cycle revenues, mandi commodity yields, and institutional governance audits. Capital facilities are non-speculative and directed toward farmer collective operations under Tamil Nadu agricultural development frameworks.
+          <strong className="text-[#9CAF45]">REGULATORY & COOPERATIVE NOTICE:</strong> FI (Phi) is an agricultural finance intelligence and cooperative performance evaluation platform. It is not a stock exchange, broker-dealer, or securities trading system. Valuations and performance scores reflect audited cooperative balance sheets, crop cycle revenues, mandi commodity yields, and institutional governance audits. Capital facilities are non-speculative and directed toward farmer collective operations under Tamil Nadu agricultural development frameworks.
         </p>
       </div>
     </div>
   );
 };
-
-// Backwards compatibility alias
-export const FpoStockMarket = FpoPerformanceMarket;

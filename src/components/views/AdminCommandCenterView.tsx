@@ -98,7 +98,7 @@ export const AdminCommandCenterView: React.FC = () => {
     setTimeout(() => {
       rebalanceIndexWeights();
       setIsRebalancing(false);
-      setToastMsg('Constituent float weights re-calculated and synchronized with TNFI 50 basket.');
+      setToastMsg('Constituent float weights re-calculated and synchronized with FI 50 basket.');
       setTimeout(() => setToastMsg(null), 3500);
     }, 600);
   };
@@ -118,7 +118,7 @@ export const AdminCommandCenterView: React.FC = () => {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              TNFI COMMAND & CONTROL
+              FI COMMAND & CONTROL
             </h1>
             <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#7A8F35]/20 text-[#A8C94A] border border-[#7A8F35]/40 flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#36C77A] animate-pulse" />
@@ -126,7 +126,7 @@ export const AdminCommandCenterView: React.FC = () => {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-            Real-time administrative operations, verification queue orchestration, data completeness monitoring, and TNFI 50 benchmark governance.
+            Real-time administrative operations, verification queue orchestration, data completeness monitoring, and FI 50 benchmark governance.
           </p>
         </div>
 
@@ -210,13 +210,13 @@ export const AdminCommandCenterView: React.FC = () => {
             <div className="text-[9px] text-neutral-500">100% Stat. Vetted</div>
           </div>
 
-          {/* Card 4: TNFI 50 Constituents */}
+          {/* Card 4: FI 50 Constituents */}
           <div
             onClick={() => setCurrentView('tnfi-50-mgmt')}
             className="p-3.5 rounded-2xl bg-[#10140D] border border-[#2A3320] hover:border-[#7A8F35] transition-all cursor-pointer group"
           >
             <div className="flex items-center justify-between text-[10px] text-neutral-400">
-              <span>TNFI 50 Basket</span>
+              <span>FI 50 Basket</span>
               <Sparkles className="w-3.5 h-3.5 text-[#A8C94A]" />
             </div>
             <div className="text-lg font-bold text-[#A8C94A] mt-1">
@@ -486,7 +486,7 @@ export const AdminCommandCenterView: React.FC = () => {
                 <span className="font-bold text-[#A8C94A]">Score ≥ 70.0 / 100</span>
               </div>
               <div className="text-[10px] text-neutral-400">
-                FPOs must maintain 2 consecutive quarters of positive operating margin and &ge;80% data completeness to remain in TNFI 50 basket.
+                FPOs must maintain 2 consecutive quarters of positive operating margin and &ge;80% data completeness to remain in FI 50 basket.
               </div>
             </div>
           </div>

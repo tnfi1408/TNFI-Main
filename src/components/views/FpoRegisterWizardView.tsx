@@ -420,7 +420,7 @@ export const FpoRegisterWizardView: React.FC = () => {
               {formData.name || 'Register Your FPO / Cooperative'}
             </h1>
             <p className="text-xs sm:text-sm text-[#969D88] mt-1 max-w-2xl">
-              Complete the structured 8-part statutory questionnaire to obtain certified TNFI verification, benchmark eligibility, and primary capital issuance clearance.
+              Complete the structured 8-part questionnaire to obtain FI verification, benchmark eligibility, and primary capital facility clearance.
             </p>
           </div>
 
@@ -473,7 +473,7 @@ export const FpoRegisterWizardView: React.FC = () => {
         <div className="p-5 rounded-2xl bg-[#D6B45C]/10 border border-[#D6B45C]/40 text-[#D6B45C] space-y-2">
           <div className="flex items-center gap-2 font-bold text-sm">
             <AlertCircle className="w-5 h-5 shrink-0" />
-            <span>ACTION REQUIRED: TNFI Verification Desk Requested Information Amendments</span>
+            <span>ACTION REQUIRED: FI Verification Desk Requested Information Amendments</span>
           </div>
           <p className="text-xs text-[#F3F4EA] leading-relaxed">
             {currentFpo.rejectionReason || currentFpo.verificationRemarks || 'Please upload the validated institutional buyer offtake escrow confirmation and update the second crop yield survey.'}
@@ -1256,7 +1256,7 @@ export const FpoRegisterWizardView: React.FC = () => {
             <div className="border-b border-[#2A3320] pb-4">
               <h2 className="text-lg font-bold text-[#F3F4EA]">8. Statutory Document Dossier & Submission</h2>
               <p className="text-xs text-[#969D88] mt-0.5">
-                Upload verified PDF / Excel proofs for compliance evaluation by the TNFI Verification Desk.
+                Upload verified PDF / Excel proofs for compliance evaluation by the FI Verification Desk.
               </p>
             </div>
 
@@ -1510,13 +1510,13 @@ export const FpoRegisterWizardView: React.FC = () => {
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-bold text-sm text-[#F3F4EA]">Submit for TNFI Verification</h3>
-                <span className="text-[10px] text-[#969D88] font-mono">ANNUAL STATUTORY REVIEW</span>
+                <h3 className="font-bold text-sm text-[#F3F4EA]">Submit for FI Verification</h3>
+                <span className="text-[10px] text-[#969D88] font-mono">ANNUAL VERIFICATION REVIEW</span>
               </div>
             </div>
 
             <p className="text-xs text-[#969D88] leading-relaxed">
-              By submitting, your FPO registration data, {formData.crops.length} agricultural varietal records ({formData.totalAcreage} acres), and attached document proofs will be forwarded to the TNFI Verification Desk.
+              By submitting, your FPO registration data, {formData.crops.length} agricultural varietal records ({formData.totalAcreage} acres), and attached document proofs will be forwarded to the FI Verification Desk.
             </p>
 
             <div className="p-3.5 rounded-xl bg-[#080A07] border border-[#2A3320] space-y-2 text-xs">

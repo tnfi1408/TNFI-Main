@@ -425,7 +425,7 @@ export const CapitalOpportunityDetailView: React.FC = () => {
 
             <div className="space-y-3 text-xs">
               <div className="flex justify-between items-center pb-2 border-b border-[#2A3320]">
-                <span className="text-[#969D88]">TNFI Verification:</span>
+                <span className="text-[#969D88]">FI Verification:</span>
                 <span className="font-bold text-[#8FAF3D] flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   VERIFIED A+
@@ -460,10 +460,10 @@ export const CapitalOpportunityDetailView: React.FC = () => {
       <div className="p-4 rounded-xl bg-[#080A07] border border-[#2A3320] text-[11px] text-[#969D88] font-sans leading-relaxed space-y-1">
         <div className="font-bold text-[#F3F4EA] font-mono text-xs flex items-center gap-1.5">
           <Info className="w-4 h-4 text-[#8FAF3D]" />
-          STATUTORY AGRICULTURAL INVESTMENT DISCLOSURE
+          AGRICULTURAL CAPITAL & FACILITY DISCLOSURE
         </div>
         <p>
-          TNFI (Tamil Nadu Farmer Index) is an agricultural intelligence and capital discovery platform. All opportunities presented are private capital transactions governed by bilateral agreements between investors and licensed Farmer Producer Companies. Yields and IRRs are projected based on historical mandi realizations and forward offtake MOUs.
+          FI (Phi) is an agricultural intelligence and capital discovery platform. All opportunities presented are commercial credit and working capital facilities governed by bilateral agreements between capital providers and licensed Farmer Producer Companies. Yields and benchmark returns are modeled based on historical mandi realizations and forward offtake MOUs.
         </p>
       </div>
 

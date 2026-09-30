@@ -182,7 +182,7 @@ export const FpoVerificationView: React.FC = () => {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-            Review onboarding applications, validate agricultural telemetry, and certify Producer Organizations for TNFI Live Registry.
+            Review onboarding applications, validate agricultural telemetry, and verify Producer Organizations for FI Live Registry.
           </p>
         </div>
 
@@ -198,7 +198,7 @@ export const FpoVerificationView: React.FC = () => {
               const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fpos, null, 2));
               const downloadAnchor = document.createElement('a');
               downloadAnchor.setAttribute("href", dataStr);
-              downloadAnchor.setAttribute("download", `tnfi-fpo-verification-queue-${new Date().toISOString().split('T')[0]}.json`);
+              downloadAnchor.setAttribute("download", `fi-fpo-verification-queue-${new Date().toISOString().split('T')[0]}.json`);
               document.body.appendChild(downloadAnchor);
               downloadAnchor.click();
               downloadAnchor.remove();
@@ -253,9 +253,9 @@ export const FpoVerificationView: React.FC = () => {
           onClick={() => setVerificationFilter('VERIFIED')}
           className={`p-3.5 rounded-2xl bg-[#10140D] border transition-all cursor-pointer ${verificationFilter === 'VERIFIED' ? 'border-emerald-500 bg-emerald-500/10' : 'border-[#2A3320] hover:border-emerald-500/50'}`}
         >
-          <div className="text-[10px] text-neutral-400 uppercase">Fully Certified</div>
+          <div className="text-[10px] text-neutral-400 uppercase">FI Verified</div>
           <div className="text-xl font-bold text-emerald-400 mt-1">{counts.verified}</div>
-          <div className="text-[9px] text-neutral-500">Live on Exchange</div>
+          <div className="text-[9px] text-neutral-500">Live on Platform</div>
         </div>
 
         <div
@@ -360,7 +360,7 @@ export const FpoVerificationView: React.FC = () => {
                 <th className="p-3.5">Data Completeness</th>
                 <th className="p-3.5">Performance Score</th>
                 <th className="p-3.5">Status</th>
-                <th className="p-3.5">TNFI 50</th>
+                <th className="p-3.5">FI 50</th>
                 <th className="p-3.5">Last Action</th>
                 <th className="p-3.5 text-right">Review Action</th>
               </tr>
