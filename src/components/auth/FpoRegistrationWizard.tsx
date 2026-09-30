@@ -127,7 +127,7 @@ export const FpoRegistrationWizard: React.FC<FpoRegistrationWizardProps> = ({
     state: 'Tamil Nadu',
     district: 'Coimbatore',
     address: 'Plot 18, Agri Marketing Hub, Pollachi Road, Coimbatore, Tamil Nadu - 641021',
-    officialEmail: 'contact@konguagri.tnfi.in',
+    officialEmail: 'contact@konguagri.fi-agri.in',
     phone: '94432 18920',
     ceoName: 'R. Soundararajan (Managing Director)',
     password: '',

@@ -492,7 +492,7 @@ export const FpoOperatingDashboardView: React.FC = () => {
             <div className="flex items-center justify-between border-b border-[#2A3320] pb-3">
               <div className="flex items-center gap-2">
                 <DollarSign className="w-4 h-4 text-[#D6B45C]" />
-                <h3 className="text-sm font-bold text-[#F3F4EA]">Primary Capital & Debt Issuance</h3>
+                <h3 className="text-sm font-bold text-[#F3F4EA]">Primary Capital & Debt Facilities</h3>
               </div>
             </div>
 

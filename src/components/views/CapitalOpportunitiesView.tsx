@@ -51,7 +51,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
   const [eoiAmount, setEoiAmount] = useState<number>(25);
   const [eoiInvestorName, setEoiInvestorName] = useState(user?.name || 'Tamil Nadu Agri Growth Fund');
   const [eoiEntity, setEoiEntity] = useState(user?.orgName || 'TN Agri Venture Capital Fund');
-  const [eoiEmail, setEoiEmail] = useState(user?.email || 'investor@tnfi.in');
+  const [eoiEmail, setEoiEmail] = useState(user?.email || 'investor@fi-capital.in');
   const [eoiTerms, setEoiTerms] = useState<'STANDARD' | 'SUBSIDY_LINKED' | 'REVENUE_SHARE' | 'EQUITY_LINKED'>('STANDARD');
   const [eoiNotes, setEoiNotes] = useState('');
   const [eoiSuccessMessage, setEoiSuccessMessage] = useState<string | null>(null);

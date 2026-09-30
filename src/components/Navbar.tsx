@@ -54,8 +54,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenMobileMenu }) => {
         </button>
 
         {/* Platform Title on Mobile */}
-        <div className="lg:hidden font-mono font-black text-sm text-[#F3F4EA] flex items-center gap-1.5">
-          <Sprout className="w-4 h-4 text-[#8FAF3D]" />
+        <div className="lg:hidden font-mono font-black text-sm text-[#F3F4EA] flex items-center gap-2">
+          <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-[#53652A] via-[#7A8F35] to-[#9CAF45] p-0.5 shadow-sm">
+            <div className="w-full h-full bg-[#10140D] rounded-[6px] flex items-center justify-center">
+              <span className="text-[10px] font-black text-[#9CAF45] font-mono leading-none">
+                FI
+              </span>
+            </div>
+          </div>
           <span>FI TERMINAL</span>
         </div>
 

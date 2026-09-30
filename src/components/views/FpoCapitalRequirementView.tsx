@@ -99,7 +99,7 @@ export const FpoCapitalRequirementView: React.FC = () => {
         riskLevel: 'LOW',
         performanceIndex: fpo.performanceScore || 85,
         status: 'ACTIVE',
-        stage: 'Primary Issuance',
+        stage: 'Capital Requirement',
         tenureMonths: formData.tenureMonths,
         projectedIrrPercent: formData.expectedYieldPercent,
         expectedReturnPercent: formData.expectedYieldPercent,
@@ -126,17 +126,17 @@ export const FpoCapitalRequirementView: React.FC = () => {
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-lg text-[10px] font-bold font-mono uppercase bg-[#7A8F35]/20 text-[#9CAF45] border border-[#7A8F35]/40">
-              PRIMARY MARKET ISSUANCE
+              PRIMARY CAPITAL REQUIREMENT
             </span>
             <span className="text-xs font-mono text-[#969D88]">
               {fpo?.name || 'Producer Organisation'}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-[#F3F4EA] tracking-tight">
-            Capital Requirement & Investor Raise Planner
+            FPO Capital Requirement & Facility Planner
           </h1>
           <p className="text-xs text-[#969D88] max-w-2xl leading-relaxed">
-            Structure primary capital raise tranches, post debt opportunities to institutional investors, and track incoming capital commitments.
+            Structure commercial credit tranches, post working capital facilities to capital providers, and track incoming expressions of interest.
           </p>
         </div>
 

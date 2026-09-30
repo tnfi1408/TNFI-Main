@@ -33,7 +33,7 @@ export const FpoIndexHero: React.FC = () => {
               <span className="text-xs text-[#969D88]">FI 50 CONSTITUENT BASKET</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F3F4EA] tracking-tight">
-              Tamil Nadu Farmer Producer Index (FI 50)
+              FI 50 — FPO Performance Index
             </h1>
             <p className="text-xs sm:text-sm text-[#969D88] mt-1.5 max-w-2xl leading-relaxed">
               The benchmark index tracking operational scale, audited harvest revenue, forward offtake parity, and credit solvency across 50 verified Tamil Nadu Farmer Producer Organizations.

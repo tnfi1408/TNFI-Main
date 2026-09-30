@@ -44,7 +44,7 @@ export const CapitalOpportunityDetailView: React.FC = () => {
   const [eoiAmount, setEoiAmount] = useState<number>(activeOpportunity?.minAllocationLakhs || 25);
   const [eoiInvestorName, setEoiInvestorName] = useState(user?.name || 'Tamil Nadu Agri Growth Fund');
   const [eoiEntity, setEoiEntity] = useState(user?.orgName || 'TN Agri Venture Capital Fund');
-  const [eoiEmail, setEoiEmail] = useState(user?.email || 'investor@tnfi.in');
+  const [eoiEmail, setEoiEmail] = useState(user?.email || 'investor@fi-capital.in');
   const [eoiTerms, setEoiTerms] = useState<'STANDARD' | 'SUBSIDY_LINKED' | 'REVENUE_SHARE' | 'EQUITY_LINKED'>('STANDARD');
   const [eoiNotes, setEoiNotes] = useState('');
   const [eoiSuccessMessage, setEoiSuccessMessage] = useState<string | null>(null);
@@ -463,7 +463,7 @@ export const CapitalOpportunityDetailView: React.FC = () => {
           AGRICULTURAL CAPITAL & FACILITY DISCLOSURE
         </div>
         <p>
-          FI (Phi) is an agricultural intelligence and capital discovery platform. All opportunities presented are commercial credit and working capital facilities governed by bilateral agreements between capital providers and licensed Farmer Producer Companies. Yields and benchmark returns are modeled based on historical mandi realizations and forward offtake MOUs.
+          FI (Phi) is an agricultural intelligence and capital discovery platform. All opportunities presented are commercial credit and working capital facilities governed by bilateral agreements between capital providers and licensed Farmer Producer Companies. Yields and agricultural performance indicators are modeled based on historical mandi realizations and forward offtake MOUs.
         </p>
       </div>
 

@@ -921,18 +921,27 @@ export const LandingLogin: React.FC = () => {
             </button>
 
             {/* Header */}
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-lg text-[#F3F1E8]">FI Access Portal</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#7A8F35]/20 text-[#9CAF45]">
-                  TAMIL NADU
-                </span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#53652A] via-[#7A8F35] to-[#9CAF45] p-0.5 shadow-lg shadow-[#7A8F35]/20 shrink-0">
+                <div className="w-full h-full bg-[#10140D] rounded-[10px] flex items-center justify-center">
+                  <span className="text-sm font-black text-[#9CAF45] font-mono">
+                    FI
+                  </span>
+                </div>
               </div>
-              <p className="text-xs text-[#969D88] mt-1">
-                {activeTab === 'signin'
-                  ? 'Enter your credentials or choose your stakeholder perspective.'
-                  : 'Select your ecosystem role to launch your dedicated onboarding workflow.'}
-              </p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-lg text-[#F3F1E8]">FI Access Portal</span>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#7A8F35]/20 text-[#9CAF45]">
+                    TAMIL NADU
+                  </span>
+                </div>
+                <p className="text-xs text-[#969D88] mt-0.5">
+                  {activeTab === 'signin'
+                    ? 'Enter your credentials or choose your stakeholder perspective.'
+                    : 'Select your ecosystem role to launch your dedicated onboarding workflow.'}
+                </p>
+              </div>
             </div>
 
             {/* Tabs: Sign In / Create Account */}
@@ -1049,7 +1058,7 @@ export const LandingLogin: React.FC = () => {
                         type="button"
                         onClick={() => {
                           setShowForgotModal(true);
-                          setResetEmail(signInUsername.includes('@') ? signInUsername : 'fpo@tnfi.org');
+                          setResetEmail(signInUsername.includes('@') ? signInUsername : 'fpo@fi-agri.in');
                         }}
                         className="text-xs text-[#969D88] hover:text-[#9CAF45]"
                       >
@@ -1259,7 +1268,7 @@ export const LandingLogin: React.FC = () => {
                     required
                     value={resetEmail}
                     onChange={e => setResetEmail(e.target.value)}
-                    placeholder="e.g. fpo@tnfi.org"
+                    placeholder="e.g. fpo@fi-agri.in"
                     className="w-full px-3.5 py-2 rounded-xl bg-[#101811] border border-[#2A3320] text-xs text-[#F3F1E8]"
                   />
                 </div>

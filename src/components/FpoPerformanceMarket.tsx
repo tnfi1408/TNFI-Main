@@ -128,7 +128,7 @@ export const FpoPerformanceMarket: React.FC = () => {
             <span className="text-xs text-[#969D88] font-mono">TAMIL NADU VETTED PRODUCER REGISTRY</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F3F4EA] tracking-tight">
-            FPO Performance & Valuation Market
+            FPO Performance & Market Intelligence
           </h1>
           <p className="text-xs sm:text-sm text-[#969D88] mt-1 max-w-2xl">
             Evaluate cooperative performance metrics of high-performing Tamil Nadu Farmer Producer Organizations with verified agricultural yields, audited financials, credit ratings, and live capital requirements.
