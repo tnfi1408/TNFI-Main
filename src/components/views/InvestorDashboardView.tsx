@@ -631,20 +631,23 @@ export const InvestorDashboardView: React.FC = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {capitalOpportunities.slice(0, 3).map(opp => (
-            <div
-              key={opp.id}
-              className="p-6 rounded-3xl bg-[#10140D] border border-[#2A3320] shadow-xl space-y-4 flex flex-col justify-between"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#D6B45C]/20 text-[#D6B45C] border border-[#D6B45C]/40">
-                    {opp.instrumentType || 'TERM LOAN / CAPITAL'}
-                  </span>
-                  <span className="text-xs font-mono font-bold text-[#36C77A]">
-                    {opp.profitMarginPercent || opp.expectedReturnPercent || 22.5}% MARGIN
-                  </span>
-                </div>
+          {capitalOpportunities.slice(0, 3).map(opp => {
+            const matchedFpo = fpos.find(f => f.id === opp.fpoId || f.name === opp.fpoName);
+            const actualMargin = opp.profitMarginPercent ?? matchedFpo?.profitMargin ?? matchedFpo?.profitMarginPercent;
+            return (
+              <div
+                key={opp.id}
+                className="p-6 rounded-3xl bg-[#10140D] border border-[#2A3320] shadow-xl space-y-4 flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#D6B45C]/20 text-[#D6B45C] border border-[#D6B45C]/40">
+                      {opp.instrumentType || 'TERM LOAN / CAPITAL'}
+                    </span>
+                    <span className="text-xs font-mono font-bold text-[#36C77A]">
+                      {actualMargin !== undefined && actualMargin !== null ? `${actualMargin}% MARGIN` : 'N/A MARGIN'}
+                    </span>
+                  </div>
 
                 <div>
                   <h3
@@ -691,7 +694,8 @@ export const InvestorDashboardView: React.FC = () => {
                 </button>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       </div>
 

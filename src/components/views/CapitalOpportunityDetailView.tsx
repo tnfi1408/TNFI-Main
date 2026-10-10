@@ -71,7 +71,7 @@ export const CapitalOpportunityDetailView: React.FC = () => {
   const targetAmount = opp ? (opp.targetAmountLakhs || opp.fundingRequiredLakhs || 30) : 30;
   const committedAmount = opp ? (opp.committedAmountLakhs || Math.round(targetAmount * 0.45)) : 15;
   const progressPercent = Math.min(100, Math.round((committedAmount / targetAmount) * 100));
-  const irr = opp ? (opp.projectedIrrPercent || opp.expectedReturnPercent || 14.5) : 14.5;
+  const rate = opp ? (opp.projectedIrrPercent ?? opp.expectedReturnPercent) : undefined;
   const stage = opp ? (opp.stage || opp.status || 'ACTIVE PIPELINE') : 'ACTIVE PIPELINE';
   const instrument = opp ? (opp.instrumentType || 'TERM LOAN') : 'TERM LOAN';
   const minTicket = opp ? (opp.minAllocationLakhs || 10) : 10;
@@ -178,8 +178,14 @@ export const CapitalOpportunityDetailView: React.FC = () => {
               <div className="text-right">
                 <div className="text-[10px] text-[#969D88] uppercase">Indicative Proposed Rate</div>
                 <div className="text-xl font-black text-[#8FAF3D] flex items-center justify-end gap-1">
-                  <TrendingUp className="w-4 h-4" />
-                  {irr}%
+                  {rate !== undefined && rate !== null ? (
+                    <>
+                      <TrendingUp className="w-4 h-4" />
+                      {rate}%
+                    </>
+                  ) : (
+                    <span>N/A</span>
+                  )}
                 </div>
                 <span className="text-[9px] text-[#969D88] block">Indicative proposed financing term</span>
               </div>
@@ -575,7 +581,7 @@ export const CapitalOpportunityDetailView: React.FC = () => {
                       onChange={e => setEoiTerms(e.target.value as any)}
                       className="w-full bg-[#080A07] border border-[#2A3320] rounded-xl px-3 py-2 text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
                     >
-                      <option value="STANDARD">Fixed Yield Loan ({opp.projectedIrrPercent}% p.a. proposed)</option>
+                      <option value="STANDARD">Fixed Yield Loan ({opp.projectedIrrPercent ? `${opp.projectedIrrPercent}% p.a. proposed` : 'Standard terms proposed'})</option>
                       <option value="SUBSIDY_LINKED">Agri Infra Fund (AIF) / NABARD Subsidy Linked Structure</option>
                       <option value="REVENUE_SHARE">Seasonal Commodity Offtake Share</option>
                       <option value="EQUITY_LINKED">Convertible / Quasi-Equity Facility</option>

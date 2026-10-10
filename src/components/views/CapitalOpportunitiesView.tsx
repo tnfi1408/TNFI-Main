@@ -44,7 +44,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string>('ALL');
   const [selectedCrop, setSelectedCrop] = useState<string>('ALL');
   const [selectedInstrument, setSelectedInstrument] = useState<string>('ALL');
-  const [sortBy, setSortBy] = useState<'amount' | 'committed' | 'performance' | 'rate'>('amount');
+  const [sortBy, setSortBy] = useState<'amount' | 'committed' | 'performance'>('amount');
 
   // Modal State for Expressing Interest
   const [selectedOppForEoi, setSelectedOppForEoi] = useState<CapitalOpportunity | null>(null);
@@ -73,7 +73,6 @@ export const CapitalOpportunitiesView: React.FC = () => {
       const stage = opp.stage || opp.status || 'ACTIVE';
       const instrument = opp.instrumentType || 'TERM LOAN';
       const targetAmount = opp.targetAmountLakhs || opp.fundingRequiredLakhs || 30;
-      const irr = opp.projectedIrrPercent || opp.expectedReturnPercent || 14.5;
       const committed = opp.committedAmountLakhs || Math.round(targetAmount * 0.45);
 
       const matchSearch =
@@ -91,8 +90,6 @@ export const CapitalOpportunitiesView: React.FC = () => {
     }).sort((a, b) => {
       const aTarget = a.targetAmountLakhs || a.fundingRequiredLakhs || 30;
       const bTarget = b.targetAmountLakhs || b.fundingRequiredLakhs || 30;
-      const aIrr = a.projectedIrrPercent || a.expectedReturnPercent || 14.5;
-      const bIrr = b.projectedIrrPercent || b.expectedReturnPercent || 14.5;
       const aCommitted = a.committedAmountLakhs || Math.round(aTarget * 0.45);
       const bCommitted = b.committedAmountLakhs || Math.round(bTarget * 0.45);
 
@@ -107,7 +104,6 @@ export const CapitalOpportunitiesView: React.FC = () => {
         const bScore = b.performanceIndex || 82;
         return bScore - aScore;
       }
-      if (sortBy === 'rate') return bIrr - aIrr;
       return bTarget - aTarget;
     });
   }, [capitalOpportunities, searchTerm, selectedStage, selectedDistrict, selectedCrop, selectedInstrument, sortBy]);
@@ -120,15 +116,13 @@ export const CapitalOpportunitiesView: React.FC = () => {
       return sum + (o.committedAmountLakhs || Math.round(target * 0.45));
     }, 0);
     const totalFarmers = capitalOpportunities.reduce((sum, o) => sum + (o.farmerBeneficiaries || (o.fundedAcres ? o.fundedAcres * 2 : 1200)), 0);
-    const avgIrr = capitalOpportunities.length > 0
-      ? (capitalOpportunities.reduce((sum, o) => sum + (o.projectedIrrPercent || o.expectedReturnPercent || 14.5), 0) / capitalOpportunities.length).toFixed(1)
-      : '14.5';
+    const avgFundingProgress = totalTarget > 0 ? Math.round((totalCommitted / totalTarget) * 100) : 0;
 
     return {
       totalTargetCr: (totalTarget / 100).toFixed(1),
       totalCommittedCr: (totalCommitted / 100).toFixed(1),
       totalFarmers,
-      avgIrr,
+      avgFundingProgress,
       count: capitalOpportunities.length
     };
   }, [capitalOpportunities]);
@@ -200,8 +194,8 @@ export const CapitalOpportunitiesView: React.FC = () => {
               <div className="text-lg font-black text-[#9CAF45]">₹{aggregateMetrics.totalTargetCr} Cr</div>
             </div>
             <div className="px-3 border-r border-[#2A3320]">
-              <div className="text-[10px] text-[#969D88] uppercase">Indicative Rate (Avg)</div>
-              <div className="text-lg font-black text-[#8FAF3D]">{aggregateMetrics.avgIrr}%</div>
+              <div className="text-[10px] text-[#969D88] uppercase">Avg Funding Progress</div>
+              <div className="text-lg font-black text-[#8FAF3D]">{aggregateMetrics.avgFundingProgress}%</div>
             </div>
             <div className="px-3">
               <div className="text-[10px] text-[#969D88] uppercase">Farmers Covered</div>
@@ -336,7 +330,6 @@ export const CapitalOpportunitiesView: React.FC = () => {
               <option value="amount">Sort: Capital Requirement (High to Low)</option>
               <option value="committed">Sort: Funding Progress %</option>
               <option value="performance">Sort: FPO Performance Index</option>
-              <option value="rate">Sort: Indicative Rate (Proposed)</option>
             </select>
           </div>
         </div>
@@ -370,7 +363,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
           const targetAmount = opp.targetAmountLakhs || opp.fundingRequiredLakhs || 30;
           const committedAmount = opp.committedAmountLakhs || Math.round(targetAmount * 0.45);
           const progressPercent = Math.min(100, Math.round((committedAmount / targetAmount) * 100));
-          const irr = opp.projectedIrrPercent || opp.expectedReturnPercent || 14.5;
+          const rate = opp.projectedIrrPercent ?? opp.expectedReturnPercent;
           const stage = opp.stage || opp.status || 'ACTIVE';
           const instrument = opp.instrumentType || 'TERM LOAN';
           const minTicket = opp.minAllocationLakhs || 10;
@@ -455,7 +448,9 @@ export const CapitalOpportunitiesView: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-[#969D88]">Indicative Rate</div>
-                    <div className="font-bold text-[#8FAF3D]">{irr}% (Proposed)</div>
+                    <div className="font-bold text-[#8FAF3D]">
+                      {rate !== undefined && rate !== null ? `${rate}% (Proposed)` : 'N/A'}
+                    </div>
                   </div>
                   <div>
                     <div className="text-[#969D88]">Farmers Impact</div>
@@ -635,7 +630,7 @@ export const CapitalOpportunitiesView: React.FC = () => {
                       onChange={e => setEoiTerms(e.target.value as any)}
                       className="w-full bg-[#080A07] border border-[#2A3320] rounded-xl px-3 py-2 text-[#F3F4EA] focus:outline-none focus:border-[#7A8F35]"
                     >
-                      <option value="STANDARD">Standard Commercial Credit / Term Loan ({selectedOppForEoi.projectedIrrPercent}% p.a. proposed)</option>
+                      <option value="STANDARD">Standard Commercial Credit / Term Loan ({selectedOppForEoi.projectedIrrPercent ? `${selectedOppForEoi.projectedIrrPercent}% p.a. proposed` : 'Standard proposed terms'})</option>
                       <option value="SUBSIDY_LINKED">Agri Infra Fund (AIF) / NABARD Subsidy Linked Facility</option>
                       <option value="REVENUE_SHARE">Seasonal Harvest Revenue Share Note</option>
                       <option value="EQUITY_LINKED">Subordinated Convertible / Equity Structure</option>

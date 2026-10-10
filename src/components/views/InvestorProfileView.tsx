@@ -336,22 +336,28 @@ export const InvestorProfileView: React.FC = () => {
 
             <div className="space-y-2 pt-2 border-t border-[#2A3320]">
               <div className="text-[10px] font-bold text-[#969D88] uppercase">TOP MATCHING OPPORTUNITIES</div>
-              {matchingOpportunities.slice(0, 3).map(opp => (
-                <div
-                  key={opp.id}
-                  onClick={() => setCurrentView('opportunity-detail', opp.id)}
-                  className="p-3 rounded-2xl bg-[#161F17] hover:bg-[#1E2B20] border border-[#2A3320] cursor-pointer transition-all space-y-1"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#F3F4EA]">{opp.fpoName}</span>
-                    <span className="text-xs font-bold font-mono text-[#D6B45C]">₹{opp.fundingRequiredLakhs}L</span>
+              {matchingOpportunities.slice(0, 3).map(opp => {
+                const matchedFpo = fpos.find(f => f.id === opp.fpoId || f.name === opp.fpoName);
+                const actualMargin = opp.profitMarginPercent ?? matchedFpo?.profitMargin ?? matchedFpo?.profitMarginPercent;
+                return (
+                  <div
+                    key={opp.id}
+                    onClick={() => setCurrentView('opportunity-detail', opp.id)}
+                    className="p-3 rounded-2xl bg-[#161F17] hover:bg-[#1E2B20] border border-[#2A3320] cursor-pointer transition-all space-y-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-[#F3F4EA]">{opp.fpoName}</span>
+                      <span className="text-xs font-bold font-mono text-[#D6B45C]">₹{opp.fundingRequiredLakhs}L</span>
+                    </div>
+                    <div className="text-[10px] text-[#969D88] flex items-center justify-between">
+                      <span>{opp.district} • {opp.crop}</span>
+                      <span className="text-[#36C77A] font-mono">
+                        {actualMargin !== undefined && actualMargin !== null ? `${actualMargin}% Margin` : 'N/A Margin'}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-[10px] text-[#969D88] flex items-center justify-between">
-                    <span>{opp.district} • {opp.crop}</span>
-                    <span className="text-[#36C77A] font-mono">{opp.profitMarginPercent || opp.expectedReturnPercent || 22}% Margin</span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <button

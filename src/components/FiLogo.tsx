@@ -10,15 +10,14 @@ interface FiLogoProps {
 
 /**
  * Official FI Logo Brand Mark
- * Geometric emblem consisting of a circular outer ring with top serif 'I' 
- * and interlocking emerald green 'F' agricultural glyph.
+ * Renders the supplied canonical FI logo asset directly with responsive sizing
+ * and preserved aspect ratio.
  */
 export const FiLogo: React.FC<FiLogoProps> = ({
   size = 'md',
   className = '',
   showText = false,
-  subtitle,
-  variant = 'auto'
+  subtitle
 }) => {
   const getDimensionPx = (): number => {
     if (typeof size === 'number') return size;
@@ -39,83 +38,17 @@ export const FiLogo: React.FC<FiLogoProps> = ({
 
   const dim = getDimensionPx();
 
-  // In dark-themed application, the ring & 'I' use crisp foreground text color (#F3F4EA)
-  // while the agricultural symbol uses the official emerald green (#17985B).
-  const slateColor = variant === 'light' ? '#28323E' : '#F3F4EA';
-  const greenColor = '#17985B';
-
   return (
     <div className={`inline-flex items-center gap-2.5 ${className}`}>
-      {/* Official FI Brand Symbol */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 200 200"
+      {/* Official FI Brand Logo Asset */}
+      <img
+        src="/assets/fi-logo-original.png"
+        alt="FI Logo"
         width={dim}
         height={dim}
-        className="shrink-0 select-none transition-all drop-shadow-xs"
-        style={{ width: dim, height: dim }}
-        aria-label="FI Logo"
-      >
-        {/* Left Arc of Circular Ring (Center 100, 100, R=84, r=60) */}
-        <path
-          d="M 36.5 45 
-             A 84 84 0 0 0 36.5 155 
-             L 76 155 
-             A 60 60 0 0 1 76 45 
-             Z"
-          fill={slateColor}
-        />
-
-        {/* Right Arc of Circular Ring */}
-        <path
-          d="M 124 45 
-             A 60 60 0 0 1 124 155 
-             L 163.5 155 
-             A 84 84 0 0 0 163.5 45 
-             Z"
-          fill={slateColor}
-        />
-
-        {/* Top Letter 'I' with Brackets and Serifs */}
-        <path
-          d="M 86 24 
-             L 114 24 
-             L 114 31 
-             C 111 31 108 33 107 37 
-             L 107 83 
-             C 108 87 111 89 114 89 
-             L 114 96 
-             L 86 96 
-             L 86 89 
-             C 89 89 92 87 93 83 
-             L 93 37 
-             C 92 33 89 31 86 31 
-             Z"
-          fill={slateColor}
-        />
-
-        {/* Lower Emerald Green 'F' / 'r' Component (#17985B) */}
-        {/* Left Accent Bar */}
-        <rect
-          x="75"
-          y="112"
-          width="13"
-          height="38"
-          fill={greenColor}
-        />
-
-        {/* Main Vertical Stem with Top Right Arm */}
-        <path
-          d="M 91 102 
-             L 142 102 
-             L 142 122 
-             L 111 122 
-             L 111 196 
-             L 91 196 
-             Z"
-          fill={greenColor}
-        />
-      </svg>
+        className="shrink-0 select-none object-contain transition-all"
+        style={{ width: `${dim}px`, height: `${dim}px` }}
+      />
 
       {/* Optional Brand Wordmark */}
       {showText && (
